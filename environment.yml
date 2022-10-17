@@ -1,10 +1,12 @@
 name: ion_suppression
 channels:
   - conda-forge
+  - bioconda
   - defaults
 dependencies:
-  - scanpy
-  - python=3.7
   - ipykernel
+  - scanpy
   - pytest
-prefix: /home/mklein/.conda/envs/ion_suppression
+  - python=3.7
+  - ipywidgets
+prefix: /Users/mariusklein/opt/anaconda3/envs/ion_suppression
