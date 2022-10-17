@@ -1,0 +1,10 @@
+name: ion_suppression
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - scanpy
+  - python=3.7
+  - ipykernel
+  - pytest
+prefix: /home/mklein/.conda/envs/ion_suppression
