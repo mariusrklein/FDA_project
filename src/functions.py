@@ -141,6 +141,7 @@ def correct_intensities_quantile_regression(
     intensities_df: pd.DataFrame,
     pixels_total_overlap: pd.Series,
     full_pixels_avg_intensities: pd.Series,
+    reference_ions: list,
     proportion_threshold = 0.1
     ) -> pd.DataFrame:
     """Corrects ion intensities based on cell sampling proportion of respective pixels
@@ -171,6 +172,8 @@ def correct_intensities_quantile_regression(
     log_ratio_df = np.log10(prop_ratio_df.replace(np.nan, 0).infer_objects())
     log_ratio_df = log_ratio_df.replace([np.inf, - np.inf], np.nan)
 
+    reference_df = pd.concat([log_ratio_df[reference_ions], log_prop_series], axis=1) \
+        .melt(id_vars=(reference))[['value', reference]]
     # create output variables
     correction_factors = log_ratio_df.copy().applymap(lambda x: np.nan)
     params = {}
@@ -185,8 +188,13 @@ def correct_intensities_quantile_regression(
         df_for_model = df[df[reference] > np.log10(proportion_threshold)].dropna()
 
         # check if enough data remains after filtering, otherweise what TODO?
-        if len(df_for_model) < 3:
-            print('skipping ' + ion)
+        if len(df_for_model) < 10:
+            print(ion + ' has not enough datapoints. using reference pool instead')
+            df_for_model = reference_df[reference_df[reference] > np.log10(proportion_threshold)].dropna()
+            df_for_model.columns = [ion, reference]
+
+        if len(df_for_model) < 10:
+            print('Still not enough datapoints, skipping ' + ion)
             continue
 
         # calculate quantile regression
