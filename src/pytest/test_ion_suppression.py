@@ -1,5 +1,7 @@
+import numpy as np
+import pandas as pd
 import pytest
-from src.functions import *
+from src.functions import get_matrices, get_molecule_normalization_factors, normalize_proportion_ratios
 
 
 @pytest.fixture
