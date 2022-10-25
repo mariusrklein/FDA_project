@@ -9,6 +9,7 @@ from typing import Dict, Tuple, Callable
 import pandas as pd
 import numpy as np
 import statsmodels.formula.api as smf
+from patsy.builtins import Q
 
 
 # CONSTANTS
@@ -64,6 +65,55 @@ def get_matrices(
     sampling_spec_matrix = overlap_matrix.divide(total_cell_coverage, axis=0)
 
     return(overlap_matrix, sampling_prop_matrix, sampling_spec_matrix)
+
+
+
+def get_matrices_from_dfs(
+    mark_area: pd.DataFrame,
+    cell_area: pd.DataFrame,
+    marks_cell_overlap: pd.DataFrame
+    ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """calculates overlap_matrix, sampling_prop_matrix and sampling_spec_matrix
+    for given positional pixel/cell data
+
+    Args:
+        mark_area (pd.DataFrame): [description]
+        marks_cell_associations (pd.DataFrame): [description]
+        marks_cell_overlap (pd.DataFrame): [description]
+
+    Returns:
+        Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]: [description]
+    """
+
+    # prototype pixel x cell matrix for abs. area overlap of all possible pixel-cell combinations
+    overlap_matrix = pd.DataFrame(index=[CELL_PRE + str(n) for n in cell_area.cell_id.astype(int)],
+                                             columns=[PIXEL_PRE + str(n) for n in mark_area.am_id.astype(int)])
+
+    # analogous matrix for overlap relative to each pixel area
+    # (corresponds to ablated region specific sampling proportion)
+    sampling_prop_matrix = overlap_matrix.copy()
+
+    # analogous matrix for constitution of every cell
+    sampling_spec_matrix = overlap_matrix.copy()
+
+
+    for cell_i in cell_area.cell_id:
+        pixels = marks_cell_overlap[marks_cell_overlap.cell_id == cell_i]
+        # get the index of the pixels as their order is the same in marks_cell_overlap
+        for _, pixel_row in pixels.iterrows():
+            # write absolute area overlap of current cell-pixel association to respective
+            # location in matrix
+            overlap_matrix.loc[CELL_PRE + str(int(cell_i)), PIXEL_PRE + str(int(pixel_row['am_id']))] = pixel_row['area']
+
+    total_pixel_size = pd.Series(mark_area.area)
+    total_pixel_size.index = overlap_matrix.columns
+
+    sampling_prop_matrix = overlap_matrix.divide(total_pixel_size, axis=1)
+
+    total_cell_coverage = overlap_matrix.sum(axis=1).replace(to_replace=0, value=1)
+    sampling_spec_matrix = overlap_matrix.divide(total_cell_coverage, axis=0)
+
+    return(sampling_prop_matrix, sampling_spec_matrix)
 
 
 
@@ -156,6 +206,8 @@ def correct_intensities_quantile_regression(
     Returns:
         pd.DataFrame: [description]
     """
+    min_datapoints = 10
+
     # get Series name of pixel sampling proportions for model formula
     reference = pixels_total_overlap.name
 
@@ -174,40 +226,49 @@ def correct_intensities_quantile_regression(
 
     reference_df = pd.concat([log_ratio_df[reference_ions], log_prop_series], axis=1) \
         .melt(id_vars=(reference))[['value', reference]]
+    
+    reference_df = reference_df[reference_df[reference] > np.log10(proportion_threshold)].dropna()
+
+    if len(reference_df) < min_datapoints:
+        raise RuntimeError("The supplied reference pool has only %1d valid data points and is therefore unsuitable. Please specify a suitable reference pool."%len(reference_df))
+
+    ref_model = smf.quantreg('Q("value") ~ ' + reference, reference_df)
+    ref_qrmodel = ref_model.fit(q=0.5)
+
     # create output variables
     correction_factors = log_ratio_df.copy().applymap(lambda x: np.nan)
     params = {}
     predictions = log_ratio_df.copy().applymap(lambda x: np.nan)
 
+    insufficient_metabolites_list = []
+
     # iterate over molecules
     for ion in log_ratio_df.columns:
         # for every molecule, create custom df with two regression variables
-        df = pd.concat([log_ratio_df[ion], log_prop_series], axis=1)
+        ion_df = pd.concat([log_ratio_df[ion], log_prop_series], axis=1)
         # filter data for model fitting: only include pixels with given sampling proportion
         # threshold and remove NAs (caused by zero intensities)
-        df_for_model = df[df[reference] > np.log10(proportion_threshold)].dropna()
+        df_for_model = ion_df[ion_df[reference] > np.log10(proportion_threshold)].dropna()
 
         # check if enough data remains after filtering, otherweise what TODO?
         if len(df_for_model) < 10:
-            print(ion + ' has not enough datapoints. using reference pool instead')
-            df_for_model = reference_df[reference_df[reference] > np.log10(proportion_threshold)].dropna()
-            df_for_model.columns = [ion, reference]
+            #print('%s has only %1d, thus not enough datapoints. using reference pool instead'%(ion, len(df_for_model)))
+            qrmodel=ref_qrmodel
+            insufficient_metabolites_list.append(ion)
 
-        if len(df_for_model) < 10:
-            print('Still not enough datapoints, skipping ' + ion)
-            continue
-
-        # calculate quantile regression
-        model = smf.quantreg(ion + ' ~ ' + reference, df_for_model)
-        qrmodel = model.fit(q=0.5)
-        params[ion] = qrmodel.params
+        else: 
+            # calculate quantile regression
+            model = smf.quantreg('Q("' + ion + '") ~ ' + reference, df_for_model)
+            qrmodel = model.fit(q=0.5)
+            params[ion] = qrmodel.params
 
         # regress out dependency on sampling proportion
-        reg_correction = 10 ** qrmodel.predict(df)
+        reg_correction = 10 ** qrmodel.predict(ion_df)
         predictions[ion] = intensities_df[ion] / reg_correction
         correction_factors[ion] = reg_correction
         
     # print(pd.concat([ion_intensities['C16H30O2'], sampling_proportion_series, log_ratio_df['C16H30O2'], correction_factors['C16H30O2'], predictions['C16H30O2']], axis=1))
-
+    print('insufficient metabolites: ')
+    print(insufficient_metabolites_list)
     #return((correction_factors, pd.Series(params), predictions))
     return predictions
