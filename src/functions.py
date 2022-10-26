@@ -16,8 +16,8 @@ from tqdm import tqdm
 
 # CONSTANTS
 
-CELL_PRE = 'cell_'
-PIXEL_PRE = 'pixel_'
+CELL_PRE = ''
+PIXEL_PRE = ''
 
 
 def get_matrices(
