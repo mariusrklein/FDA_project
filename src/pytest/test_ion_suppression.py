@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-from src.functions import get_matrices, get_molecule_normalization_factors, normalize_proportion_ratios
+from src.functions import CELL_PRE, PIXEL_PRE, get_matrices, get_matrices_from_dfs, get_molecule_normalization_factors, normalize_proportion_ratios
 
 
 @pytest.fixture
@@ -17,32 +17,49 @@ def mark_area_minimal():
     return {'1': 10, '2': 10, '3':10, '4':10}
 
 @pytest.fixture
+def mark_area_df():
+    return pd.DataFrame({'am_id':[1, 2, 3, 4], 'area':[10, 10, 10, 10]})
+
+@pytest.fixture
+def cell_area_df():
+    return pd.DataFrame({'cell_id':[1, 2, 3]})
+
+@pytest.fixture
+def overlap_df():
+    return pd.DataFrame({'cell_id':[1, 1, 2], 'am_id':[2, 4, 3], 'area':[10, 5, 5]})
+
+@pytest.fixture
 def overlap_matrix():
-    df = pd.DataFrame({'pixel_1':[np.nan, np.nan, np.nan], 'pixel_2':[10.0, np.nan, np.nan], 'pixel_3':[np.nan, 5.0, np.nan], 'pixel_4':[5.0, np.nan, np.nan] })
-    df.index = ['cell_1', 'cell_2', 'cell_3']
+    df = pd.DataFrame({'1':[np.nan, np.nan, np.nan], '2':[10.0, np.nan, np.nan], '3':[np.nan, 5.0, np.nan], '4':[5.0, np.nan, np.nan] })
+    df.columns = [PIXEL_PRE + i for i in df.columns]
+    df.index = [CELL_PRE + i for i in ['1', '2', '3']]
     return df
 
 @pytest.fixture
 def sampling_prop_matrix():
-    df = pd.DataFrame({'pixel_1':[np.nan, np.nan, np.nan], 'pixel_2':[1.0, np.nan, np.nan], 'pixel_3':[np.nan, 0.5, np.nan], 'pixel_4':[0.5, np.nan, np.nan] })
-    df.index = ['cell_1', 'cell_2', 'cell_3']
+    df = pd.DataFrame({'1':[np.nan, np.nan, np.nan], '2':[1.0, np.nan, np.nan], '3':[np.nan, 0.5, np.nan], '4':[0.5, np.nan, np.nan] })
+    df.columns = [PIXEL_PRE + i for i in df.columns]
+    df.index = [CELL_PRE + i for i in ['1', '2', '3']]
     return df
 
 @pytest.fixture
 def sampling_spec_matrix():
-    df = pd.DataFrame({'pixel_1':[np.nan, np.nan, np.nan], 'pixel_2':[2/3, np.nan, np.nan], 'pixel_3':[np.nan, 1.0, np.nan], 'pixel_4':[1/3, np.nan, np.nan] })
-    df.index = ['cell_1', 'cell_2', 'cell_3']
+    df = pd.DataFrame({'1':[np.nan, np.nan, np.nan], '2':[2/3, np.nan, np.nan], '3':[np.nan, 1.0, np.nan], '4':[1/3, np.nan, np.nan] })
+    df.columns = [PIXEL_PRE + i for i in df.columns]
+    df.index = [CELL_PRE + i for i in ['1', '2', '3']]
     return df
  
 @pytest.fixture
 def intensities_df():
     df = pd.DataFrame({'ion_1':[0, 10, 10, 5], 'ion_2':[10, 0, 5, 5]})
-    df.index = ['pixel_1', 'pixel_2', 'pixel_3', 'pixel_4']
+    df.index = [PIXEL_PRE + i for i in ['1', '2', '3', '4']]
     return df
 
 @pytest.fixture
 def pixels_total_overlap():
-    return pd.Series({'pixel_1': 0.0, 'pixel_2': 1.0, 'pixel_3': 0.5, 'pixel_4': 0.5})
+    ser = pd.Series({'1': 0.0, '2': 1.0, '3': 0.5, '4': 0.5})
+    ser.index = [PIXEL_PRE + i for i in ser.index]
+    return ser
 
 @pytest.fixture
 def full_pixels_avg_intensities():
@@ -51,7 +68,7 @@ def full_pixels_avg_intensities():
 
 @pytest.fixture
 def norm_intensity_prop_ratios():
-    return pd.DataFrame({'ion_1': [np.nan, 1.0, 2.0, 1.0], 'ion_2':[np.nan, np.nan, np.nan, np.nan]}, index=['pixel_1', 'pixel_2', 'pixel_3', 'pixel_4'])
+    return pd.DataFrame({'ion_1': [np.nan, 1.0, 2.0, 1.0], 'ion_2':[np.nan, np.nan, np.nan, np.nan]}, index=[PIXEL_PRE + i for i in ['1', '2', '3', '4']])
 
 
 def test_get_matrices(mark_area_minimal, cell_marks_minimal, marks_cell_overlap_minimal, overlap_matrix, sampling_prop_matrix, sampling_spec_matrix):
@@ -60,7 +77,7 @@ def test_get_matrices(mark_area_minimal, cell_marks_minimal, marks_cell_overlap_
 
     gen_overlap_matrix, gen_sampling_prop_matrix, gen_sampling_spec_matrix = get_matrices(mark_area=mark_area_minimal, marks_cell_associations=cell_marks_minimal, marks_cell_overlap=marks_cell_overlap_minimal)
     
-    if not overlap_matrix.shape == sampling_prop_matrix.shape == sampling_spec_matrix.shape == (3, 4):
+    if not gen_overlap_matrix.shape == gen_sampling_prop_matrix.shape == gen_sampling_spec_matrix.shape == (3, 4):
         problems.append('generated matrices have different sizes')
     
     if len(overlap_matrix.compare(gen_overlap_matrix)) >  0:
@@ -73,6 +90,25 @@ def test_get_matrices(mark_area_minimal, cell_marks_minimal, marks_cell_overlap_
         problems.append('problem with calculation of sampling_spec_matrix \n' + str(sampling_spec_matrix.compare(gen_sampling_spec_matrix)))
 
     assert not problems, "errors occured:\n{}".format("\n".join(problems))
+
+
+def test_get_matrices_from_dfs(mark_area_df, cell_area_df, overlap_df, sampling_prop_matrix, sampling_spec_matrix):
+    
+    problems = []
+
+    gen_overlap_matrix, gen_sampling_spec_matrix = get_matrices_from_dfs(mark_area=mark_area_df, cell_area=cell_area_df, marks_cell_overlap=overlap_df)
+    
+    if not gen_overlap_matrix.shape == gen_sampling_spec_matrix.shape == (3, 4):
+        problems.append('generated matrices have different sizes')
+    
+    if len(sampling_prop_matrix.compare(gen_overlap_matrix)) > 0:
+        problems.append('problem with calculation of sampling_prop_matrix \n' + str(sampling_prop_matrix.compare(gen_overlap_matrix)))
+
+    if len(sampling_spec_matrix.compare(gen_sampling_spec_matrix)) > 0:
+        problems.append('problem with calculation of sampling_spec_matrix \n' + str(sampling_spec_matrix.compare(gen_sampling_spec_matrix)))
+
+    assert not problems, "errors occured:\n{}".format("\n".join(problems))
+
 
 
 def test_get_molecule_normalization_factors(intensities_df, sampling_prop_matrix, pixels_total_overlap, full_pixels_avg_intensities):
