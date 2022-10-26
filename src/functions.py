@@ -6,10 +6,12 @@ Functions:
 Author: Marius Klein (mklein@duck.com), October 2022
 """
 from typing import Dict, Tuple, Callable
+from joblib import Parallel, delayed
 import pandas as pd
 import numpy as np
 import statsmodels.formula.api as smf
 from patsy.builtins import Q
+from tqdm import tqdm
 
 
 # CONSTANTS
@@ -267,6 +269,91 @@ def correct_intensities_quantile_regression(
         predictions[ion] = intensities_df[ion] / reg_correction
         correction_factors[ion] = reg_correction
         
+    # print(pd.concat([ion_intensities['C16H30O2'], sampling_proportion_series, log_ratio_df['C16H30O2'], correction_factors['C16H30O2'], predictions['C16H30O2']], axis=1))
+    print('insufficient metabolites: ')
+    print(insufficient_metabolites_list)
+    #return((correction_factors, pd.Series(params), predictions))
+    return predictions
+
+
+def correct_intensities_quantile_regression_parallel(
+    intensities_df: pd.DataFrame,
+    pixels_total_overlap: pd.Series,
+    full_pixels_avg_intensities: pd.Series,
+    reference_ions: list,
+    proportion_threshold = 0.1,
+    n_jobs = 1
+    ) -> pd.DataFrame:
+    """Corrects ion intensities based on cell sampling proportion of respective pixels
+
+    Args:
+        intensities_df (pd.DataFrame): Ion intensity DataFrame with molecules in columns and
+        pixels in rows
+        pixels_total_overlap (pd.Series): [description]
+        full_pixels_avg_intensities (pd.Series): [description]
+        proportion_threshold (float, optional): [description]. Defaults to 0.1.
+
+    Returns:
+        pd.DataFrame: [description]
+    """
+    min_datapoints = 10
+
+    # get Series name of pixel sampling proportions for model formula
+    reference = pixels_total_overlap.name
+
+    if len(intensities_df) != len(pixels_total_overlap):
+        print('Quantreg: Inconsistent sizes of arguments')
+
+    # calculate intensity / sampling proportion ratios
+    prop_ratio_df = normalize_proportion_ratios(intensities_df=intensities_df,
+        pixels_total_overlap=pixels_total_overlap,
+        full_pixels_avg_intensities=full_pixels_avg_intensities)
+
+    # take log of both variables: intensity / sampling proportion ratios and sampling proportions
+    log_prop_series = np.log10(pixels_total_overlap)
+    log_ratio_df = np.log10(prop_ratio_df.replace(np.nan, 0).infer_objects())
+    log_ratio_df = log_ratio_df.replace([np.inf, - np.inf], np.nan)
+
+    reference_df = pd.concat([log_ratio_df[reference_ions], log_prop_series], axis=1) \
+        .melt(id_vars=(reference))[['value', reference]]
+    
+    reference_df = reference_df[reference_df[reference] > np.log10(proportion_threshold)].dropna()
+
+    if len(reference_df) < min_datapoints:
+        raise RuntimeError("The supplied reference pool has only %1d valid data points and is therefore unsuitable. Please specify a suitable reference pool."%len(reference_df))
+
+    ref_model = smf.quantreg('Q("value") ~ ' + reference, reference_df)
+    ref_qrmodel = ref_model.fit(q=0.5)
+
+    insufficient_metabolites_list = []
+    
+    def quantile_ion(ion):
+        # for every molecule, create custom df with two regression variables
+        ion_df = pd.concat([log_ratio_df[ion], log_prop_series], axis=1)
+        # filter data for model fitting: only include pixels with given sampling proportion
+        # threshold and remove NAs (caused by zero intensities)
+        df_for_model = ion_df[ion_df[reference] > np.log10(proportion_threshold)].dropna()
+
+        # check if enough data remains after filtering
+        if len(df_for_model) < 10:
+            #print('%s has only %1d, thus not enough datapoints. using reference pool instead'%(ion, len(df_for_model)))
+            qrmodel=ref_qrmodel
+            insufficient_metabolites_list.append(ion)
+
+        else:
+            # calculate quantile regression
+            model = smf.quantreg('Q("' + ion + '") ~ ' + reference, df_for_model)
+            qrmodel = model.fit(q=0.5)
+
+        # regress out dependency on sampling proportion
+        reg_correction = 10 ** qrmodel.predict(ion_df)
+        return intensities_df[ion] / reg_correction
+        
+
+    # iterate over molecules
+
+    predictions_list = Parallel(n_jobs=n_jobs)(delayed(quantile_ion)(ion) for ion in tqdm(log_ratio_df.columns))
+    predictions = pd.DataFrame(predictions_list, index=intensities_df.columns, columns=intensities_df.index).T
     # print(pd.concat([ion_intensities['C16H30O2'], sampling_proportion_series, log_ratio_df['C16H30O2'], correction_factors['C16H30O2'], predictions['C16H30O2']], axis=1))
     print('insufficient metabolites: ')
     print(insufficient_metabolites_list)
