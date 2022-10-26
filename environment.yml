@@ -9,4 +9,10 @@ dependencies:
   - pytest
   - python=3.7
   - ipywidgets
+  - leidenalg
+  - plotly
+  - pylint
+  - pytest-pylint
+  - patsy
+  - matplotlib-venn
 prefix: /Users/mariusklein/opt/anaconda3/envs/ion_suppression
