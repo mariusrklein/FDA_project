@@ -276,8 +276,8 @@ def correct_intensities_quantile_regression(
         correction_factors[ion] = reg_correction
         
     # print(pd.concat([ion_intensities['C16H30O2'], sampling_proportion_series, log_ratio_df['C16H30O2'], correction_factors['C16H30O2'], predictions['C16H30O2']], axis=1))
-    print('insufficient metabolites: ')
-    print(insufficient_metabolites_list)
+    print('insufficient metabolites: %1d'%len(insufficient_metabolites_list))
+    #print(insufficient_metabolites_list)
     #return((correction_factors, pd.Series(params), predictions))
     return predictions
 
@@ -361,8 +361,8 @@ def correct_intensities_quantile_regression_parallel(
     predictions_list = Parallel(n_jobs=n_jobs)(delayed(quantile_ion)(ion) for ion in tqdm(log_ratio_df.columns))
     predictions = pd.DataFrame(predictions_list, index=intensities_df.columns, columns=intensities_df.index).T
     # print(pd.concat([ion_intensities['C16H30O2'], sampling_proportion_series, log_ratio_df['C16H30O2'], correction_factors['C16H30O2'], predictions['C16H30O2']], axis=1))
-    print('insufficient metabolites: ')
-    print(insufficient_metabolites_list)
+    print('insufficient metabolites: %1d'%len(insufficient_metabolites_list))
+    #print(insufficient_metabolites_list)
     #return((correction_factors, pd.Series(params), predictions))
     return predictions
 
