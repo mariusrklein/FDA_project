@@ -30,18 +30,18 @@ def get_matrices(
     mark_area: Dict[str, list],
     marks_cell_associations: Dict[str, list],
     marks_cell_overlap: Dict[str, int]
-    ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
 
-    """calculates overlap_matrix, sampling_prop_matrix and sampling_spec_matrix
+    """calculates overlap_matrix and sampling_spec_matrix
     for given positional pixel/cell data
 
     Args:
-        mark_area (Dict[str, list]): [description]
+        mark_area (Dict[str, list]): 
         marks_cell_associations (Dict[str, list]): [description]
         marks_cell_overlap (Dict[str, int]): [description]
 
     Returns:
-        Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]: [description]
+        Tuple[pd.DataFrame, pd.DataFrame]: [description]
     """
 
     # prototype pixel x cell matrix for abs. area overlap of all possible pixel-cell combinations
@@ -72,7 +72,7 @@ def get_matrices(
     total_cell_coverage = overlap_matrix.sum(axis=1).replace(to_replace=0, value=1)
     sampling_spec_matrix = overlap_matrix.divide(total_cell_coverage, axis=0)
 
-    return(overlap_matrix, sampling_prop_matrix, sampling_spec_matrix)
+    return(sampling_prop_matrix, sampling_spec_matrix)
 
 
 
@@ -80,17 +80,20 @@ def get_matrices_from_dfs(
     mark_area: pd.DataFrame,
     cell_area: pd.DataFrame,
     marks_cell_overlap: pd.DataFrame
-    ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """calculates overlap_matrix, sampling_prop_matrix and sampling_spec_matrix
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """calculates overlap_matrix and sampling_spec_matrix
     for given positional pixel/cell data
 
     Args:
-        mark_area (pd.DataFrame): [description]
-        marks_cell_associations (pd.DataFrame): [description]
-        marks_cell_overlap (pd.DataFrame): [description]
+        mark_area (pd.DataFrame): Data frame of all ablation marks. Has identifier column `am_id` 
+        cell_area (pd.DataFrame): Data frame of all captured cells. Has identifier column `cell_id`
+        marks_cell_overlap (pd.DataFrame): Data frame of all overlaps between ablation marks and
+        cells. Has identifier columns `cell_id` and `am_id` and an `area` column that contains the
+        area of a corresponding overlap.
 
     Returns:
-        Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]: [description]
+        Tuple[pd.DataFrame, pd.DataFrame]: Returns two dataframes, the normalized overlap matrix and
+        the sampling-specificity matrix.
     """
 
     # prototype pixel x cell matrix for abs. area overlap of all possible pixel-cell combinations
@@ -123,7 +126,22 @@ def get_matrices_from_dfs(
 
     return(sampling_prop_matrix, sampling_spec_matrix)
 
+def add_matrices(adata: ad.AnnData, 
+    overlap_matrix: pd.DataFrame, 
+    sampling_spec_matrix: pd.DataFrame
+    ) -> None:
+    """attaches pixel-cell matrices to an AnnData object for downstream calculations. The referenced
+    AnnData object is manipulated inplace.
 
+    Args:
+        adata (ad.AnnData): pixel-based AnnData object
+        overlap_matrix (pd.DataFrame): A normalised overlap-matrix with cells in rows and pixels in columns
+        sampling_spec_matrix (pd.DataFrame): Analoous to overlap-matrix: a Sampling specificity matrix.
+    """
+
+    adata.obsm['correction_overlap_matrix'] = overlap_matrix.T
+    adata.obsm['correction_sampling_spec_matrix'] = sampling_spec_matrix.T
+    return
 
 def get_molecule_normalization_factors(
     intensities_df: pd.DataFrame,
@@ -156,6 +174,23 @@ def get_molecule_normalization_factors(
 
     # return both series
     return (pixels_total_overlap, full_pixels_avg_intensities)
+
+def add_normalization_factors(adata: ad.AnnData,
+    method: Callable[..., float]) -> None:
+    """Calculates two sets of normalization factors and attaches them to the given AnnData object.
+    The object is being manipulated inplace.
+
+    Args:
+        adata (ad.AnnData): Pixel-based AnnData object
+        method (Callable[..., float]): method to use for calculation of full_pixel_avg_intensities
+    """
+
+    overlap, full_pix = get_molecule_normalization_factors(intensities_df=adata.to_df(), 
+        overlap_matrix = adata.obsm['correction_overlap_matrix'].T,
+        method = method)
+    adata.var['correction_full_pixel_avg_intensities'] = full_pix
+    adata.obs['correction_total_pixel_overlap'] = overlap
+    return
 
 
 def normalize_proportion_ratios(
@@ -207,7 +242,7 @@ def correct_intensities_quantile_regression(
         pixels in rows
         pixels_total_overlap (pd.Series): [description]
         full_pixels_avg_intensities (pd.Series): [description]
-        proportion_threshold (float, optional): [description]. Defaults to 0.1.
+        proportion_threshold (float, optional): Defaults to 0.1.
 
     Returns:
         pd.DataFrame: [description]
@@ -236,7 +271,8 @@ def correct_intensities_quantile_regression(
     reference_df = reference_df[reference_df[reference] > np.log10(proportion_threshold)].dropna()
 
     if len(reference_df) < min_datapoints:
-        raise RuntimeError("The supplied reference pool has only %1d valid data points and is therefore unsuitable. Please specify a suitable reference pool."%len(reference_df))
+        raise RuntimeError("The supplied reference pool has only %1d valid data points and is "
+        + "therefore unsuitable. Please specify a suitable reference pool."%len(reference_df))
 
     ref_model = smf.quantreg('Q("value") ~ ' + reference, reference_df)
     ref_qrmodel = ref_model.fit(q=0.5)
@@ -288,7 +324,7 @@ def correct_intensities_quantile_regression_parallel(
     proportion_threshold = 0.1,
     min_datapoints = 10,
     n_jobs = 1
-    ) -> pd.DataFrame:
+    ) -> ad.AnnData:
     """Corrects ion intensities based on cell sampling proportion of respective pixels
 
     Args:
@@ -299,7 +335,7 @@ def correct_intensities_quantile_regression_parallel(
         proportion_threshold (float, optional): [description]. Defaults to 0.1.
 
     Returns:
-        pd.DataFrame: [description]
+        ad.AnnData: [description]
     """
     
     # get Series name of pixel sampling proportions for model formula
@@ -327,7 +363,8 @@ def correct_intensities_quantile_regression_parallel(
     reference_df = reference_df[reference_df[reference] > np.log10(proportion_threshold)].dropna()
 
     if len(reference_df) < min_datapoints:
-        raise RuntimeError("The supplied reference pool has only %1d valid data points and is therefore unsuitable. Please specify a suitable reference pool."%len(reference_df))
+        raise RuntimeError("The supplied reference pool has only %1d valid data points and is "
+        + "therefore unsuitable. Please specify a suitable reference pool."%len(reference_df))
 
     ref_model = smf.quantreg('Q("value") ~ ' + reference, reference_df)
     ref_qrmodel = ref_model.fit(q=0.5)
@@ -362,10 +399,10 @@ def correct_intensities_quantile_regression_parallel(
         pred = ion_df['raw_corrected']
         pred.name = ion
         return (pred, len(df_for_model), qrmodel.iterations)
-        
 
     # iterate over molecules
-    predictions_tuples = Parallel(n_jobs=n_jobs)(delayed(quantile_ion)(ion) for ion in log_ratio_df.columns)
+    predictions_tuples = Parallel(n_jobs=n_jobs)(
+        delayed(quantile_ion)(ion) for ion in log_ratio_df.columns)
     predictions_dict = {i[0].name: i[0] for i in predictions_tuples}
     datapoints_list = [i[1] for i in predictions_tuples]
     iterations_list = [i[2] for i in predictions_tuples]
@@ -382,14 +419,31 @@ def correct_intensities_quantile_regression_parallel(
     #return((correction_factors, pd.Series(params), predictions))
     return predictions_ad
 
+def correct_quantile_inplace(adata: ad.AnnData,
+    reference_ions: list,
+    proportion_threshold = 0.1,
+    min_datapoints = 10,
+    n_jobs = 1
+) -> ad.AnnData:
+
+    an = correct_intensities_quantile_regression_parallel(intensities_ad = adata, 
+        pixels_total_overlap = adata.obs['correction_total_pixel_overlap'],
+        full_pixels_avg_intensities = adata.var['correction_full_pixel_avg_intensities'],
+        reference_ions = reference_ions,
+        proportion_threshold = proportion_threshold,
+        min_datapoints = min_datapoints,
+        n_jobs = n_jobs
+        )
+
+    return an
 
 
 def cell_normalization_Rappez_adata(sampling_prop_matrix: pd.DataFrame,
-                                    sampling_spec_matrix: pd.DataFrame,
-                                    adata: ad.AnnData,
-                                    raw_adata: ad.AnnData,
-                                    sampling_prop_threshold = 0.3,
-                                    sampling_spec_threshold = 0
+    sampling_spec_matrix: pd.DataFrame,
+    adata: ad.AnnData,
+    raw_adata: ad.AnnData,
+    sampling_prop_threshold = 0.3,
+    sampling_spec_threshold = 0
 ) -> ad.AnnData:
     
     # filter out pixels with little overlap with any cell (thus sum of all overlaps)
@@ -413,10 +467,34 @@ def cell_normalization_Rappez_adata(sampling_prop_matrix: pd.DataFrame,
     norm_ion_intensities.X = cor_df.multiply(1/sampling_spec_matrix_filtered.sum(axis=1), axis=0).astype(np.float32)
     norm_ion_intensities.obs.index = norm_ion_intensities.obs.cell_id.map(lambda x: x.replace(CELL_PRE, ""))
 
+    norm_ion_intensities = norm_ion_intensities[:, raw_adata.var_names]
     norm_ion_intensities = norm_ion_intensities[raw_adata.obs_names]
     norm_ion_intensities.obs = raw_adata.obs
     
     return norm_ion_intensities
+
+
+def deconvolution_rappez(adata: ad.AnnData,
+    raw_adata: ad.AnnData = None,
+    sampling_prop_threshold = 0.3,
+    sampling_spec_threshold = 0
+) -> ad.AnnData:
+
+    if raw_adata is None:
+        raw_adata = ad.AnnData(var=adata.var, 
+            obs=pd.DataFrame({'cell_id':adata.obsm['correction_overlap_matrix'].columns}, 
+                index=adata.obsm['correction_overlap_matrix'].columns))
+
+    deconv_adata = cell_normalization_Rappez_adata(
+        sampling_prop_matrix = adata.obsm['correction_overlap_matrix'].T,
+        sampling_spec_matrix = adata.obsm['correction_sampling_spec_matrix'].T,
+        adata = adata,
+        raw_adata = raw_adata,
+        sampling_prop_threshold = sampling_prop_threshold,
+        sampling_spec_threshold = sampling_spec_threshold
+    )
+
+    return deconv_adata
 
 
 ## ------------------------ ##
