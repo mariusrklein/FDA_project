@@ -146,15 +146,13 @@ def get_molecule_normalization_factors(
     """
     # sum up all cellular overlaps of each pixel
     pixels_total_overlap = overlap_matrix.sum(axis=0).infer_objects()
-
+    pixels_total_overlap.name = "total_pixel_area"
+    
     # get all pixels whose cellular overlaps sum up to the total pixel area (1)
     full_pixels = pixels_total_overlap[pixels_total_overlap == 1].index
-
-    pixels_total_overlap.name = "total_pixel_area"
-    full_pixels.name = "full_pixel_factors_" + method.__name__
-
-    # iterate over all metabolites and take average (or other measure) of intensities in full pixels
+        # iterate over all metabolites and take average (or other measure) of intensities in full pixels
     full_pixels_avg_intensities = intensities_df.apply(lambda x: method(x[full_pixels]))
+    full_pixels_avg_intensities.name = "full_pixel_factors_" + method.__name__
 
     # return both series
     return (pixels_total_overlap, full_pixels_avg_intensities)
@@ -283,17 +281,18 @@ def correct_intensities_quantile_regression(
 
 
 def correct_intensities_quantile_regression_parallel(
-    intensities_df: pd.DataFrame,
+    intensities_ad: ad.AnnData,
     pixels_total_overlap: pd.Series,
     full_pixels_avg_intensities: pd.Series,
     reference_ions: list,
     proportion_threshold = 0.1,
+    min_datapoints = 10,
     n_jobs = 1
     ) -> pd.DataFrame:
     """Corrects ion intensities based on cell sampling proportion of respective pixels
 
     Args:
-        intensities_df (pd.DataFrame): Ion intensity DataFrame with molecules in columns and
+        intensities_ad (ad.AnnData): Ion intensity DataFrame with molecules in columns and
         pixels in rows
         pixels_total_overlap (pd.Series): [description]
         full_pixels_avg_intensities (pd.Series): [description]
@@ -302,23 +301,25 @@ def correct_intensities_quantile_regression_parallel(
     Returns:
         pd.DataFrame: [description]
     """
-    min_datapoints = 10
-
+    
     # get Series name of pixel sampling proportions for model formula
     reference = pixels_total_overlap.name
 
-    if len(intensities_df) != len(pixels_total_overlap):
+    if len(intensities_ad) != len(pixels_total_overlap):
         print('Quantreg: Inconsistent sizes of arguments')
 
     # calculate intensity / sampling proportion ratios
-    prop_ratio_df = normalize_proportion_ratios(intensities_df=intensities_df,
+    prop_ratio_df = normalize_proportion_ratios(intensities_df=intensities_ad.to_df(),
         pixels_total_overlap=pixels_total_overlap,
         full_pixels_avg_intensities=full_pixels_avg_intensities)
 
     # take log of both variables: intensity / sampling proportion ratios and sampling proportions
-    log_prop_series = np.log10(pixels_total_overlap)
-    log_ratio_df = np.log10(prop_ratio_df.replace(np.nan, 0).infer_objects())
-    log_ratio_df = log_ratio_df.replace([np.inf, - np.inf], np.nan)
+    log_prop_series = np.log10(pixels_total_overlap.replace(0, np.nan))
+    log_ratio_df = np.log10(prop_ratio_df.replace(0, np.nan))
+    
+    # log_prop_series = np.log10(pixels_total_overlap)
+    # log_ratio_df = np.log10(prop_ratio_df.replace(np.nan, 0).infer_objects())
+    # log_ratio_df = log_ratio_df.replace([np.inf, - np.inf], np.nan)
 
     reference_df = pd.concat([log_ratio_df[reference_ions], log_prop_series], axis=1) \
         .melt(id_vars=(reference))[['value', reference]]
@@ -331,8 +332,6 @@ def correct_intensities_quantile_regression_parallel(
     ref_model = smf.quantreg('Q("value") ~ ' + reference, reference_df)
     ref_qrmodel = ref_model.fit(q=0.5)
 
-    insufficient_metabolites_list = []
-    
     def quantile_ion(ion):
         # for every molecule, create custom df with two regression variables
         ion_df = pd.concat([log_ratio_df[ion], log_prop_series], axis=1)
@@ -341,10 +340,9 @@ def correct_intensities_quantile_regression_parallel(
         df_for_model = ion_df[ion_df[reference] > np.log10(proportion_threshold)].dropna()
 
         # check if enough data remains after filtering
-        if len(df_for_model) < 10:
+        if len(df_for_model) < min_datapoints:
             #print('%s has only %1d, thus not enough datapoints. using reference pool instead'%(ion, len(df_for_model)))
             qrmodel=ref_qrmodel
-            insufficient_metabolites_list.append(ion)
 
         else:
             # calculate quantile regression
@@ -353,19 +351,72 @@ def correct_intensities_quantile_regression_parallel(
 
         # regress out dependency on sampling proportion
         reg_correction = 10 ** qrmodel.predict(ion_df)
-        return intensities_df[ion] / reg_correction
+        
+        raw = intensities_ad.to_df()[ion]
+        raw.name = "raw"
+        ion_df = ion_df.join(raw)
+        ion_df['raw_corrected'] = ion_df['raw'] / reg_correction
+        ion_df['corrected'] = ion_df[ion] / reg_correction
+        ion_df[reference] = pixels_total_overlap
+        
+        pred = ion_df['raw_corrected']
+        pred.name = ion
+        return (pred, len(df_for_model), qrmodel.iterations)
         
 
     # iterate over molecules
+    predictions_tuples = Parallel(n_jobs=n_jobs)(delayed(quantile_ion)(ion) for ion in log_ratio_df.columns)
+    predictions_dict = {i[0].name: i[0] for i in predictions_tuples}
+    datapoints_list = [i[1] for i in predictions_tuples]
+    iterations_list = [i[2] for i in predictions_tuples]
+    predictions_ad = intensities_ad.copy()
 
-    predictions_list = Parallel(n_jobs=n_jobs)(delayed(quantile_ion)(ion) for ion in tqdm(log_ratio_df.columns))
-    predictions = pd.DataFrame(predictions_list, index=intensities_df.columns, columns=intensities_df.index).T
+    predictions_ad.X = pd.DataFrame(predictions_dict).replace(np.nan, 0)
+    predictions_ad.var['correction_n_datapoints'] = datapoints_list
+    predictions_ad.var['correction_using_ion_pool'] = [datapoint < min_datapoints for datapoint in datapoints_list]
+    predictions_ad.var['correction_n_iterations'] = iterations_list
+    predictions_ad.obs['total_pixel_overlap'] = pixels_total_overlap
+    
     # print(pd.concat([ion_intensities['C16H30O2'], sampling_proportion_series, log_ratio_df['C16H30O2'], correction_factors['C16H30O2'], predictions['C16H30O2']], axis=1))
-    print('insufficient metabolites: %1d'%len(insufficient_metabolites_list))
     #print(insufficient_metabolites_list)
     #return((correction_factors, pd.Series(params), predictions))
-    return predictions
+    return predictions_ad
 
+
+
+def cell_normalization_Rappez_adata(sampling_prop_matrix: pd.DataFrame,
+                                    sampling_spec_matrix: pd.DataFrame,
+                                    adata: ad.AnnData,
+                                    raw_adata: ad.AnnData,
+                                    sampling_prop_threshold = 0.3,
+                                    sampling_spec_threshold = 0
+) -> ad.AnnData:
+    
+    # filter out pixels with little overlap with any cell (thus sum of all overlaps)
+    pixel_sampling_prop_keep = sampling_prop_matrix.sum(axis = 0) > sampling_prop_threshold
+    # filter out pixels with low contributions to a cell
+    pixel_sampling_spec_keep = sampling_spec_matrix > sampling_spec_threshold
+
+    sampling_prop_matrix_filtered = sampling_prop_matrix.sum(axis = 0) * pixel_sampling_prop_keep
+    sampling_spec_matrix_filtered = sampling_spec_matrix * pixel_sampling_spec_keep
+
+    sum_prop_matrix = sampling_prop_matrix_filtered.replace(to_replace=0, value=np.nan)
+
+    # create dataframe for results
+    norm_ion_intensities = ad.AnnData(obs=pd.DataFrame({'cell_id': sampling_prop_matrix.index}, 
+                                                       index=sampling_prop_matrix.index), 
+                                      var=adata.var)
+
+    norm_spots = adata.to_df().multiply(1/sum_prop_matrix, axis=0)
+    
+    cor_df = sampling_spec_matrix_filtered.replace(np.nan, 0).dot(norm_spots)
+    norm_ion_intensities.X = cor_df.multiply(1/sampling_spec_matrix_filtered.sum(axis=1), axis=0).astype(np.float32)
+    norm_ion_intensities.obs.index = norm_ion_intensities.obs.cell_id.map(lambda x: x.replace(CELL_PRE, ""))
+
+    norm_ion_intensities = norm_ion_intensities[raw_adata.obs_names]
+    norm_ion_intensities.obs = raw_adata.obs
+    
+    return norm_ion_intensities
 
 
 ## ------------------------ ##
