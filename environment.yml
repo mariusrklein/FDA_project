@@ -7,7 +7,7 @@ dependencies:
   - ipykernel
   - scanpy
   - pytest
-  - python=3.7
+  - python=3.10
   - ipywidgets
   - leidenalg
   - plotly
