@@ -15,4 +15,6 @@ dependencies:
   - pytest-pylint
   - patsy
   - matplotlib-venn
+  - bbknn
+  - papermill
 prefix: /Users/mariusklein/opt/anaconda3/envs/ion_suppression
