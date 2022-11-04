@@ -33,6 +33,7 @@ def overlap_matrix():
     df = pd.DataFrame({'1':[np.nan, np.nan, np.nan], '2':[10.0, np.nan, np.nan], '3':[np.nan, 5.0, np.nan], '4':[5.0, np.nan, np.nan] })
     df.columns = [PIXEL_PRE + i for i in df.columns]
     df.index = [CELL_PRE + i for i in ['1', '2', '3']]
+    df = df.replace(np.nan, 0)
     return df
 
 @pytest.fixture
@@ -40,6 +41,7 @@ def sampling_prop_matrix():
     df = pd.DataFrame({'1':[np.nan, np.nan, np.nan], '2':[1.0, np.nan, np.nan], '3':[np.nan, 0.5, np.nan], '4':[0.5, np.nan, np.nan] })
     df.columns = [PIXEL_PRE + i for i in df.columns]
     df.index = [CELL_PRE + i for i in ['1', '2', '3']]
+    df = df.replace(np.nan, 0)
     return df
 
 @pytest.fixture
@@ -47,6 +49,7 @@ def sampling_spec_matrix():
     df = pd.DataFrame({'1':[np.nan, np.nan, np.nan], '2':[2/3, np.nan, np.nan], '3':[np.nan, 1.0, np.nan], '4':[1/3, np.nan, np.nan] })
     df.columns = [PIXEL_PRE + i for i in df.columns]
     df.index = [CELL_PRE + i for i in ['1', '2', '3']]
+    df = df.replace(np.nan, 0)
     return df
  
 @pytest.fixture
@@ -71,20 +74,17 @@ def norm_intensity_prop_ratios():
     return pd.DataFrame({'ion_1': [np.nan, 1.0, 2.0, 1.0], 'ion_2':[np.nan, np.nan, np.nan, np.nan]}, index=[PIXEL_PRE + i for i in ['1', '2', '3', '4']])
 
 
-def test_get_matrices(mark_area_minimal, cell_marks_minimal, marks_cell_overlap_minimal, overlap_matrix, sampling_prop_matrix, sampling_spec_matrix):
+def test_get_matrices(mark_area_minimal, cell_marks_minimal, marks_cell_overlap_minimal, sampling_prop_matrix, sampling_spec_matrix):
     
     problems = []
 
-    gen_overlap_matrix, gen_sampling_prop_matrix, gen_sampling_spec_matrix = get_matrices(mark_area=mark_area_minimal, marks_cell_associations=cell_marks_minimal, marks_cell_overlap=marks_cell_overlap_minimal)
+    gen_overlap_matrix, gen_sampling_spec_matrix = get_matrices(mark_area=mark_area_minimal, marks_cell_associations=cell_marks_minimal, marks_cell_overlap=marks_cell_overlap_minimal)
     
-    if not gen_overlap_matrix.shape == gen_sampling_prop_matrix.shape == gen_sampling_spec_matrix.shape == (3, 4):
+    if not gen_overlap_matrix.shape == gen_sampling_spec_matrix.shape == (3, 4):
         problems.append('generated matrices have different sizes')
-    
-    if len(overlap_matrix.compare(gen_overlap_matrix)) >  0:
-        problems.append('problem with calculation of overlap matrix \n' + str(overlap_matrix.compare(gen_overlap_matrix)))
 
-    if len(sampling_prop_matrix.compare(gen_sampling_prop_matrix)) > 0:
-        problems.append('problem with calculation of sampling_prop_matrix \n' + str(sampling_prop_matrix.compare(gen_sampling_prop_matrix)))
+    if len(sampling_prop_matrix.compare(gen_overlap_matrix)) > 0:
+        problems.append('problem with calculation of sampling_prop_matrix \n' + str(sampling_prop_matrix.compare(gen_overlap_matrix)))
 
     if len(sampling_spec_matrix.compare(gen_sampling_spec_matrix)) > 0:
         problems.append('problem with calculation of sampling_spec_matrix \n' + str(sampling_spec_matrix.compare(gen_sampling_spec_matrix)))

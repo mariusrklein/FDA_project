@@ -67,10 +67,10 @@ def get_matrices(
             overlap_matrix.loc[CELL_PRE + cell_i, PIXEL_PRE + pixel_loc] = overlap_area
 
     total_pixel_size = dict(zip(overlap_matrix.columns, mark_area.values()))
-    sampling_prop_matrix = overlap_matrix.divide(total_pixel_size, axis=1)
+    sampling_prop_matrix = overlap_matrix.divide(total_pixel_size, axis=1).replace(np.nan, 0)
 
     total_cell_coverage = overlap_matrix.sum(axis=1).replace(to_replace=0, value=1)
-    sampling_spec_matrix = overlap_matrix.divide(total_cell_coverage, axis=0)
+    sampling_spec_matrix = overlap_matrix.divide(total_cell_coverage, axis=0).replace(np.nan, 0)
 
     return(sampling_prop_matrix, sampling_spec_matrix)
 
@@ -116,13 +116,13 @@ def get_matrices_from_dfs(
             # location in matrix
             overlap_matrix.loc[CELL_PRE + str(int(cell_i)), PIXEL_PRE + str(int(pixel_row['am_id']))] = pixel_row['area']
 
-    total_pixel_size = pd.Series(mark_area.area)
+    total_pixel_size = pd.Series(mark_area.area).replace(0, np.nan)
     total_pixel_size.index = overlap_matrix.columns
 
-    sampling_prop_matrix = overlap_matrix.divide(total_pixel_size, axis=1)
+    sampling_prop_matrix = overlap_matrix.divide(total_pixel_size, axis=1).replace(np.nan, 0)
 
     total_cell_coverage = overlap_matrix.sum(axis=1).replace(to_replace=0, value=1)
-    sampling_spec_matrix = overlap_matrix.divide(total_cell_coverage, axis=0)
+    sampling_spec_matrix = overlap_matrix.divide(total_cell_coverage, axis=0).replace(np.nan, 0)
 
     return(sampling_prop_matrix, sampling_spec_matrix)
 
@@ -139,8 +139,9 @@ def add_matrices(adata: ad.AnnData,
         sampling_spec_matrix (pd.DataFrame): Analoous to overlap-matrix: a Sampling specificity matrix.
     """
 
-    adata.obsm['correction_overlap_matrix'] = overlap_matrix.T
-    adata.obsm['correction_sampling_spec_matrix'] = sampling_spec_matrix.T
+    adata.obsm['correction_overlap_matrix'] = overlap_matrix.T.to_numpy()
+    adata.obsm['correction_sampling_spec_matrix'] = sampling_spec_matrix.T.to_numpy()
+    adata.uns['correction_cell_list'] = list(overlap_matrix.index)
     return
 
 def get_molecule_normalization_factors(
@@ -163,14 +164,12 @@ def get_molecule_normalization_factors(
         Tuple[pd.Series, pd.Series]: pixels_total_overlap and full_pixels_avg_intensities
     """
     # sum up all cellular overlaps of each pixel
-    pixels_total_overlap = overlap_matrix.sum(axis=0).infer_objects()
-    pixels_total_overlap.name = "total_pixel_area"
+    pixels_total_overlap = overlap_matrix.sum(axis=0)
     
     # get all pixels whose cellular overlaps sum up to the total pixel area (1)
-    full_pixels = pixels_total_overlap[pixels_total_overlap == 1].index
+    full_pixels = pd.Series(pixels_total_overlap[pixels_total_overlap == 1]).index
         # iterate over all metabolites and take average (or other measure) of intensities in full pixels
     full_pixels_avg_intensities = intensities_df.apply(lambda x: method(x[full_pixels]))
-    full_pixels_avg_intensities.name = "full_pixel_factors_" + method.__name__
 
     # return both series
     return (pixels_total_overlap, full_pixels_avg_intensities)
@@ -185,11 +184,11 @@ def add_normalization_factors(adata: ad.AnnData,
         method (Callable[..., float]): method to use for calculation of full_pixel_avg_intensities
     """
 
-    overlap, full_pix = get_molecule_normalization_factors(intensities_df=adata.to_df(), 
+    overlap, full_pix = get_molecule_normalization_factors(intensities_df=adata.to_df(),
         overlap_matrix = adata.obsm['correction_overlap_matrix'].T,
         method = method)
-    adata.var['correction_full_pixel_avg_intensities'] = full_pix
     adata.obs['correction_total_pixel_overlap'] = overlap
+    adata.var['correction_full_pixel_avg_intensities'] = full_pix
     return
 
 
@@ -339,6 +338,7 @@ def correct_intensities_quantile_regression_parallel(
     """
     
     # get Series name of pixel sampling proportions for model formula
+    pixels_total_overlap = pd.Series(pixels_total_overlap, name='pixels_total_overlap')
     reference = pixels_total_overlap.name
 
     if len(intensities_ad) != len(pixels_total_overlap):
@@ -398,7 +398,7 @@ def correct_intensities_quantile_regression_parallel(
         
         pred = ion_df['raw_corrected']
         pred.name = ion
-        return (pred, len(df_for_model), qrmodel.iterations)
+        return (pred, len(df_for_model), qrmodel.iterations, qrmodel.params)
 
     # iterate over molecules
     predictions_tuples = Parallel(n_jobs=n_jobs)(
@@ -406,12 +406,14 @@ def correct_intensities_quantile_regression_parallel(
     predictions_dict = {i[0].name: i[0] for i in predictions_tuples}
     datapoints_list = [i[1] for i in predictions_tuples]
     iterations_list = [i[2] for i in predictions_tuples]
+    slope_list = [i[3][1] for i in predictions_tuples]
     predictions_ad = intensities_ad.copy()
 
     predictions_ad.X = pd.DataFrame(predictions_dict).replace(np.nan, 0)
     predictions_ad.var['correction_n_datapoints'] = datapoints_list
     predictions_ad.var['correction_using_ion_pool'] = [datapoint < min_datapoints for datapoint in datapoints_list]
     predictions_ad.var['correction_n_iterations'] = iterations_list
+    predictions_ad.var['correction_quantreg_slope'] = slope_list
     predictions_ad.obs['total_pixel_overlap'] = pixels_total_overlap
     
     # print(pd.concat([ion_intensities['C16H30O2'], sampling_proportion_series, log_ratio_df['C16H30O2'], correction_factors['C16H30O2'], predictions['C16H30O2']], axis=1))
@@ -453,18 +455,24 @@ def cell_normalization_Rappez_adata(sampling_prop_matrix: pd.DataFrame,
 
     sampling_prop_matrix_filtered = sampling_prop_matrix.sum(axis = 0) * pixel_sampling_prop_keep
     sampling_spec_matrix_filtered = sampling_spec_matrix * pixel_sampling_spec_keep
+    # sampling_spec_matrix_filtered[sampling_spec_matrix_filtered == 0] = np.nan
 
-    sum_prop_matrix = sampling_prop_matrix_filtered.replace(to_replace=0, value=np.nan)
+    sum_prop_matrix = sampling_prop_matrix_filtered.astype(float)#.replace(to_replace=0, value=np.nan)
+    sum_prop_matrix[sum_prop_matrix == 0] = np.nan
 
     # create dataframe for results
-    norm_ion_intensities = ad.AnnData(obs=pd.DataFrame({'cell_id': sampling_prop_matrix.index}, 
-                                                       index=sampling_prop_matrix.index), 
+    norm_ion_intensities = ad.AnnData(obs=pd.DataFrame({'cell_id': adata.uns['correction_cell_list']},
+                                                        index=adata.uns['correction_cell_list']),
                                       var=adata.var)
 
     norm_spots = adata.to_df().multiply(1/sum_prop_matrix, axis=0)
-    
-    cor_df = sampling_spec_matrix_filtered.replace(np.nan, 0).dot(norm_spots)
-    norm_ion_intensities.X = cor_df.multiply(1/sampling_spec_matrix_filtered.sum(axis=1), axis=0).astype(np.float32)
+    # making sure the matrices for matrix product dont contain nans
+    sampling_spec_matrix_filtered[np.isnan(sampling_spec_matrix_filtered)] = 0
+    norm_spots[np.isnan(norm_spots)] = 0
+
+    cor_df = sampling_spec_matrix_filtered.dot(norm_spots)
+    inv_sampling_spec = 1/sampling_spec_matrix_filtered.sum(axis=1)
+    norm_ion_intensities.X = (cor_df * inv_sampling_spec[:, np.newaxis]).astype(np.float32)
     norm_ion_intensities.obs.index = norm_ion_intensities.obs.cell_id.map(lambda x: x.replace(CELL_PRE, ""))
 
     norm_ion_intensities = norm_ion_intensities[:, raw_adata.var_names]

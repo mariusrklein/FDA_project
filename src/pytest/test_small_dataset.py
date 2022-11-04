@@ -8,9 +8,9 @@ import scanpy as sc
 import statistics as st
 import multiprocessing
 from importlib import reload
-
 import sys
 sys.path.append('/Volumes/mklein/FDA_project')
+import src.functions
 
 
 if platform.system() == "Darwin":
@@ -88,7 +88,7 @@ def create_small_dataset():
     sm_matrix = sc.read(os.path.join(sample_path, files['sm_matrix']))
     cell_sm_matrix = sc.read(os.path.join(sample_path, files['cell_sm_matrix']))
 
-    overlap_matrix, _ = get_matrices()
+    overlap_matrix, sampling_spec_matrix = get_matrices()
     sm_matrix = sm_matrix[:, sm_matrix.var_names[51:60]]
     sm_matrix = sm_matrix[overlap_matrix.columns]
     sm_matrix.obs_names = PIXEL_PRE + sm_matrix.obs_names
@@ -102,9 +102,12 @@ def create_small_dataset():
     return sm_matrix
 
 def correct_dataset(sm_matrix, write = False):
-    from src.functions import get_molecule_normalization_factors, correct_intensities_quantile_regression_parallel
+    reload(src.functions)
+    from src.functions import get_molecule_normalization_factors, correct_intensities_quantile_regression_parallel, add_matrices
 
-    overlap_matrix, _ = get_matrices()
+    overlap_matrix, sampling_spec_matrix = get_matrices()
+    add_matrices(sm_matrix, overlap_matrix, sampling_spec_matrix)
+
     total_pixel_overlap, full_pixel_intensities_median = get_molecule_normalization_factors(sm_matrix.to_df(), overlap_matrix, method= st.median)
     
     corr_sm_matrix = correct_intensities_quantile_regression_parallel(sm_matrix, total_pixel_overlap, full_pixel_intensities_median, reference_ions=sm_matrix.var_names, n_jobs=multiprocessing.cpu_count())
@@ -116,6 +119,7 @@ def correct_dataset(sm_matrix, write = False):
 
 
 def deconvolute_dataset(corr_sm_matrix, cell_sm_matrix, write = False):
+    reload(src.functions)
     from src.functions import cell_normalization_Rappez_adata
     overlap_matrix, sampling_spec_matrix = get_matrices()
 
@@ -129,18 +133,18 @@ def deconvolute_dataset(corr_sm_matrix, cell_sm_matrix, write = False):
 def test_correct_dataset(sm_matrix, corr_sm_matrix):
     gen_corr_sm_matrix = correct_dataset(sm_matrix)
 
-    assert len(corr_sm_matrix.to_df().compare(gen_corr_sm_matrix.to_df())) == 0, 'Error in dataset correction: \n' + str(corr_sm_matrix.to_df().compare(gen_corr_sm_matrix.to_df()))
+    assert len(corr_sm_matrix.to_df().compare(gen_corr_sm_matrix.to_df())) == 0 and len(gen_corr_sm_matrix.to_df().dropna(how='all')) > 0, 'Error in dataset correction: \n' + str(corr_sm_matrix.to_df().compare(gen_corr_sm_matrix.to_df()))
     
 
 def test_deconvolute_dataset(corr_sm_matrix, cell_sm_matrix, corr_cell_sm_matrix):
     gen_corr_cell_sm_matrix = deconvolute_dataset(corr_sm_matrix, cell_sm_matrix)
 
-    assert len(corr_cell_sm_matrix.to_df().compare(gen_corr_cell_sm_matrix.to_df())) == 0, 'Error in dataset correction: \n' + str(corr_cell_sm_matrix.to_df().compare(gen_corr_cell_sm_matrix.to_df()))
+    assert len(corr_cell_sm_matrix.to_df().compare(gen_corr_cell_sm_matrix.to_df())) == 0 and len(gen_corr_cell_sm_matrix.to_df().dropna(how='all')) > 0, 'Error in dataset correction: \n' + str(corr_cell_sm_matrix.to_df().compare(gen_corr_cell_sm_matrix.to_df()))
     
 
-    
+
 # if __name__ == '__main__':
-#     _ = create_small_dataset()
-#     _ = correct_dataset(sm_matrix = get_sm_matrix(), write = True)
-#     _ = deconvolute_dataset(corr_sm_matrix = get_corr_sm_matrix(), cell_sm_matrix = get_cell_sm_matrix(), write = True)
+  #   _ = create_small_dataset()
+   #  _ = correct_dataset(sm_matrix = get_sm_matrix(), write = True)
+   #  _ = deconvolute_dataset(corr_sm_matrix = get_corr_sm_matrix(), cell_sm_matrix = get_cell_sm_matrix(), write = True)
     
