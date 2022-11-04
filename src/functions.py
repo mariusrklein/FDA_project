@@ -455,7 +455,6 @@ def cell_normalization_Rappez_adata(sampling_prop_matrix: pd.DataFrame,
 
     sampling_prop_matrix_filtered = sampling_prop_matrix.sum(axis = 0) * pixel_sampling_prop_keep
     sampling_spec_matrix_filtered = sampling_spec_matrix * pixel_sampling_spec_keep
-    # sampling_spec_matrix_filtered[sampling_spec_matrix_filtered == 0] = np.nan
 
     sum_prop_matrix = sampling_prop_matrix_filtered.astype(float)#.replace(to_replace=0, value=np.nan)
     sum_prop_matrix[sum_prop_matrix == 0] = np.nan
@@ -471,8 +470,11 @@ def cell_normalization_Rappez_adata(sampling_prop_matrix: pd.DataFrame,
     norm_spots[np.isnan(norm_spots)] = 0
 
     cor_df = sampling_spec_matrix_filtered.dot(norm_spots)
-    inv_sampling_spec = 1/sampling_spec_matrix_filtered.sum(axis=1)
-    norm_ion_intensities.X = (cor_df * inv_sampling_spec[:, np.newaxis]).astype(np.float32)
+    cell_norm_factor = sampling_spec_matrix_filtered.sum(axis=1)
+    cell_norm_factor[cell_norm_factor == 0] = np.nan
+    deconv_array = cor_df / cell_norm_factor[:, np.newaxis]
+    deconv_array[np.isnan(deconv_array)] = 0
+    norm_ion_intensities.X = deconv_array.astype(np.float32)
     norm_ion_intensities.obs.index = norm_ion_intensities.obs.cell_id.map(lambda x: x.replace(CELL_PRE, ""))
 
     norm_ion_intensities = norm_ion_intensities[:, raw_adata.var_names]
@@ -531,14 +533,19 @@ def intermixing_metric_sampled(
     n_jobs = multiprocessing.cpu_count()
 ):
 
-    sample = adata_orig.obs.groupby(condition_name, 
+    sample = adata_orig.obs.groupby(condition_name,
         group_keys=False).apply(lambda x: x.sample(frac=sample_frac, random_state=1))
 
     adata = adata_orig.copy()
     adata = adata[sample.index]
 
-    dist_matrix = distance_matrix(adata.obsm[measure], 
-        adata_orig.obsm[measure])
+    dist_matrix: np.ndarray
+    if measure == "X":
+        dist_matrix = distance_matrix(adata.X,
+            adata_orig.X)
+    else:
+        dist_matrix = distance_matrix(adata.obsm[measure],
+            adata_orig.obsm[measure])
     #neighborhood_size = len(adata.obs)
     #sampling_range = np.unique(np.logspace(0, np.log10(neighborhood_size), n_datapoints).astype(int))
     
@@ -576,29 +583,51 @@ def intermixing_metric_sampled(
     return summary
 
 
-def intermixing(adata1, adata2, condition_name, labels: Tuple[str, str], show_table=[10], sample_frac=0.2):
-    fig, ax = plt.subplots(1, 2)
+def intermixing(adata_dict: Dict[str, ad.AnnData],
+    condition_name: str,
+    measures = ['X', 'X_pca', 'X_umap'],
+    show_table = [10],
+    sample_frac = 0.2,
+    n_jobs = multiprocessing.cpu_count()
+)  -> pd.DataFrame:
+
+    fig, ax = plt.subplots(1, len(measures), sharey=True)
+    fig.set_figwidth(4*len(measures))
+    
     summaries = {}
 
-    summaries['umap_1'] = intermixing_metric_sampled(adata1, condition_name, sample_frac=sample_frac, 
-        ax=ax[0], label=labels[0]+'_umap', measure='X_umap', normalized=True)
-    summaries['umap_2'] = intermixing_metric_sampled(adata2, condition_name, sample_frac=sample_frac, 
-        ax=ax[0], label=labels[1]+'_umap', measure='X_umap', normalized=True)
+    for i, measure in enumerate(measures):
+        
+        for label, adata in adata_dict.items():
+            summaries[measure+'_'+label] = intermixing_metric_sampled(adata_orig = adata, 
+                condition_name = condition_name, 
+                sample_frac = sample_frac, 
+                ax = ax[i], 
+                label = measure+'_'+label, 
+                measure = measure,
+                normalized = True,
+                n_jobs = n_jobs
+            )
 
-    summaries['pca_1'] = intermixing_metric_sampled(adata1, condition_name, sample_frac=sample_frac, 
-        ax=ax[1], label=labels[0]+'_pca', measure='X_pca', normalized=True)
-    summaries['pca_2'] = intermixing_metric_sampled(adata2, condition_name, sample_frac=sample_frac, 
-        ax=ax[1], label=labels[1]+'_pca', measure='X_pca', normalized=True)
+        ax[i].legend()
 
-    ax[0].legend()
-    ax[1].legend()
+
+
     fig.tight_layout()
     
-    if all([hood in summaries['umap_1'].index for hood in show_table]):
-        return pd.concat({k: v.loc[show_table] for k, v in summaries.items()})
-    else:
-        return pd.concat([intermixing_metric_sampled(adata1, condition_name=condition_name, 
-            neighborhood_size=show_table, n_datapoints=1, label='none', normalized=True),
-            intermixing_metric_sampled(adata2, condition_name=condition_name, 
-            neighborhood_size=show_table, n_datapoints=1, label='ISM', normalized=True)], 
-            axis=0, keys=[labels[0], labels[1]])
+    if not all([hood in list(summaries.values())[0].index for hood in show_table]):
+        summaries = {}
+        for i, measure in enumerate(measures):
+            for label, adata in adata_dict.items():
+                summaries[measure+'_'+label] = intermixing_metric_sampled(adata_orig = adata, 
+                    condition_name = condition_name,
+                    neighborhood_size = show_table,
+                    sample_frac = sample_frac,
+                    label = measure+'_'+label,
+                    measure = measure,
+                    normalized = True,
+                    n_jobs = n_jobs
+                )
+
+    return pd.concat({k: v.loc[show_table] for k, v in summaries.items()})
+   
