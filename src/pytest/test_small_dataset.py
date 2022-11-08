@@ -10,7 +10,7 @@ import multiprocessing
 from importlib import reload
 import sys
 sys.path.append('/Volumes/mklein/FDA_project')
-import src.functions
+import src.correction
 
 
 if platform.system() == "Darwin":
@@ -64,7 +64,7 @@ def corr_cell_sm_matrix():
 
 
 def get_matrices():
-    from src.functions import get_matrices_from_dfs
+    from src.correction import get_matrices_from_dfs
 
     cell_regions = pd.read_csv(project_files['cell_regions'])
     mark_regions = pd.read_csv(project_files['mark_regions'])
@@ -83,7 +83,7 @@ def matrizes():
 
 
 def create_small_dataset():
-    from src.functions import PIXEL_PRE
+    from src.correction import PIXEL_PRE
 
     sm_matrix = sc.read(os.path.join(sample_path, files['sm_matrix']))
     cell_sm_matrix = sc.read(os.path.join(sample_path, files['cell_sm_matrix']))
@@ -102,8 +102,8 @@ def create_small_dataset():
     return sm_matrix
 
 def correct_dataset(sm_matrix, write = False):
-    reload(src.functions)
-    from src.functions import get_molecule_normalization_factors, correct_intensities_quantile_regression_parallel, add_matrices
+    reload(src.correction)
+    from src.correction import get_molecule_normalization_factors, correct_intensities_quantile_regression_parallel, add_matrices
 
     overlap_matrix, sampling_spec_matrix = get_matrices()
     add_matrices(sm_matrix, overlap_matrix, sampling_spec_matrix)
@@ -119,8 +119,8 @@ def correct_dataset(sm_matrix, write = False):
 
 
 def deconvolute_dataset(corr_sm_matrix, cell_sm_matrix, write = False):
-    reload(src.functions)
-    from src.functions import cell_normalization_Rappez_adata
+    reload(src.correction)
+    from src.correction import cell_normalization_Rappez_adata
     overlap_matrix, sampling_spec_matrix = get_matrices()
 
     corr_cell_sm_matrix = cell_normalization_Rappez_adata(sampling_prop_matrix=overlap_matrix, sampling_spec_matrix=sampling_spec_matrix, adata=corr_sm_matrix, raw_adata=cell_sm_matrix)

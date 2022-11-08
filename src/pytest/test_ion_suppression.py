@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-from src.functions import CELL_PRE, PIXEL_PRE, get_matrices, get_matrices_from_dfs, get_molecule_normalization_factors, normalize_proportion_ratios
+from src.correction import CELL_PRE, PIXEL_PRE, get_matrices, get_matrices_from_dfs, get_molecule_normalization_factors, normalize_proportion_ratios
 
 
 @pytest.fixture
