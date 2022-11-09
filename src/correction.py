@@ -18,13 +18,7 @@ from scipy.spatial import distance_matrix
 from scipy.sparse import csc_matrix, csr_matrix
 from itertools import chain
 import anndata as ad
-
-
-
-# CONSTANTS
-
-CELL_PRE = ''
-PIXEL_PRE = ''
+from src import const
 
 
 def get_matrices(
@@ -46,8 +40,8 @@ def get_matrices(
     """
 
     # prototype pixel x cell matrix for abs. area overlap of all possible pixel-cell combinations
-    overlap_matrix = pd.DataFrame(index=[CELL_PRE + n for n in marks_cell_overlap.keys()],
-                                             columns=[PIXEL_PRE + n for n in mark_area.keys()])
+    overlap_matrix = pd.DataFrame(index=[const.CELL_PRE + n for n in marks_cell_overlap.keys()],
+                                             columns=[const.PIXEL_PRE + n for n in mark_area.keys()])
 
     # analogous matrix for overlap relative to each pixel area
     # (corresponds to ablated region specific sampling proportion)
@@ -65,7 +59,7 @@ def get_matrices(
             overlap_area = marks_cell_overlap[cell_i][pixel_i]
             # write absolute area overlap of current cell-pixel association to respective
             # location in matrix
-            overlap_matrix.loc[CELL_PRE + cell_i, PIXEL_PRE + pixel_loc] = overlap_area
+            overlap_matrix.loc[const.CELL_PRE + cell_i, const.PIXEL_PRE + pixel_loc] = overlap_area
 
     total_pixel_size = dict(zip(overlap_matrix.columns, mark_area.values()))
     sampling_prop_matrix = overlap_matrix.divide(total_pixel_size, axis=1).replace(np.nan, 0)
@@ -98,8 +92,8 @@ def get_matrices_from_dfs(
     """
 
     # prototype pixel x cell matrix for abs. area overlap of all possible pixel-cell combinations
-    overlap_matrix = pd.DataFrame(index=[CELL_PRE + str(n) for n in cell_area.cell_id.astype(int)],
-                                             columns=[PIXEL_PRE + str(n) for n in mark_area.am_id.astype(int)])
+    overlap_matrix = pd.DataFrame(index=[const.CELL_PRE + str(n) for n in cell_area.cell_id.astype(int)],
+                                             columns=[const.PIXEL_PRE + str(n) for n in mark_area.am_id.astype(int)])
 
     # analogous matrix for overlap relative to each pixel area
     # (corresponds to ablated region specific sampling proportion)
@@ -115,7 +109,7 @@ def get_matrices_from_dfs(
         for _, pixel_row in pixels.iterrows():
             # write absolute area overlap of current cell-pixel association to respective
             # location in matrix
-            overlap_matrix.loc[CELL_PRE + str(int(cell_i)), PIXEL_PRE + str(int(pixel_row['am_id']))] = pixel_row['area']
+            overlap_matrix.loc[const.CELL_PRE + str(int(cell_i)), const.PIXEL_PRE + str(int(pixel_row['am_id']))] = pixel_row['area']
 
     total_pixel_size = pd.Series(mark_area.area).replace(0, np.nan)
     total_pixel_size.index = overlap_matrix.columns
@@ -229,11 +223,15 @@ def get_molecule_normalization_factors(
     """
     # sum up all cellular overlaps of each pixel
     pixels_total_overlap = overlap_matrix.sum(axis=0)
-    
-    # get all pixels whose cellular overlaps sum up to the total pixel area (1)
-    full_pixels = pd.Series(pixels_total_overlap[pixels_total_overlap == 1]).index
-        # iterate over all metabolites and take average (or other measure) of intensities in full pixels
-    full_pixels_avg_intensities = intensities_df.apply(lambda x: method(x[full_pixels]))
+
+    # iterate over all metabolites and take average (or other measure) of intensities in full pixels
+    intensities_df[const.TPO] = pixels_total_overlap
+
+    intensities_df = intensities_df[intensities_df[const.TPO] == 1]
+    del intensities_df[const.TPO]
+
+    full_pixels_avg_intensities = np.array([method(intensities_df[ion]) for ion in intensities_df])
+
 
     # return both series
     return (pixels_total_overlap, full_pixels_avg_intensities)
@@ -251,132 +249,169 @@ def add_normalization_factors(adata: ad.AnnData,
     overlap, full_pix = get_molecule_normalization_factors(intensities_df=adata.to_df(),
         overlap_matrix = adata.obsm['correction_overlap_matrix'].T,
         method = method)
-    adata.obs['correction_total_pixel_overlap'] = overlap
-    adata.var['correction_full_pixel_avg_intensities'] = full_pix
+    adata.obs[const.TPO] = overlap
+    adata.var[const.FPAI] = full_pix
     return
 
 
+# def normalize_proportion_ratios(
+#     intensities_df: pd.DataFrame,
+#     pixels_total_overlap: pd.Series,
+#     full_pixels_avg_intensities: pd.Series,
+#     normalized = True
+#     ) -> pd.DataFrame:
+#     """Calculates intensity / sampling proportion rates for ion intensities
+
+#     Args:
+#         intensities_df (pd.DataFrame): [description]
+#         pixels_total_overlap (pd.Series): [description]
+#         full_pixels_avg_intensities (pd.Series): [description]
+#         normalized (bool, optional): [description]. Defaults to True.
+
+#     Returns:
+#         pd.DataFrame: [description]
+#     """
+#     if(len(intensities_df) != len(pixels_total_overlap) or \
+#        len(intensities_df.columns) != len(full_pixels_avg_intensities)):
+#         print('normalize_proportion_ratios: Inconsistant size of arguments. Coercing')
+
+#     # calculate intensity / sampling proportion ratios
+#     intensity_prop_ratios = intensities_df.divide(
+#         pixels_total_overlap.replace(to_replace=0, value=np.nan), axis = 0)
+
+#     # normalize ratios so that full pixels have intensities with avg = 1
+#     norm_intensity_prop_ratios = intensity_prop_ratios.divide(
+#         full_pixels_avg_intensities, axis=1).replace(np.inf, np.nan)
+
+#     # normalization is optional
+#     if normalized:
+#         return norm_intensity_prop_ratios
+#     return intensity_prop_ratios
+
 def normalize_proportion_ratios(
-    intensities_df: pd.DataFrame,
-    pixels_total_overlap: pd.Series,
-    full_pixels_avg_intensities: pd.Series,
+    intensities_ad: ad.AnnData,
     normalized = True
-    ) -> pd.DataFrame:
+    ) -> ad.AnnData:
     """Calculates intensity / sampling proportion rates for ion intensities
 
     Args:
-        intensities_df (pd.DataFrame): [description]
-        pixels_total_overlap (pd.Series): [description]
-        full_pixels_avg_intensities (pd.Series): [description]
+        intensities_ad (ad.AnnData): [description]
         normalized (bool, optional): [description]. Defaults to True.
 
     Returns:
-        pd.DataFrame: [description]
+        ad.AnnData: [description]
     """
-    if(len(intensities_df) != len(pixels_total_overlap) or \
-       len(intensities_df.columns) != len(full_pixels_avg_intensities)):
-        print('normalize_proportion_ratios: Inconsistant size of arguments. Coercing')
 
     # calculate intensity / sampling proportion ratios
-    intensity_prop_ratios = intensities_df.divide(
-        pixels_total_overlap.replace(to_replace=0, value=np.nan), axis = 0)
+    total_pixel_overlap = np.array(
+        intensities_ad.obs[const.TPO]).reshape((len(intensities_ad), 1))
+    total_pixel_overlap[total_pixel_overlap == 0] = np.nan
+
+    full_pixels_avg_intensities = np.array(
+        intensities_ad.var[const.FPAI]).reshape((1, len(intensities_ad.var)))
+    full_pixels_avg_intensities[full_pixels_avg_intensities == 0] = np.nan
+
+    intensity_prop_ratios = intensities_ad.X / total_pixel_overlap
 
     # normalize ratios so that full pixels have intensities with avg = 1
-    norm_intensity_prop_ratios = intensity_prop_ratios.divide(
-        full_pixels_avg_intensities, axis=1).replace(np.inf, np.nan)
+    norm_intensity_prop_ratios = intensity_prop_ratios / full_pixels_avg_intensities
+    
+    out_ad = intensities_ad.copy()
 
     # normalization is optional
     if normalized:
-        return norm_intensity_prop_ratios
-    return intensity_prop_ratios
-
-
-def correct_intensities_quantile_regression(
-    intensities_df: pd.DataFrame,
-    pixels_total_overlap: pd.Series,
-    full_pixels_avg_intensities: pd.Series,
-    reference_ions: list,
-    proportion_threshold = 0.1
-    ) -> pd.DataFrame:
-    """Corrects ion intensities based on cell sampling proportion of respective pixels
-
-    Args:
-        intensities_df (pd.DataFrame): Ion intensity DataFrame with molecules in columns and
-        pixels in rows
-        pixels_total_overlap (pd.Series): [description]
-        full_pixels_avg_intensities (pd.Series): [description]
-        proportion_threshold (float, optional): Defaults to 0.1.
-
-    Returns:
-        pd.DataFrame: [description]
-    """
-    min_datapoints = 10
-
-    # get Series name of pixel sampling proportions for model formula
-    reference = pixels_total_overlap.name
-
-    if len(intensities_df) != len(pixels_total_overlap):
-        print('Quantreg: Inconsistent sizes of arguments')
-
-    # calculate intensity / sampling proportion ratios
-    prop_ratio_df = normalize_proportion_ratios(intensities_df=intensities_df,
-        pixels_total_overlap=pixels_total_overlap,
-        full_pixels_avg_intensities=full_pixels_avg_intensities)
-
-    # take log of both variables: intensity / sampling proportion ratios and sampling proportions
-    log_prop_series = np.log10(pixels_total_overlap)
-    log_ratio_df = np.log10(prop_ratio_df.replace(np.nan, 0).infer_objects())
-    log_ratio_df = log_ratio_df.replace([np.inf, - np.inf], np.nan)
-
-    reference_df = pd.concat([log_ratio_df[reference_ions], log_prop_series], axis=1) \
-        .melt(id_vars=(reference))[['value', reference]]
+        out_ad.X = norm_intensity_prop_ratios
+    else: 
+        out_ad.X = intensity_prop_ratios
     
-    reference_df = reference_df[reference_df[reference] > np.log10(proportion_threshold)].dropna()
+    return out_ad
 
-    if len(reference_df) < min_datapoints:
-        raise RuntimeError("The supplied reference pool has only %1d valid data points and is "
-        + "therefore unsuitable. Please specify a suitable reference pool."%len(reference_df))
+# def correct_intensities_quantile_regression(
+#     intensities_df: pd.DataFrame,
+#     pixels_total_overlap: pd.Series,
+#     full_pixels_avg_intensities: pd.Series,
+#     reference_ions: list,
+#     proportion_threshold = 0.1
+#     ) -> pd.DataFrame:
+#     """Corrects ion intensities based on cell sampling proportion of respective pixels
 
-    ref_model = smf.quantreg('Q("value") ~ ' + reference, reference_df)
-    ref_qrmodel = ref_model.fit(q=0.5)
+#     Args:
+#         intensities_df (pd.DataFrame): Ion intensity DataFrame with molecules in columns and
+#         pixels in rows
+#         pixels_total_overlap (pd.Series): [description]
+#         full_pixels_avg_intensities (pd.Series): [description]
+#         proportion_threshold (float, optional): Defaults to 0.1.
 
-    # create output variables
-    correction_factors = log_ratio_df.copy().applymap(lambda x: np.nan)
-    params = {}
-    predictions = log_ratio_df.copy().applymap(lambda x: np.nan)
+#     Returns:
+#         pd.DataFrame: [description]
+#     """
+#     min_datapoints = 10
 
-    insufficient_metabolites_list = []
+#     # get Series name of pixel sampling proportions for model formula
+#     reference = pixels_total_overlap.name
 
-    # iterate over molecules
-    for ion in log_ratio_df.columns:
-        # for every molecule, create custom df with two regression variables
-        ion_df = pd.concat([log_ratio_df[ion], log_prop_series], axis=1)
-        # filter data for model fitting: only include pixels with given sampling proportion
-        # threshold and remove NAs (caused by zero intensities)
-        df_for_model = ion_df[ion_df[reference] > np.log10(proportion_threshold)].dropna()
+#     if len(intensities_df) != len(pixels_total_overlap):
+#         print('Quantreg: Inconsistent sizes of arguments')
 
-        # check if enough data remains after filtering, otherweise what TODO?
-        if len(df_for_model) < 10:
-            #print('%s has only %1d, thus not enough datapoints. using reference pool instead'%(ion, len(df_for_model)))
-            qrmodel=ref_qrmodel
-            insufficient_metabolites_list.append(ion)
+#     # calculate intensity / sampling proportion ratios
+#     prop_ratio_df = normalize_proportion_ratios(intensities_df=intensities_df,
+#         pixels_total_overlap=pixels_total_overlap,
+#         full_pixels_avg_intensities=full_pixels_avg_intensities)
 
-        else: 
-            # calculate quantile regression
-            model = smf.quantreg('Q("' + ion + '") ~ ' + reference, df_for_model)
-            qrmodel = model.fit(q=0.5)
-            params[ion] = qrmodel.params
+#     # take log of both variables: intensity / sampling proportion ratios and sampling proportions
+#     log_prop_series = np.log10(pixels_total_overlap)
+#     log_ratio_df = np.log10(prop_ratio_df.replace(np.nan, 0).infer_objects())
+#     log_ratio_df = log_ratio_df.replace([np.inf, - np.inf], np.nan)
 
-        # regress out dependency on sampling proportion
-        reg_correction = 10 ** qrmodel.predict(ion_df)
-        predictions[ion] = intensities_df[ion] / reg_correction
-        correction_factors[ion] = reg_correction
+#     reference_df = pd.concat([log_ratio_df[reference_ions], log_prop_series], axis=1) \
+#         .melt(id_vars=(reference))[['value', reference]]
+    
+#     reference_df = reference_df[reference_df[reference] > np.log10(proportion_threshold)].dropna()
+
+#     if len(reference_df) < min_datapoints:
+#         raise RuntimeError("The supplied reference pool has only %1d valid data points and is "
+#         + "therefore unsuitable. Please specify a suitable reference pool."%len(reference_df))
+
+#     ref_model = smf.quantreg('Q("value") ~ ' + reference, reference_df)
+#     ref_qrmodel = ref_model.fit(q=0.5)
+
+#     # create output variables
+#     correction_factors = log_ratio_df.copy().applymap(lambda x: np.nan)
+#     params = {}
+#     predictions = log_ratio_df.copy().applymap(lambda x: np.nan)
+
+#     insufficient_metabolites_list = []
+
+#     # iterate over molecules
+#     for ion in log_ratio_df.columns:
+#         # for every molecule, create custom df with two regression variables
+#         ion_df = pd.concat([log_ratio_df[ion], log_prop_series], axis=1)
+#         # filter data for model fitting: only include pixels with given sampling proportion
+#         # threshold and remove NAs (caused by zero intensities)
+#         df_for_model = ion_df[ion_df[reference] > np.log10(proportion_threshold)].dropna()
+
+#         # check if enough data remains after filtering, otherweise what TODO?
+#         if len(df_for_model) < 10:
+#             #print('%s has only %1d, thus not enough datapoints. using reference pool instead'%(ion, len(df_for_model)))
+#             qrmodel=ref_qrmodel
+#             insufficient_metabolites_list.append(ion)
+
+#         else: 
+#             # calculate quantile regression
+#             model = smf.quantreg('Q("' + ion + '") ~ ' + reference, df_for_model)
+#             qrmodel = model.fit(q=0.5)
+#             params[ion] = qrmodel.params
+
+#         # regress out dependency on sampling proportion
+#         reg_correction = 10 ** qrmodel.predict(ion_df)
+#         predictions[ion] = intensities_df[ion] / reg_correction
+#         correction_factors[ion] = reg_correction
         
-    # print(pd.concat([ion_intensities['C16H30O2'], sampling_proportion_series, log_ratio_df['C16H30O2'], correction_factors['C16H30O2'], predictions['C16H30O2']], axis=1))
-    print('insufficient metabolites: %1d'%len(insufficient_metabolites_list))
-    #print(insufficient_metabolites_list)
-    #return((correction_factors, pd.Series(params), predictions))
-    return predictions
+#     # print(pd.concat([ion_intensities['C16H30O2'], sampling_proportion_series, log_ratio_df['C16H30O2'], correction_factors['C16H30O2'], predictions['C16H30O2']], axis=1))
+#     print('insufficient metabolites: %1d'%len(insufficient_metabolites_list))
+#     #print(insufficient_metabolites_list)
+#     #return((correction_factors, pd.Series(params), predictions))
+#     return predictions
 
 
 def correct_intensities_quantile_regression_parallel(
@@ -409,13 +444,11 @@ def correct_intensities_quantile_regression_parallel(
         print('Quantreg: Inconsistent sizes of arguments')
 
     # calculate intensity / sampling proportion ratios
-    prop_ratio_df = normalize_proportion_ratios(intensities_df=intensities_ad.to_df(),
-        pixels_total_overlap=pixels_total_overlap,
-        full_pixels_avg_intensities=full_pixels_avg_intensities)
+    prop_ratio_ad = normalize_proportion_ratios(intensities_ad=intensities_ad)
 
     # take log of both variables: intensity / sampling proportion ratios and sampling proportions
     log_prop_series = np.log10(pixels_total_overlap.replace(0, np.nan))
-    log_ratio_df = np.log10(prop_ratio_df.replace(0, np.nan))
+    log_ratio_df = np.log10(prop_ratio_ad.to_df().replace(0, np.nan))
     
     # log_prop_series = np.log10(pixels_total_overlap)
     # log_ratio_df = np.log10(prop_ratio_df.replace(np.nan, 0).infer_objects())
@@ -495,8 +528,8 @@ def correct_quantile_inplace(adata: ad.AnnData,
 ) -> ad.AnnData:
 
     an = correct_intensities_quantile_regression_parallel(intensities_ad = adata, 
-        pixels_total_overlap = adata.obs['correction_total_pixel_overlap'],
-        full_pixels_avg_intensities = adata.var['correction_full_pixel_avg_intensities'],
+        pixels_total_overlap = adata.obs[const.TPO],
+        full_pixels_avg_intensities = adata.var[const.FPAI],
         reference_ions = reference_ions,
         proportion_threshold = proportion_threshold,
         min_datapoints = min_datapoints,
@@ -541,7 +574,7 @@ def cell_normalization_Rappez_adata(sampling_prop_matrix: pd.DataFrame,
     deconv_array = cor_df / cell_norm_factor[:, np.newaxis]
     deconv_array[np.isnan(deconv_array)] = 0
     norm_ion_intensities.X = deconv_array.astype(np.float32)
-    norm_ion_intensities.obs.index = norm_ion_intensities.obs.cell_id.map(lambda x: x.replace(CELL_PRE, ""))
+    norm_ion_intensities.obs.index = norm_ion_intensities.obs.cell_id.map(lambda x: x.replace(const.CELL_PRE, ""))
 
     norm_ion_intensities = norm_ion_intensities[:, raw_adata.var_names]
     norm_ion_intensities = norm_ion_intensities[raw_adata.obs_names]

@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
 import pytest
-from src.correction import CELL_PRE, PIXEL_PRE, get_matrices, get_matrices_from_dfs, get_molecule_normalization_factors, normalize_proportion_ratios
-
+import anndata as ad
+from src.correction import get_matrices, get_matrices_from_dfs, get_molecule_normalization_factors, normalize_proportion_ratios
+from src import const
 
 @pytest.fixture
 def cell_marks_minimal():
@@ -31,37 +32,37 @@ def overlap_df():
 @pytest.fixture
 def overlap_matrix():
     df = pd.DataFrame({'1':[np.nan, np.nan, np.nan], '2':[10.0, np.nan, np.nan], '3':[np.nan, 5.0, np.nan], '4':[5.0, np.nan, np.nan] })
-    df.columns = [PIXEL_PRE + i for i in df.columns]
-    df.index = [CELL_PRE + i for i in ['1', '2', '3']]
+    df.columns = [const.PIXEL_PRE + i for i in df.columns]
+    df.index = [const.CELL_PRE + i for i in ['1', '2', '3']]
     df = df.replace(np.nan, 0)
     return df
 
 @pytest.fixture
 def sampling_prop_matrix():
     df = pd.DataFrame({'1':[np.nan, np.nan, np.nan], '2':[1.0, np.nan, np.nan], '3':[np.nan, 0.5, np.nan], '4':[0.5, np.nan, np.nan] })
-    df.columns = [PIXEL_PRE + i for i in df.columns]
-    df.index = [CELL_PRE + i for i in ['1', '2', '3']]
+    df.columns = [const.PIXEL_PRE + i for i in df.columns]
+    df.index = [const.CELL_PRE + i for i in ['1', '2', '3']]
     df = df.replace(np.nan, 0)
     return df
 
 @pytest.fixture
 def sampling_spec_matrix():
     df = pd.DataFrame({'1':[np.nan, np.nan, np.nan], '2':[2/3, np.nan, np.nan], '3':[np.nan, 1.0, np.nan], '4':[1/3, np.nan, np.nan] })
-    df.columns = [PIXEL_PRE + i for i in df.columns]
-    df.index = [CELL_PRE + i for i in ['1', '2', '3']]
+    df.columns = [const.PIXEL_PRE + i for i in df.columns]
+    df.index = [const.CELL_PRE + i for i in ['1', '2', '3']]
     df = df.replace(np.nan, 0)
     return df
  
 @pytest.fixture
 def intensities_df():
     df = pd.DataFrame({'ion_1':[0, 10, 10, 5], 'ion_2':[10, 0, 5, 5]})
-    df.index = [PIXEL_PRE + i for i in ['1', '2', '3', '4']]
+    df.index = [const.PIXEL_PRE + i for i in ['1', '2', '3', '4']]
     return df
 
 @pytest.fixture
 def pixels_total_overlap():
     ser = pd.Series({'1': 0.0, '2': 1.0, '3': 0.5, '4': 0.5})
-    ser.index = [PIXEL_PRE + i for i in ser.index]
+    ser.index = [const.PIXEL_PRE + i for i in ser.index]
     return ser
 
 @pytest.fixture
@@ -71,7 +72,7 @@ def full_pixels_avg_intensities():
 
 @pytest.fixture
 def norm_intensity_prop_ratios():
-    return pd.DataFrame({'ion_1': [np.nan, 1.0, 2.0, 1.0], 'ion_2':[np.nan, np.nan, np.nan, np.nan]}, index=[PIXEL_PRE + i for i in ['1', '2', '3', '4']])
+    return pd.DataFrame({'ion_1': [np.nan, 1.0, 2.0, 1.0], 'ion_2':[np.nan, np.nan, np.nan, np.nan]}, index=[const.PIXEL_PRE + i for i in ['1', '2', '3', '4']])
 
 
 def test_get_matrices(mark_area_minimal, cell_marks_minimal, marks_cell_overlap_minimal, sampling_prop_matrix, sampling_spec_matrix):
@@ -128,6 +129,10 @@ def test_get_molecule_normalization_factors(intensities_df, sampling_prop_matrix
 
 def test_normalize_proportion_ratios(intensities_df, pixels_total_overlap, full_pixels_avg_intensities, norm_intensity_prop_ratios):
 
-    gen_prop_ratios_df = normalize_proportion_ratios(intensities_df=intensities_df, pixels_total_overlap=pixels_total_overlap, full_pixels_avg_intensities=full_pixels_avg_intensities)
+    adata = ad.AnnData(X = intensities_df, 
+        var = pd.DataFrame({const.FPAI: full_pixels_avg_intensities}), 
+        obs = pd.DataFrame({const.TPO: pixels_total_overlap}))
+    print(adata.var)
+    gen_prop_ratios_ad = normalize_proportion_ratios(adata)
 
-    assert len(norm_intensity_prop_ratios.compare(gen_prop_ratios_df)) == 0, "error calculating intensity / sampling proportion ratios" + str(norm_intensity_prop_ratios.compare(gen_prop_ratios_df))
+    assert len(norm_intensity_prop_ratios.compare(gen_prop_ratios_ad.to_df())) == 0, "error calculating intensity / sampling proportion ratios" + str(norm_intensity_prop_ratios.compare(gen_prop_ratios_ad.to_df()))

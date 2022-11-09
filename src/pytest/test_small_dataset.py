@@ -83,7 +83,7 @@ def matrizes():
 
 
 def create_small_dataset():
-    from src.correction import PIXEL_PRE
+    from src import const
 
     sm_matrix = sc.read(os.path.join(sample_path, files['sm_matrix']))
     cell_sm_matrix = sc.read(os.path.join(sample_path, files['cell_sm_matrix']))
@@ -91,7 +91,7 @@ def create_small_dataset():
     overlap_matrix, sampling_spec_matrix = get_matrices()
     sm_matrix = sm_matrix[:, sm_matrix.var_names[51:60]]
     sm_matrix = sm_matrix[overlap_matrix.columns]
-    sm_matrix.obs_names = PIXEL_PRE + sm_matrix.obs_names
+    sm_matrix.obs_names = const.PIXEL_PRE + sm_matrix.obs_names
 
     cell_sm_matrix = cell_sm_matrix[:, sm_matrix.var_names]
     cell_sm_matrix = cell_sm_matrix[overlap_matrix.index]
@@ -103,14 +103,14 @@ def create_small_dataset():
 
 def correct_dataset(sm_matrix, write = False):
     reload(src.correction)
-    from src.correction import get_molecule_normalization_factors, correct_intensities_quantile_regression_parallel, add_matrices
+    from src.correction import add_normalization_factors, correct_quantile_inplace, add_matrices
 
     overlap_matrix, sampling_spec_matrix = get_matrices()
     add_matrices(sm_matrix, overlap_matrix, sampling_spec_matrix)
 
-    total_pixel_overlap, full_pixel_intensities_median = get_molecule_normalization_factors(sm_matrix.to_df(), overlap_matrix, method= st.median)
+    add_normalization_factors(sm_matrix, method= st.median)
     
-    corr_sm_matrix = correct_intensities_quantile_regression_parallel(sm_matrix, total_pixel_overlap, full_pixel_intensities_median, reference_ions=sm_matrix.var_names, n_jobs=multiprocessing.cpu_count())
+    corr_sm_matrix = correct_quantile_inplace(sm_matrix, reference_ions=sm_matrix.var_names, n_jobs=multiprocessing.cpu_count())
     
     if write:
         corr_sm_matrix.write(os.path.join(target_path, 'am_spatiomolecular_adata_corrected.h5ad'))
