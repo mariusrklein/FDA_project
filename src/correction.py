@@ -421,6 +421,7 @@ def correct_intensities_quantile_regression_parallel(
     reference_ions: list,
     proportion_threshold = 0.1,
     min_datapoints = 10,
+    correct_intersect = False,
     n_jobs = 1
     ) -> ad.AnnData:
     """Corrects ion intensities based on cell sampling proportion of respective pixels
@@ -431,9 +432,15 @@ def correct_intensities_quantile_regression_parallel(
         pixels_total_overlap (pd.Series): [description]
         full_pixels_avg_intensities (pd.Series): [description]
         proportion_threshold (float, optional): [description]. Defaults to 0.1.
+        min_datapoints (int, optional): number of datapoints required for correction using
+        this molecule. Otherwise falling back to reference ions.
+        correct_intersect (bool, optional): whether to correct for an intersect not equal to
+        zero. This constant scales the whole set of intensities independant from the 
+        sampling ratio.
+        n_jobs (int, optional): number of cores to use for parallel processing.
 
     Returns:
-        ad.AnnData: [description]
+        ad.AnnData: Annotated data matrix with corrected intensities assigned.
     """
     
     # get Series name of pixel sampling proportions for model formula
@@ -490,10 +497,13 @@ def correct_intensities_quantile_regression_parallel(
         raw.name = "raw"
         ion_df = ion_df.join(raw)
         ion_df['raw_corrected'] = ion_df['raw'] / reg_correction
+        ion_df['raw_corrected_intersect'] = ion_df['raw'] / reg_correction * 10 ** qrmodel.params[0]
         ion_df['corrected'] = ion_df[ion] / reg_correction
         ion_df[reference] = pixels_total_overlap
         
         pred = ion_df['raw_corrected']
+        if correct_intersect:
+            pred = ion_df['raw_corrected_intersect']
         pred.name = ion
         return (pred, len(df_for_model), qrmodel.iterations, qrmodel.params)
 
@@ -524,8 +534,32 @@ def correct_quantile_inplace(adata: ad.AnnData,
     reference_ions: list,
     proportion_threshold = 0.1,
     min_datapoints = 10,
+    correct_intersect = False,
     n_jobs = 1
 ) -> ad.AnnData:
+    """Corrects ion intensities based on cell sampling proportion of respective pixels and 
+    returns resulting annotated data matrix.
+
+    Args:
+        adata (ad.AnnData): Ion intensity DataFrame with molecules in columns and
+        pixels in rows
+        reference_ions (list): list with the names of ions used as fallback if correction
+        cannot be calculated for molecules using existing data. If more than one molecules 
+        are given, all their datapoints are used.
+        proportion_threshold (float, optional): Threshold of sampling proportion. Only 
+        ablation marks with a higher proportion are used to calculate the correction.
+        Defaults to 0.1.
+        min_datapoints (int, optional): number of datapoints required for correction using
+        this molecule. Otherwise falling back to reference ions.
+        correct_intersect (bool, optional): whether to correct for an intersect not equal to
+        zero. This constant scales the whole set of intensities independant from the 
+        sampling ratio.
+        n_jobs (int, optional): number of cores to use for parallel processing.
+
+    Returns:
+        ad.AnnData: Annotated data matrix with corrected intensities assigned.
+    """
+    
 
     an = correct_intensities_quantile_regression_parallel(intensities_ad = adata, 
         pixels_total_overlap = adata.obs[const.TPO],
@@ -533,6 +567,7 @@ def correct_quantile_inplace(adata: ad.AnnData,
         reference_ions = reference_ions,
         proportion_threshold = proportion_threshold,
         min_datapoints = min_datapoints,
+        correct_intersect = correct_intersect,
         n_jobs = n_jobs
         )
 
@@ -579,20 +614,27 @@ def cell_normalization_Rappez_adata(sampling_prop_matrix: pd.DataFrame,
     norm_ion_intensities = norm_ion_intensities[:, raw_adata.var_names]
     norm_ion_intensities = norm_ion_intensities[raw_adata.obs_names]
     norm_ion_intensities.obs = raw_adata.obs
-    
     return norm_ion_intensities
-
 
 def deconvolution_rappez(adata: ad.AnnData,
     raw_adata: ad.AnnData = None,
     sampling_prop_threshold = 0.3,
     sampling_spec_threshold = 0
 ) -> ad.AnnData:
+    """Pixel-cell deconvolution as implemented in the original SpaceM publication
+    
+    Args:
+        adata (anndata.AnnData):
+        raw_adata: ad.AnnData = None,
+    sampling_prop_threshold = 0.3,
+    sampling_spec_threshold = 0
+    
+    """
 
     if raw_adata is None:
         raw_adata = ad.AnnData(var=adata.var, 
-            obs=pd.DataFrame({'cell_id':adata.obsm['correction_overlap_matrix'].columns}, 
-                index=adata.obsm['correction_overlap_matrix'].columns))
+            obs=pd.DataFrame({'cell_id':adata.uns['correction_cell_list']}, 
+                index=adata.uns['correction_cell_list']))
 
     deconv_adata = cell_normalization_Rappez_adata(
         sampling_prop_matrix = adata.obsm['correction_overlap_matrix'].T,
