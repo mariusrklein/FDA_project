@@ -18,7 +18,14 @@ from scipy.spatial import distance_matrix
 from scipy.sparse import csc_matrix, csr_matrix
 from itertools import chain
 import anndata as ad
+import scanpy as sc
 from src import const
+import sys
+sys.path.append('/home/mklein/spacem')
+from SpaceM.lib.modules import (
+    overlap_analysis,
+    single_cell_analysis_normalization
+)
 
 
 def get_matrices(
@@ -203,8 +210,7 @@ def add_matrices(adata: ad.AnnData,
     return
 
 def get_molecule_normalization_factors(
-    intensities_df: pd.DataFrame,
-    overlap_matrix: pd.DataFrame,
+    adata: pd.DataFrame,
     method: Callable[..., float]
     ) -> Tuple[pd.Series, pd.Series]:
     """Calculates two series with pixel- and molecule-specific normalization factors
@@ -221,8 +227,12 @@ def get_molecule_normalization_factors(
     Returns:
         Tuple[pd.Series, pd.Series]: pixels_total_overlap and full_pixels_avg_intensities
     """
+    
+    overlap_matrix = adata.obsm['correction_overlap_matrix'].T
+    intensities_df = adata.to_df()
+    
     # sum up all cellular overlaps of each pixel
-    pixels_total_overlap = overlap_matrix.sum(axis=0)
+    pixels_total_overlap = overlap_matrix.sum(axis=0) / np.array(adata.obs['area'])
 
     # iterate over all metabolites and take average (or other measure) of intensities in full pixels
     intensities_df[const.TPO] = pixels_total_overlap
@@ -231,7 +241,6 @@ def get_molecule_normalization_factors(
     del intensities_df[const.TPO]
 
     full_pixels_avg_intensities = np.array([method(intensities_df[ion]) for ion in intensities_df])
-
 
     # return both series
     return (pixels_total_overlap, full_pixels_avg_intensities)
@@ -246,47 +255,11 @@ def add_normalization_factors(adata: ad.AnnData,
         method (Callable[..., float]): method to use for calculation of full_pixel_avg_intensities
     """
 
-    overlap, full_pix = get_molecule_normalization_factors(intensities_df=adata.to_df(),
-        overlap_matrix = adata.obsm['correction_overlap_matrix'].T,
+    overlap, full_pix = get_molecule_normalization_factors(adata=adata,
         method = method)
     adata.obs[const.TPO] = overlap
     adata.var[const.FPAI] = full_pix
     return
-
-
-# def normalize_proportion_ratios(
-#     intensities_df: pd.DataFrame,
-#     pixels_total_overlap: pd.Series,
-#     full_pixels_avg_intensities: pd.Series,
-#     normalized = True
-#     ) -> pd.DataFrame:
-#     """Calculates intensity / sampling proportion rates for ion intensities
-
-#     Args:
-#         intensities_df (pd.DataFrame): [description]
-#         pixels_total_overlap (pd.Series): [description]
-#         full_pixels_avg_intensities (pd.Series): [description]
-#         normalized (bool, optional): [description]. Defaults to True.
-
-#     Returns:
-#         pd.DataFrame: [description]
-#     """
-#     if(len(intensities_df) != len(pixels_total_overlap) or \
-#        len(intensities_df.columns) != len(full_pixels_avg_intensities)):
-#         print('normalize_proportion_ratios: Inconsistant size of arguments. Coercing')
-
-#     # calculate intensity / sampling proportion ratios
-#     intensity_prop_ratios = intensities_df.divide(
-#         pixels_total_overlap.replace(to_replace=0, value=np.nan), axis = 0)
-
-#     # normalize ratios so that full pixels have intensities with avg = 1
-#     norm_intensity_prop_ratios = intensity_prop_ratios.divide(
-#         full_pixels_avg_intensities, axis=1).replace(np.inf, np.nan)
-
-#     # normalization is optional
-#     if normalized:
-#         return norm_intensity_prop_ratios
-#     return intensity_prop_ratios
 
 def normalize_proportion_ratios(
     intensities_ad: ad.AnnData,
@@ -574,12 +547,61 @@ def correct_quantile_inplace(adata: ad.AnnData,
     return an
 
 
+def get_overlap_data(cell_regions, mark_regions, overlap_regions):
+    return overlap_analysis.OverlapData(
+        cell_regions=cell_regions.set_index('cell_id'),
+        ablation_mark_regions=mark_regions.set_index('am_id'),
+        overlap_regions=overlap_regions,
+        overlap_labels=None
+    )
+
+def add_overlap_matrix_spacem(adata, cell_regions, mark_regions, overlap_regions):
+
+    overlap_data = get_overlap_data(cell_regions, mark_regions, overlap_regions)
+
+    overlap_matrix = overlap_analysis.compute_overlap_matrix(
+        overlap_data.overlap_regions,
+        overlap_data.cell_regions.index,
+        overlap_data.ablation_mark_regions.index,
+    )
+
+    # prepare data that is required for the quantile regression
+    adata.obsm['correction_overlap_matrix'] = np.array(overlap_matrix.T)
+    adata.obs['area'] = list(mark_regions.area)
+    adata.uns['correction_cell_list'] = list(overlap_matrix.index)
+    adata.uns['cell_area'] = list(cell_regions.area)
+
+def deconvolution_spacem(adata: ad.AnnData, overlap_data: overlap_analysis.OverlapData, raw_adata: ad.AnnData = None):
+    
+    if raw_adata is None:
+        raw_adata = ad.AnnData(var = adata.var, obs = pd.DataFrame(index=adata.uns['correction_cell_list']))
+    
+    metabolites = raw_adata.var_names.intersection(adata.var_names)
+
+    spectra_df = sc.get.obs_df(adata, keys=list(metabolites))
+    spectra_df.index = spectra_df.index.astype(int)
+    
+    cell_spectra = single_cell_analysis_normalization.create_cell_ion_intensities_dataframe_from_spectra_df(
+        am_spectra_df=spectra_df,
+        overlap_data = overlap_data,
+        cell_normalization_method = "weighted_by_overlap_and_sampling_area",
+        ablation_marks_min_overlap_ratio = 0.3
+    )
+    cells = cell_spectra.index.astype(str).intersection(raw_adata.obs_names)
+    
+    cell_adata = raw_adata[cells, metabolites].copy()
+    cell_adata.X = cell_spectra.loc[cells.astype(int)].values
+    cell_adata.var = cell_adata.var.align(adata.var)[1].loc[metabolites]
+    return cell_adata
+
+
 def cell_normalization_Rappez_adata(sampling_prop_matrix: pd.DataFrame,
     sampling_spec_matrix: pd.DataFrame,
     adata: ad.AnnData,
     raw_adata: ad.AnnData,
     sampling_prop_threshold = 0.3,
-    sampling_spec_threshold = 0
+    sampling_spec_threshold = 0,
+    remove_empty_cells = False,
 ) -> ad.AnnData:
     
     # filter out pixels with little overlap with any cell (thus sum of all overlaps)
@@ -609,17 +631,23 @@ def cell_normalization_Rappez_adata(sampling_prop_matrix: pd.DataFrame,
     deconv_array = cor_df / cell_norm_factor[:, np.newaxis]
     deconv_array[np.isnan(deconv_array)] = 0
     norm_ion_intensities.X = deconv_array.astype(np.float32)
-    norm_ion_intensities.obs.index = norm_ion_intensities.obs.cell_id.map(lambda x: x.replace(const.CELL_PRE, ""))
+    #norm_ion_intensities.obs.index = norm_ion_intensities.obs.cell_id.map(lambda x: x.replace(const.CELL_PRE, ""))
 
-    norm_ion_intensities = norm_ion_intensities[:, raw_adata.var_names]
-    norm_ion_intensities = norm_ion_intensities[raw_adata.obs_names]
-    norm_ion_intensities.obs = raw_adata.obs
+    obs_names = raw_adata.obs_names
+    var_names = raw_adata.var_names.intersection(adata.var_names)
+    if remove_empty_cells:
+        cells_out = np.array(adata.uns['correction_cell_list'])[np.array(adata.obsm['correction_overlap_matrix']).sum(axis=0) != 0]
+        obs_names = raw_adata.obs_names.intersection(cells_out)
+
+    norm_ion_intensities = norm_ion_intensities[obs_names, var_names]
+    norm_ion_intensities.obs = raw_adata.obs.loc[obs_names, :]
     return norm_ion_intensities
 
 def deconvolution_rappez(adata: ad.AnnData,
     raw_adata: ad.AnnData = None,
     sampling_prop_threshold = 0.3,
-    sampling_spec_threshold = 0
+    sampling_spec_threshold = 0,
+    remove_empty_cells = False,
 ) -> ad.AnnData:
     """Pixel-cell deconvolution as implemented in the original SpaceM publication
     
@@ -642,7 +670,8 @@ def deconvolution_rappez(adata: ad.AnnData,
         adata = adata,
         raw_adata = raw_adata,
         sampling_prop_threshold = sampling_prop_threshold,
-        sampling_spec_threshold = sampling_spec_threshold
+        sampling_spec_threshold = sampling_spec_threshold,
+        remove_empty_cells = remove_empty_cells,
     )
 
     return deconv_adata
