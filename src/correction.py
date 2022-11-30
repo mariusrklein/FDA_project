@@ -20,6 +20,7 @@ from itertools import chain
 import anndata as ad
 import scanpy as sc
 from src import const
+import seaborn as sns
 import sys
 sys.path.append('/home/mklein/spacem')
 from SpaceM.lib.modules import (
@@ -233,14 +234,23 @@ def get_molecule_normalization_factors(
     
     # sum up all cellular overlaps of each pixel
     pixels_total_overlap = overlap_matrix.sum(axis=0) / np.array(adata.obs['area'])
-
+    
     # iterate over all metabolites and take average (or other measure) of intensities in full pixels
     intensities_df[const.TPO] = pixels_total_overlap
 
-    intensities_df = intensities_df[intensities_df[const.TPO] == 1]
-    del intensities_df[const.TPO]
+    full_intensities_df = intensities_df[intensities_df[const.TPO] == 1]
+    
+    if len(full_intensities_df) == 0:
+        # threshold = np.percentile(intensities_df[const.TPO], 99)
+        arr = intensities_df[const.TPO].values
+        threshold = float(arr[np.argsort(arr)][-10:-9])
 
-    full_pixels_avg_intensities = np.array([method(intensities_df[ion]) for ion in intensities_df])
+        full_intensities_df = intensities_df[intensities_df[const.TPO] >= threshold]
+        print('No pixels with full overlap found. Taking top ten pixels with overlap > %1.2f'%threshold)
+        
+    del full_intensities_df[const.TPO]
+    print('Using %d pixels to calculate full-pixel avereage intensities.'%len(full_intensities_df))
+    full_pixels_avg_intensities = np.array([method(full_intensities_df[ion]) for ion in full_intensities_df])
 
     # return both series
     return (pixels_total_overlap, full_pixels_avg_intensities)
@@ -555,7 +565,7 @@ def get_overlap_data(cell_regions, mark_regions, overlap_regions):
         overlap_labels=None
     )
 
-def add_overlap_matrix_spacem(adata, cell_regions, mark_regions, overlap_regions):
+def add_overlap_matrix_spacem(adata, cell_regions, mark_regions, overlap_regions, return_matrix = False):
 
     overlap_data = get_overlap_data(cell_regions, mark_regions, overlap_regions)
 
@@ -571,10 +581,16 @@ def add_overlap_matrix_spacem(adata, cell_regions, mark_regions, overlap_regions
     adata.uns['correction_cell_list'] = list(overlap_matrix.index)
     adata.uns['cell_area'] = list(cell_regions.area)
 
-def deconvolution_spacem(adata: ad.AnnData, overlap_data: overlap_analysis.OverlapData, raw_adata: ad.AnnData = None):
+def deconvolution_spacem(adata: ad.AnnData, overlap_data: overlap_analysis.OverlapData, raw_adata: ad.AnnData = None, deconvolution_params: dict = None):
     
     if raw_adata is None:
         raw_adata = ad.AnnData(var = adata.var, obs = pd.DataFrame(index=adata.uns['correction_cell_list']))
+        
+    if deconvolution_params is None:
+        deconvolution_params = {'cell_normalization_method': 'weighted_by_overlap_and_sampling_area', 
+                                'ablation_marks_min_overlap_ratio': 0.3
+                               }
+        print('no deconvolution parameters given!')
     
     metabolites = raw_adata.var_names.intersection(adata.var_names)
 
@@ -584,8 +600,8 @@ def deconvolution_spacem(adata: ad.AnnData, overlap_data: overlap_analysis.Overl
     cell_spectra = single_cell_analysis_normalization.create_cell_ion_intensities_dataframe_from_spectra_df(
         am_spectra_df=spectra_df,
         overlap_data = overlap_data,
-        cell_normalization_method = "weighted_by_overlap_and_sampling_area",
-        ablation_marks_min_overlap_ratio = 0.3
+        cell_normalization_method = deconvolution_params['cell_normalization_method'],
+        ablation_marks_min_overlap_ratio = deconvolution_params['ablation_marks_min_overlap_ratio']
     )
     cells = cell_spectra.index.astype(str).intersection(raw_adata.obs_names)
     
