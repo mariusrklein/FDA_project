@@ -159,7 +159,7 @@ class MetaboliteAnalysis:
         ax[1].set_title('Intensity LFC by ion suppression correction')
         fig.set_figwidth(12)
     
-    def top_ion_plot(self, top_ions = 5, plot_method=sns.histplot, exclude_ref_corrected = True, **kwargs):
+    def top_ion_plot(self, top_ions = 5, plot_method=sns.histplot, exclude_ref_corrected = True, log=False, **kwargs):
         
         plot_df = self.plot_df_filtered if exclude_ref_corrected else self.plot_df
         plot_df = plot_df[plot_df.uncorrected > 0]
@@ -173,9 +173,10 @@ class MetaboliteAnalysis:
         }
         
         for condition, ion_list in tops.items():
-            self.ion_plot(ions=ion_list, title=condition, plot_method=plot_method, exclude_ref_corrected=exclude_ref_corrected, **kwargs)
+            self.ion_plot(ions=ion_list, title=condition, plot_method=plot_method, 
+                          exclude_ref_corrected=exclude_ref_corrected, log=log, **kwargs)
         
-    def ion_plot(self, ions, title='', plot_method=sns.histplot, exclude_ref_corrected=True, **kwargs):
+    def ion_plot(self, ions, title='', plot_method=sns.histplot, exclude_ref_corrected=True, log=False, **kwargs):
 
         plot_df = self.plot_df_filtered.copy() if exclude_ref_corrected else self.plot_df.copy()
         plot_df = plot_df[self.plot_df.uncorrected > 0]
@@ -192,17 +193,28 @@ class MetaboliteAnalysis:
         }
         grid = sns.FacetGrid(plot_df, col='ion', row='set', sharex=False, sharey=False, col_order=ions, palette='cividis', margin_titles=True)
         grid.map(plot_method, 'uncorrected', 'ISM correction', **kwargs).add_legend()
-        grid.set(aspect = 1)
+        if not log:
+            grid.set(aspect = 1)
         for i, ax in enumerate(grid.axes.flat): 
             lim_max = max([ax.get_xlim()[1], ax.get_ylim()[1]])
             lim_min = min([ax.get_xlim()[0], ax.get_ylim()[0]])
-            ax.set_xlim(lim_min, lim_max)
-            ax.set_ylim(lim_min, lim_max)
+            
             textstr = '\n'.join(['%s = %1.3f'%(name, value[i]) for name, value in params.items()])
-          #  'quantreg slope = %1.3f\npearson r = %1.5f\nscores = %1.2f'%(slopes[i], pearson[i], scores[i])
+            #  'quantreg slope = %1.3f\npearson r = %1.5f\nscores = %1.2f'%(slopes[i], pearson[i], scores[i])
             props = dict(boxstyle='round', alpha=0.5)
+            
+            if log:
+                #ax.set_xlim(np.log(lim_min), np.log(lim_max))
+                #ax.set_ylim(np.log(lim_min), np.log(lim_max))
+                
+                ax.axline((1,1), (2,2))
+            else:
+                ax.set_xlim(lim_min, lim_max)
+                ax.set_ylim(lim_min, lim_max)
+               
+                ax.axline((lim_min,lim_min), slope=1)
+                
             ax.text(0.05, 0.95, textstr, transform=ax.transAxes, verticalalignment='top', bbox=props, fontsize=10)
-            ax.axline((lim_min,lim_min), slope=1)
     
     def quotient_plot(self, show_cells = None, show_TPO = True):
         
@@ -214,9 +226,9 @@ class MetaboliteAnalysis:
         cells_df['set_TPO'] = [self.adata_cor.obs.loc[c, 'list_TPO'] for c in self.cells]
         cells_df['list_TPO'] = [list(np.float_(row.split(";"))) for row in cells_df['set_TPO']]
 
-        grid = sns.FacetGrid(self.long_plot_df[self.long_plot_df['cell'].isin(self.cells)], row='correction', col='cell', margin_titles=True, sharey=False,
-                            col_order = self.cells)
-        grid.map(sns.lineplot, 'ion', 'value', linewidth = 0.5)
+        grid = sns.FacetGrid(self.long_plot_df[self.long_plot_df['cell'].isin(self.cells)], row='correction', col='cell', 
+                             hue='corrected_only_using_pool', margin_titles=True, sharey=False, col_order = self.cells)
+        grid.map(sns.lineplot, 'ion', 'value', linewidth = 0.5).add_legend()
         for i, ax in enumerate(grid.axes.flat): 
             ax.set_xticks([])
             if i >= 2*len(self.cells):
@@ -246,11 +258,11 @@ class MetaboliteAnalysis:
                 ax.set_xlabel('corrected / raw ion intensities ratio')
             
 
-    def save_matrix(self, save_to_path, safe_to_name = 'metenrichr'):
+    def save_matrix(self, save_to_path, safe_to_name = 'metenrichr', save_figures = None):
         subset_adata = self.conc_adata_raw.copy()
         df = subset_adata.to_df()
         # compress data by rounding
-        significant_figures = int(df.shape[0] * df.shape[1] / 6e6)
+        significant_figures = int(df.shape[0] * df.shape[1] / 6e6) if save_figures is None else save_figures
         df = df.applymap(lambda x: 0 if x == 0 else round(x, significant_figures - int(np.floor(np.log10(np.abs(x))))))
         df.to_csv(os.path.join(save_to_path, safe_to_name+'_matrix.csv'))
 
