@@ -1,0 +1,1403 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Single-Cell Analysis &#8212; Ion suppression correction  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Single-Cell Analysis</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars and line breaks on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+    white-space: pre;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.jp-RenderedHTMLCommon thead,
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.jp-RenderedHTMLCommon th,
+div.rendered_html th {
+  font-weight: bold;
+}
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.jp-RenderedHTMLCommon tbody tr:hover,
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<section id="Single-Cell-Analysis">
+<h1>Single-Cell Analysis<a class="headerlink" href="#Single-Cell-Analysis" title="Permalink to this heading">¶</a></h1>
+<p>v1.1 - <a class="reference external" href="changelog.md">Changelog</a></p>
+<p>The purpose of this notebook is to give a basic example of how to perform single-cell analysis of SpaceM data, more precisely the following steps:</p>
+<ul class="simple">
+<li><p>Loading multiple SpaceM datasets</p></li>
+<li><p>QC &amp; Preprocessing</p></li>
+<li><p>Dimensionality reduction (i.e. creating a UMAP)</p></li>
+<li><p>Clustering</p></li>
+<li><p>Differential analysis</p></li>
+</ul>
+<div class="line-block">
+<div class="line">These steps are demonstrated using a SpaceM perturbation dataset generously donated by Luísa. If you want to run this notebook yourself, you can download the dataset <a class="reference external" href="https://oc.embl.de/index.php/s/QIKf2EiVmZwHWbL">here</a>.</div>
+<div class="line">The dataset contains the metabolomes of cells subjected to one of four different treatments in order to induce metabolic changes, with five replicates for each treatment.</div>
+</div>
+<p>You are also invited to also use this notebook as a basis for your own analysis - keep in mind however that each analysis often needs to be custom-tailored to your data. Feel free to reach out to Alex if you need help!</p>
+<p>Before you read this notebook, also consider checking out <a class="reference external" href="https://scanpy.readthedocs.io/en/stable/usage-principles.html">this primer</a> on the core usage principles of Scanpy, the main Python package we’re going to use for single-cell analysis.</p>
+<section id="Setup">
+<h2>Setup<a class="headerlink" href="#Setup" title="Permalink to this heading">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Make sure to install both <a class="reference external" href="https://scanpy.readthedocs.io/en/stable/installation.html">Scanpy</a> and <a class="reference external" href="https://grp-alexandrov.embl-community.io/outer-spacem/installation.html">Outer SpaceM</a> before running this notebook!</p>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">outer_spacem</span> <span class="k">as</span> <span class="nn">osm</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;retina&#39;]
+
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">rc</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="s2">&quot;legend.frameon&quot;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="p">},</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;ticks&quot;</span><span class="p">,</span>
+    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;talk&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Loading-the-data">
+<h2>Loading the data<a class="headerlink" href="#Loading-the-data" title="Permalink to this heading">¶</a></h2>
+<p>It is highly recommended you track all datasets within a SpaceM project in a central metadata table (e.g. a csv file or an Excel sheet). If your datasets are all part of a project on METASPACE, you can use the “Export to CSV” in the project view to get a basis for this (you might need to click “see all datasets” first).</p>
+<p>Apart from a unique dataset ID, you can also include information such as a dataset’s slide number, position on said slide, as well as biologically relevant information, e.g. treatment:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/home/mklein/FDA_project/data/Mx_Seahorse/metadata.csv&quot;</span><span class="p">)</span>
+
+<span class="n">metadata</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>datasetId</th>
+      <th>col</th>
+      <th>row</th>
+      <th>treatment</th>
+      <th>replicate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2022-01-27_17h46m46s</td>
+      <td>2</td>
+      <td>A</td>
+      <td>Stim</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2022-01-27_17h53m42s</td>
+      <td>3</td>
+      <td>A</td>
+      <td>Stim + 2-DG</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2022-01-27_17h48m39s</td>
+      <td>1</td>
+      <td>G</td>
+      <td>NStim</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2022-01-27_17h38m58s</td>
+      <td>1</td>
+      <td>D</td>
+      <td>NStim</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2022-01-27_17h33m41s</td>
+      <td>3</td>
+      <td>H</td>
+      <td>Stim + 2-DG</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2022-01-27_18h01m34s</td>
+      <td>4</td>
+      <td>G</td>
+      <td>Stim + Oligomycin</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2022-01-27_17h44m11s</td>
+      <td>1</td>
+      <td>B</td>
+      <td>NStim</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2022-01-27_17h20m20s</td>
+      <td>2</td>
+      <td>F</td>
+      <td>Stim</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2022-01-27_17h35m51s</td>
+      <td>2</td>
+      <td>E</td>
+      <td>Stim</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2022-01-27_17h24m46s</td>
+      <td>1</td>
+      <td>C</td>
+      <td>NStim</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2022-01-27_17h29m07s</td>
+      <td>3</td>
+      <td>B</td>
+      <td>Stim + 2-DG</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2022-01-27_17h14m28s</td>
+      <td>4</td>
+      <td>B</td>
+      <td>Stim + Oligomycin</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2022-01-27_17h12m17s</td>
+      <td>3</td>
+      <td>E</td>
+      <td>Stim + 2-DG</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2022-01-27_17h22m40s</td>
+      <td>2</td>
+      <td>I</td>
+      <td>Stim</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2022-01-27_17h27m14s</td>
+      <td>4</td>
+      <td>E</td>
+      <td>Stim + Oligomycin</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2022-01-27_17h18m01s</td>
+      <td>1</td>
+      <td>E</td>
+      <td>NStim</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2022-01-27_17h31m49s</td>
+      <td>2</td>
+      <td>J</td>
+      <td>Stim</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2022-01-27_17h41m45s</td>
+      <td>4</td>
+      <td>H</td>
+      <td>Stim + Oligomycin</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2022-01-27_17h56m04s</td>
+      <td>4</td>
+      <td>F</td>
+      <td>Stim + Oligomycin</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2022-01-27_17h51m05s</td>
+      <td>3</td>
+      <td>F</td>
+      <td>Stim + 2-DG</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>As we can see, there’s 20 individual SpaceM datasets that are tracked by this table. The benefit of a metadata table apart from letting you keep track all your datasets is that loading all your datasets now boils down to a single line of code. To load your datasets you’re going to need your metadata table (i.e. a pandas DataFrame) and a pattern that can be used to find datasets:</p>
+<p>A couple of those samples have shown batch effects, let’s exclude them:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metadata_subset</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">metadata</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">13</span><span class="p">]),</span> <span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;/home/mklein/FDA_project/data/Mx_Seahorse/</span><span class="si">{row}{col}</span><span class="s2">/cells_spatiomolecular_adata_spacem.h5ad&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>This pattern contains two wildcards encased in curly brackets: <code class="docutils literal notranslate"><span class="pre">{row}</span></code> and <code class="docutils literal notranslate"><span class="pre">{col}</span></code>. For each dataset tracked in our metadata table, these wildcards are going to be filled with the dataset’s respective column values, i.e. the <code class="docutils literal notranslate"><span class="pre">row</span></code> and <code class="docutils literal notranslate"><span class="pre">col</span></code> columns in the metadata table.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">osm</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">bulk_read</span><span class="p">(</span>
+    <span class="n">metadata_subset</span><span class="p">,</span>
+    <span class="n">file_pattern</span> <span class="o">=</span> <span class="n">pattern</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 16/16 [00:04&lt;00:00,  3.68it/s]
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/anndata/_core/anndata.py:1785: FutureWarning: X.dtype being converted to np.float32 from float64. In the next version of anndata (0.9) conversion will not be automatic. Pass dtype explicitly to avoid this warning. Pass `AnnData(X, dtype=X.dtype, ...)` to get the future behavour.
+  [AnnData(sparse.csr_matrix(a.shape), obs=a.obs) for a in all_adatas],
+</pre></div></div>
+</div>
+<div class="line-block">
+<div class="line">…and with that, the 17 selected datasets have been loaded and combined as a single <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object.</div>
+<div class="line">Additionally, loading datasets this way directly includes the metadata information in our single-cell data, e.g. treatment and replicate information:</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;datasetId&quot;</span><span class="p">,</span><span class="s2">&quot;col&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;treatment&quot;</span><span class="p">,</span> <span class="s2">&quot;replicate&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>datasetId</th>
+      <th>col</th>
+      <th>row</th>
+      <th>treatment</th>
+      <th>replicate</th>
+    </tr>
+    <tr>
+      <th>cell_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>22582-3</th>
+      <td>2022-01-27_18h01m34s</td>
+      <td>4</td>
+      <td>G</td>
+      <td>Stim + Oligomycin</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>101-0</th>
+      <td>2022-01-27_17h46m46s</td>
+      <td>2</td>
+      <td>A</td>
+      <td>Stim</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>10970-6</th>
+      <td>2022-01-27_17h35m51s</td>
+      <td>2</td>
+      <td>E</td>
+      <td>Stim</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>9371-12</th>
+      <td>2022-01-27_17h18m01s</td>
+      <td>1</td>
+      <td>E</td>
+      <td>NStim</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>13265-10</th>
+      <td>2022-01-27_17h12m17s</td>
+      <td>3</td>
+      <td>E</td>
+      <td>Stim + 2-DG</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Preprocessing">
+<h2>Preprocessing<a class="headerlink" href="#Preprocessing" title="Permalink to this heading">¶</a></h2>
+<section id="Quality-control">
+<h3>Quality control<a class="headerlink" href="#Quality-control" title="Permalink to this heading">¶</a></h3>
+<p>Let’s first perform some quality control. For starters, let’s check the size of our dataset:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(12790, 1009)
+</pre></div></div>
+</div>
+<div class="line-block">
+<div class="line">Our dataset consists of roughly 17000 cells described by 547 unique ions.</div>
+<div class="line">Let’s get some more detailed QC metrics:</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cell_qc</span><span class="p">,</span> <span class="n">ion_qc</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_qc_metrics</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">percent_top</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">displot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">cell_qc</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Unique ions&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;N cells&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#CC3333&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_sc_analysis_22_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Seahorse_sc_analysis_22_0.png" style="width: 469px; height: 464px;" />
+</div>
+</div>
+<p>Seems like most of our cells have 100-200 unique ions, and there is close to 0 cells that only have very few annotations.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">displot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">ion_qc</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;n_cells_by_counts&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Unique cells&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;N ions&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#CC3333&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_sc_analysis_24_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Seahorse_sc_analysis_24_0.png" style="width: 465px; height: 464px;" />
+</div>
+</div>
+<p>There seems to be plenty of ions however that only occur in a low number of cells.</p>
+</section>
+<section id="Filtering-cells-and-ions">
+<h3>Filtering cells and ions<a class="headerlink" href="#Filtering-cells-and-ions" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">Cells with only few annotations may not have been sampled by the MALDI laser sufficiently, and should therefore be removed.</div>
+<div class="line">Ions that are only present in a few cells will contain only little biological information, and removing them reduces dataset complexity.</div>
+</div>
+<p>Keep in mind however that the threshold for both filtering steps should be adapted to your own analysis.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cells before filtering:&quot;</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_cells</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_genes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cells after filtering:&quot;</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Cells before filtering: 12790
+Cells after filtering: 12790
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ions before filtering:&quot;</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ions after filtering:&quot;</span><span class="p">,</span> <span class="n">adata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Ions before filtering: 1009
+Ions after filtering: 570
+</pre></div></div>
+</div>
+</section>
+<section id="Normalization">
+<h3>Normalization<a class="headerlink" href="#Normalization" title="Permalink to this heading">¶</a></h3>
+<p>Technical aspects of MS imaging for SpaceM cause significant variance in how much biological material is sampled, similarly to varying sequencing depth in scRNA-seq. As this sampling variance can severely distort downstream analysis, we’re going to apply some normalization to mitigate for it.</p>
+<p>The simplest way to do this is by scaling a cell’s ion counts using a size factor porportional to the total ion count (TIC) of the cells - commonly referred to as TIC normalization:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="mf">1e4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Scaling">
+<h3>Scaling<a class="headerlink" href="#Scaling" title="Permalink to this heading">¶</a></h3>
+<p>Other single-cell omics may require you to scale intensities to achieve more normally distributed counts. For SpaceM data this is not recommended however:</p>
+<ul class="simple">
+<li><p>Log (or log1p) scaling is commonly used in sequencing-based single-cell analyses to reduce data skewness, but has shown to actually drown out biological information in SpaceM data.</p></li>
+<li><p>Z scoring (i.e. centering to 0 and scaling to as standard deviation of 1) has no consensus even in other single-cell omics, from experience it can severely distort SpaceM data.</p></li>
+</ul>
+<div class="line-block">
+<div class="line">Therefore, in addition to TIC normalization, we’re going to apply a log1p transformation.</div>
+<div class="line">This aims at reducing the skewness of the data, and at better matching the assumption of many downstream analysis tools that counts are normally distributed.</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;norm_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># keep raw values for diff. analysis</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Dimensionality-reduction">
+<h2>Dimensionality reduction<a class="headerlink" href="#Dimensionality-reduction" title="Permalink to this heading">¶</a></h2>
+<p>We’ll perform some dimensionality reduction in order to get a visual overview of our data. In short, we’ll create a <strong>U</strong>niform <strong>M</strong>anifold <strong>A</strong>pproximation and <strong>P</strong>rojection (UMAP) representation of our data that will give us a overview of the biological (i.e. wanted) and technical (i.e. unwanted) variance within the sample e.g. similarity of cell types, conditions or replicates.</p>
+<p>You can read more about dimensionality reduction in single-cell analysis <a class="reference external" href="https://chanzuckerberg.github.io/scRNA-python-workshop/analysis/03-dimensionality-reduction.html">here</a>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">osm</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">highlight_scatterplot</span><span class="p">(</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
+    <span class="n">obsm_key</span> <span class="o">=</span> <span class="s2">&quot;X_umap&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;treatment&quot;</span><span class="p">,</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;treatment&quot;</span><span class="p">,</span>
+    <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;tab10&quot;</span><span class="p">,</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">scatter_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">f</span><span class="o">.</span><span class="n">add_legend</span><span class="p">(</span><span class="n">markerscale</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_sc_analysis_39_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Seahorse_sc_analysis_39_0.png" style="width: 2223px; height: 438px;" />
+</div>
+</div>
+<div class="line-block">
+<div class="line">Excellent! Seems like different treatments seem to be a major driver of variance in our UMAP!</div>
+<div class="line">Let’s take a deeper look however and also check how much variance we have between our replicates.</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">osm</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">highlight_scatterplot</span><span class="p">(</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
+    <span class="n">obsm_key</span> <span class="o">=</span> <span class="s2">&quot;X_umap&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;replicate&quot;</span><span class="p">,</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;treatment&quot;</span><span class="p">,</span>
+    <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;tab10&quot;</span><span class="p">,</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">scatter_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">f</span><span class="o">.</span><span class="n">add_legend</span><span class="p">(</span><span class="n">markerscale</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_sc_analysis_41_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Seahorse_sc_analysis_41_0.png" style="width: 2063px; height: 438px;" />
+</div>
+</div>
+<p>We can see that mixing of replicates is not perfect (i.e. some technical variance remains in the dataset), but the biological variance we’re interested in (i.e. different treatments) outweighs the technical variance.</p>
+</section>
+<section id="Clustering">
+<h2>Clustering<a class="headerlink" href="#Clustering" title="Permalink to this heading">¶</a></h2>
+<p>Clustering cells based on their similarity is the base step in identifying biological groups (e.g. cells of the same type or metabolic states), as well as to infer differences between groups through differential analysis. Here we’re going to use the Leiden algorithm to identify groups of cells.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">osm</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">highlight_scatterplot</span><span class="p">(</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
+    <span class="n">obsm_key</span> <span class="o">=</span> <span class="s2">&quot;X_umap&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;leiden&quot;</span><span class="p">,</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;leiden&quot;</span><span class="p">,</span>
+    <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;tab10&quot;</span><span class="p">,</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">scatter_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">f</span><span class="o">.</span><span class="n">add_legend</span><span class="p">(</span><span class="n">markerscale</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_sc_analysis_46_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Seahorse_sc_analysis_46_0.png" style="width: 3036px; height: 438px;" />
+</div>
+</div>
+<p>As we can see above, cluster 4 covers only cells from a single replicate and is most likely artefatual. Therefore let’s merge it with cluster 1:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">leiden</span> <span class="o">==</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="s2">&quot;leiden&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">leiden</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">leiden</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">remove_unused_categories</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>With some additional tweaks we can make the UMAPs a bit more visually appealing:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a consistent color palette</span>
+<span class="n">keys</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;tab10&quot;</span><span class="p">,</span> <span class="n">n_colors</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span>
+
+<span class="n">leiden_palette</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">colors</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;leiden_colors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span>
+    <span class="s2">&quot;tab10&quot;</span><span class="p">,</span>
+    <span class="n">n_colors</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;leiden&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">osm</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">highlight_scatterplot</span><span class="p">(</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
+    <span class="n">obsm_key</span> <span class="o">=</span> <span class="s2">&quot;X_umap&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;leiden&quot;</span><span class="p">,</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;leiden&quot;</span><span class="p">,</span>
+    <span class="n">decorate_titles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># Decorate titles</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">scatter_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="n">trim_axes</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># ...And draw some more minimalist axes</span>
+<span class="p">)</span>
+
+<span class="n">f</span><span class="o">.</span><span class="n">add_legend</span><span class="p">(</span><span class="n">markerscale</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_sc_analysis_52_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Seahorse_sc_analysis_52_0.png" style="width: 2535px; height: 438px;" />
+</div>
+</div>
+<p>The number of clusters the Leiden algorithm will detect depends on the <code class="docutils literal notranslate"><span class="pre">resolution</span></code> parameter, you might want to tinker around with it a little bit. In the future, Outer-SpaceM will hopefully include a tool to take care of that for you!</p>
+<p>Once we have indentified groups of cells, we can check how cells subjected to different treatments distribute across those groups:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Register some consistent color palettes</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">_utils</span><span class="o">.</span><span class="n">_set_colors_for_categorical_obs</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;leiden&quot;</span><span class="p">,</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;tab10&quot;</span><span class="p">))</span> <span class="c1"># Need to pass color palette objects, otherwise the colors look terrible</span>
+
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;treatment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;treatment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span> <span class="c1"># String fields need to be converted to categoricals</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">_utils</span><span class="o">.</span><span class="n">_set_colors_for_categorical_obs</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="s2">&quot;treatment&quot;</span><span class="p">,</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;Dark2&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">osm</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">highlight_scatterplot</span><span class="p">(</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
+    <span class="n">obsm_key</span> <span class="o">=</span> <span class="s2">&quot;X_umap&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;treatment&quot;</span><span class="p">,</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;leiden&quot;</span><span class="p">,</span>
+    <span class="n">decorate_titles</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="c1"># Decorate titles</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">scatter_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="n">trim_axes</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># ...And draw some more minimalist axes</span>
+<span class="p">)</span>
+
+<span class="n">f</span><span class="o">.</span><span class="n">add_legend</span><span class="p">(</span><span class="n">markerscale</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_sc_analysis_55_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Seahorse_sc_analysis_55_0.png" style="width: 2726px; height: 438px;" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">osm</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">cross_label_counts_stacked</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">key_split</span><span class="o">=</span><span class="s2">&quot;treatment&quot;</span><span class="p">,</span>
+    <span class="n">key_count</span><span class="o">=</span><span class="s2">&quot;leiden&quot;</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="s2">&quot;relative&quot;</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_sc_analysis_56_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Seahorse_sc_analysis_56_0.png" style="width: 810px; height: 444px;" />
+</div>
+</div>
+<p>We can also check the composition of groups. Note that here we additionally normalize by the size of each treatment’s population by passing <code class="docutils literal notranslate"><span class="pre">normalize=&quot;popsize&quot;</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">osm</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">cross_label_counts_stacked</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">key_split</span><span class="o">=</span><span class="s2">&quot;leiden&quot;</span><span class="p">,</span>
+    <span class="n">key_count</span><span class="o">=</span><span class="s2">&quot;treatment&quot;</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="s2">&quot;popsize&quot;</span><span class="p">,</span>
+    <span class="n">decorate_yticks</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_sc_analysis_58_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Seahorse_sc_analysis_58_0.png" style="width: 810px; height: 444px;" />
+</div>
+</div>
+<p>For example we can see that cluster 1 is made up almost completely out of 2DG-treated cells.</p>
+</section>
+<section id="Differential-Analysis">
+<h2>Differential Analysis<a class="headerlink" href="#Differential-Analysis" title="Permalink to this heading">¶</a></h2>
+<p>After identifying groups of cells we might want to know what makes these groups unique, for which we are going to perform differential analysis.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>There are no data-backed best practices for differential analysis of SpaceM data yet. The steps currently shown here therefore use the most simplistic methods, which may not be universally applicable. A future update to this notebook will aim to change that and provide more robust methods.</p>
+</div>
+<p>To identify which ions are differentially abundant between between groups of cells, we will use a series of 1-vs-rest wilcoxon rank-sum tests for each ion:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;leiden&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;wilcoxon&quot;</span><span class="p">,</span> <span class="n">use_raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s check out which ions are most associated with each of our four groups:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">gene_symbols</span><span class="o">=</span><span class="s2">&quot;formula&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">KeyError</span>                                  Traceback (most recent call last)
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/indexes/base.py:3803</span>, in <span class="ansi-cyan-fg">Index.get_loc</span><span class="ansi-blue-fg">(self, key, method, tolerance)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3802</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
+<span class="ansi-green-fg">-&gt; 3803</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_engine</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">get_loc</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">casted_key</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3804</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">KeyError</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> err:
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/_libs/index.pyx:138</span>, in <span class="ansi-cyan-fg">pandas._libs.index.IndexEngine.get_loc</span><span class="ansi-blue-fg">()</span>
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/_libs/index.pyx:165</span>, in <span class="ansi-cyan-fg">pandas._libs.index.IndexEngine.get_loc</span><span class="ansi-blue-fg">()</span>
+
+File <span class="ansi-green-fg">pandas/_libs/hashtable_class_helper.pxi:5745</span>, in <span class="ansi-cyan-fg">pandas._libs.hashtable.PyObjectHashTable.get_item</span><span class="ansi-blue-fg">()</span>
+
+File <span class="ansi-green-fg">pandas/_libs/hashtable_class_helper.pxi:5753</span>, in <span class="ansi-cyan-fg">pandas._libs.hashtable.PyObjectHashTable.get_item</span><span class="ansi-blue-fg">()</span>
+
+<span class="ansi-red-fg">KeyError</span>: &#39;formula&#39;
+
+The above exception was the direct cause of the following exception:
+
+<span class="ansi-red-fg">KeyError</span>                                  Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In [46], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">sc</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">pl</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">rank_genes_groups</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">adata</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">sharey</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">False</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fontsize</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">12</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">gene_symbols</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#34;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">formula</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#34;</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/__init__.py:404</span>, in <span class="ansi-cyan-fg">rank_genes_groups</span><span class="ansi-blue-fg">(adata, groups, n_genes, gene_symbols, key, fontsize, ncols, sharey, show, save, ax, **kwds)</span>
+<span class="ansi-green-intense-fg ansi-bold">    402</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> gene_symbols <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-intense-fg ansi-bold">    403</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> adata<span style="color: rgb(98,98,98)">.</span>raw <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span> <span class="ansi-bold" style="color: rgb(175,0,255)">and</span> adata<span style="color: rgb(98,98,98)">.</span>uns[key][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">params</span><span style="color: rgb(175,0,0)">&#39;</span>][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">use_raw</span><span style="color: rgb(175,0,0)">&#39;</span>]:
+<span class="ansi-green-fg">--&gt; 404</span>         gene_names <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">adata</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">raw</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">var</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">gene_symbols</span><span class="ansi-yellow-bg">]</span>[gene_names]
+<span class="ansi-green-intense-fg ansi-bold">    405</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
+<span class="ansi-green-intense-fg ansi-bold">    406</span>         gene_names <span style="color: rgb(98,98,98)">=</span> adata<span style="color: rgb(98,98,98)">.</span>var[gene_symbols][gene_names]
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/frame.py:3804</span>, in <span class="ansi-cyan-fg">DataFrame.__getitem__</span><span class="ansi-blue-fg">(self, key)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3802</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>columns<span style="color: rgb(98,98,98)">.</span>nlevels <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">1</span>:
+<span class="ansi-green-intense-fg ansi-bold">   3803</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_getitem_multilevel(key)
+<span class="ansi-green-fg">-&gt; 3804</span> indexer <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">columns</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">get_loc</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">key</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3805</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> is_integer(indexer):
+<span class="ansi-green-intense-fg ansi-bold">   3806</span>     indexer <span style="color: rgb(98,98,98)">=</span> [indexer]
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/indexes/base.py:3805</span>, in <span class="ansi-cyan-fg">Index.get_loc</span><span class="ansi-blue-fg">(self, key, method, tolerance)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3803</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_engine<span style="color: rgb(98,98,98)">.</span>get_loc(casted_key)
+<span class="ansi-green-intense-fg ansi-bold">   3804</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">KeyError</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> err:
+<span class="ansi-green-fg">-&gt; 3805</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">KeyError</span>(key) <span class="ansi-bold" style="color: rgb(0,135,0)">from</span> <span class="ansi-bold" style="color: rgb(0,0,255)">err</span>
+<span class="ansi-green-intense-fg ansi-bold">   3806</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">TypeError</span>:
+<span class="ansi-green-intense-fg ansi-bold">   3807</span>     <span style="color: rgb(95,135,135)"># If we have a listlike key, _check_indexing_error will raise</span>
+<span class="ansi-green-intense-fg ansi-bold">   3808</span>     <span style="color: rgb(95,135,135)">#  InvalidIndexError. Otherwise we fall through and re-raise</span>
+<span class="ansi-green-intense-fg ansi-bold">   3809</span>     <span style="color: rgb(95,135,135)">#  the TypeError.</span>
+<span class="ansi-green-intense-fg ansi-bold">   3810</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_check_indexing_error(key)
+
+<span class="ansi-red-fg">KeyError</span>: &#39;formula&#39;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_sc_analysis_64_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Seahorse_sc_analysis_64_1.png" style="width: 399px; height: 394px;" />
+</div>
+</div>
+<p>We can also visualize the abundance of these ions on our UMAP:</p>
+<p>To avoid high ion intensities dominating the plots, let’s apply some hotspot clipping:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;norm_counts&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;clipped&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;norm_counts&quot;</span><span class="p">],</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">groupname</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;rank_genes_groups&quot;</span><span class="p">][</span><span class="s2">&quot;params&quot;</span><span class="p">][</span><span class="s2">&quot;groupby&quot;</span><span class="p">]</span> <span class="c1"># = &quot;leiden&quot;</span>
+<span class="n">top_n</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">groupname</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">categories</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">rank_genes_groups_df</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;scores&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ions</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">top_n</span><span class="p">]</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">ions</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;mercury&quot;</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;clipped&quot;</span><span class="p">,</span>
+        <span class="n">show</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">figure</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">groupname</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Furthermore, we can check the distribution of p-values and logfoldchanges in a volcano plot:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pval_thres</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="c1"># upper threshold for p-values</span>
+<span class="n">fc_thres</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># lower threshold for fold changes</span>
+
+<span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">groupname</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">categories</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">rank_genes_groups_df</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;scores&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">groupname</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;significance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pvals_adj&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pval_thres</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;logfoldchanges&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">fc_thres</span><span class="p">))</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pvals_adj_nlog10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pvals_adj&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1e-300</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="p">,</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;logfoldchanges&quot;</span><span class="p">,</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;pvals_adj_nlog10&quot;</span><span class="p">,</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;significance&quot;</span><span class="p">,</span>
+        <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;tab10&quot;</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Log fold change&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;-log10(p)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower left&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Significance&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">groupname</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Unfortunately, the volcano plots on SpaceM usually looks pretty messy…</p>
+<p>Nonetheless, we can now export these markers to use them in other analyses:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/ama/data/220325_Luisa_ScSeahorse&quot;</span>
+
+<span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">groupname</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">categories</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">rank_genes_groups_df</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;scores&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">groupname</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;pvals&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pval_thres</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;logfoldchanges&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">fc_thres</span><span class="p">))</span>
+    <span class="p">]</span>
+
+    <span class="n">df_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">groupname</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">_markers.tsv&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">df_path</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">df_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Single-Cell Analysis</a><ul>
+<li><a class="reference internal" href="#Setup">Setup</a></li>
+<li><a class="reference internal" href="#Loading-the-data">Loading the data</a></li>
+<li><a class="reference internal" href="#Preprocessing">Preprocessing</a><ul>
+<li><a class="reference internal" href="#Quality-control">Quality control</a></li>
+<li><a class="reference internal" href="#Filtering-cells-and-ions">Filtering cells and ions</a></li>
+<li><a class="reference internal" href="#Normalization">Normalization</a></li>
+<li><a class="reference internal" href="#Scaling">Scaling</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Dimensionality-reduction">Dimensionality reduction</a></li>
+<li><a class="reference internal" href="#Clustering">Clustering</a></li>
+<li><a class="reference internal" href="#Differential-Analysis">Differential Analysis</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/analysis/Mx_Seahorse/sc_analysis.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Single-Cell Analysis</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Marius Klein.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

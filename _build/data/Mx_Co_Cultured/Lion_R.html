@@ -1,0 +1,539 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>&lt;no title&gt; &#8212; Ion suppression correction  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars and line breaks on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+    white-space: pre;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.jp-RenderedHTMLCommon thead,
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.jp-RenderedHTMLCommon th,
+div.rendered_html th {
+  font-weight: bold;
+}
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.jp-RenderedHTMLCommon tbody tr:hover,
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">bmetenrichr</span><span class="p">,</span> <span class="n">lib.loc</span><span class="o">=</span><span class="s">&#39;/home/mklein/.conda/envs/ion_suppression/lib/R/library&#39;</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">pbapply</span><span class="p">,</span> <span class="n">lib.loc</span><span class="o">=</span><span class="s">&#39;/home/mklein/.conda/envs/ion_suppression/lib/R/library&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Warning message:
+“package ‘pbapply’ was built under R version 4.2.2”
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">scm</span> <span class="o">=</span> <span class="nf">read_csv</span><span class="p">(</span><span class="s">&#39;/home/mklein/FDA_project/data/Mx_Co_Cultured/lion_table.csv&#39;</span><span class="p">)</span>
+<span class="n">scm</span> <span class="o">=</span> <span class="nf">column_to_rownames</span><span class="p">(</span><span class="n">scm</span><span class="p">,</span> <span class="s">&#39;X1&#39;</span><span class="p">)</span>
+<span class="n">cond</span> <span class="o">=</span> <span class="nf">str_replace</span><span class="p">(</span><span class="nf">colnames</span><span class="p">(</span><span class="n">scm</span><span class="p">),</span> <span class="s">&quot;_.*&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="n">annot</span> <span class="o">=</span> <span class="nf">rownames</span><span class="p">(</span><span class="n">scm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Warning message:
+“Missing column names filled in: &#39;X1&#39; [1]”
+Warning message:
+“Duplicated column names deduplicated: &#39;uncorrected&#39; =&gt; &#39;uncorrected_1&#39; [3], &#39;uncorrected&#39; =&gt; &#39;uncorrected_2&#39; [4], &#39;uncorrected&#39; =&gt; &#39;uncorrected_3&#39; [5], &#39;uncorrected&#39; =&gt; &#39;uncorrected_4&#39; [6], &#39;uncorrected&#39; =&gt; &#39;uncorrected_5&#39; [7], &#39;uncorrected&#39; =&gt; &#39;uncorrected_6&#39; [8], &#39;uncorrected&#39; =&gt; &#39;uncorrected_7&#39; [9], &#39;uncorrected&#39; =&gt; &#39;uncorrected_8&#39; [10], &#39;uncorrected&#39; =&gt; &#39;uncorrected_9&#39; [11], &#39;uncorrected&#39; =&gt; &#39;uncorrected_10&#39; [12], &#39;uncorrected&#39; =&gt; &#39;uncorrected_11&#39; [13], &#39;uncorrected&#39; =&gt; &#39;uncorrected_12&#39; [14], &#39;uncorrected&#39; =&gt; &#39;uncorrected_13&#39; [15], &#39;uncorrected&#39; =&gt; &#39;uncorrected_14&#39; [16], &#39;uncorrected&#39; =&gt; &#39;uncorrected_15&#39; [17], &#39;uncorrected&#39; =&gt; &#39;uncorrected_16&#39; [18], &#39;uncorrected&#39; =&gt; &#39;uncorrected_17&#39; [19], &#39;uncorrected&#39; =&gt; &#39;uncorrected_18&#39; [20], &#39;uncorrected&#39; =&gt; &#39;uncorrected_19&#39; [21], &#39;uncorrected&#39; =&gt; &#39;uncorrected_20&#39; [22], &#39;uncorrected&#39; =&gt; &#39;uncorrected_21&#39; [23], &#39;uncorrected&#39; =&gt; &#39;uncorrected_22&#39; [24], &#39;uncorrected&#39; =&gt; &#39;uncorrected_23&#39; [25], &#39;uncorrected&#39; =&gt; &#39;uncorrected_24&#39; [26], &#39;uncorrected&#39; =&gt; &#39;uncorrected_25&#39; [27], &#39;uncorrected&#39; =&gt; &#39;uncorrected_26&#39; [28], &#39;uncorrected&#39; =&gt; &#39;uncorrected_27&#39; [29], &#39;uncorrected&#39; =&gt; &#39;uncorrected_28&#39; [30], &#39;uncorrected&#39; =&gt; &#39;uncorrected_29&#39; [31], &#39;uncorrected&#39; =&gt; &#39;uncorrected_30&#39; [32], &#39;uncorrected&#39; =&gt; &#39;uncorrected_31&#39; [33], &#39;uncorrected&#39; =&gt; &#39;uncorrected_32&#39; [34], &#39;uncorrected&#39; =&gt; &#39;uncorrected_33&#39; [35], &#39;uncorrected&#39; =&gt; &#39;uncorrected_34&#39; [36], &#39;uncorrected&#39; =&gt; &#39;uncorrected_35&#39; [37], &#39;uncorrected&#39; =&gt; &#39;uncorrected_36&#39; [38], &#39;uncorrected&#39; =&gt; &#39;uncorrected_37&#39; [39], &#39;uncorrected&#39; =&gt; &#39;uncorrected_38&#39; [40], &#39;uncorrected&#39; =&gt; &#39;uncorrected_39&#39; [41], &#39;uncorrected&#39; =&gt; &#39;uncorrected_40&#39; [42], &#39;uncorrected&#39; =&gt; &#39;uncorrected_41&#39; [43], &#39;uncorrected&#39; =&gt; &#39;uncorrected_42&#39; [44], &#39;uncorrected&#39; =&gt; &#39;uncorrected_43&#39; [45], &#39;uncorrected&#39; =&gt; &#39;uncorrected_44&#39; [46], &#39;uncorrected&#39; =&gt; &#39;uncorrected_45&#39; [47], &#39;uncorrected&#39; =&gt; &#39;uncorrected_46&#39; [48], &#39;uncorrected&#39; =&gt; &#39;uncorrected_47&#39; [49], &#39;uncorrected&#39; =&gt; &#39;uncorrected_48&#39; [50], &#39;uncorrected&#39; =&gt; &#39;uncorrected_49&#39; [51], &#39;uncorrected&#39; =&gt; &#39;uncorrected_50&#39; [52], &#39;uncorrected&#39; =&gt; &#39;uncorrected_51&#39; [53], &#39;uncorrected&#39; =&gt; &#39;uncorrected_52&#39; [54], &#39;uncorrected&#39; =&gt; &#39;uncorrected_53&#39; [55], &#39;uncorrected&#39; =&gt; &#39;uncorrected_54&#39; [56], &#39;uncorrected&#39; =&gt; &#39;uncorrected_55&#39; [57], &#39;uncorrected&#39; =&gt; &#39;uncorrected_56&#39; [58], &#39;uncorrected&#39; =&gt; &#39;uncorrected_57&#39; [59], &#39;uncorrected&#39; =&gt; &#39;uncorrected_58&#39; [60], &#39;uncorrected&#39; =&gt; &#39;uncorrected_59&#39; [61], &#39;uncorrected&#39; =&gt; &#39;uncorrected_60&#39; [62], &#39;uncorrected&#39; =&gt; &#39;uncorrected_61&#39; [63], &#39;uncorrected&#39; =&gt; &#39;uncorrected_62&#39; [64], &#39;uncorrected&#39; =&gt; &#39;uncorrected_63&#39; [65], &#39;uncorrected&#39; =&gt; &#39;uncorrected_64&#39; [66], &#39;uncorrected&#39; =&gt; &#39;uncorrected_65&#39; [67], &#39;uncorrected&#39; =&gt; &#39;uncorrected_66&#39; [68], &#39;uncorrected&#39; =&gt; &#39;uncorrected_67&#39; [69], &#39;uncorrected&#39; =&gt; &#39;uncorrected_68&#39; [70], &#39;uncorrected&#39; =&gt; &#39;uncorrected_69&#39; [71], &#39;uncorrected&#39; =&gt; &#39;uncorrected_70&#39; [72], &#39;uncorrected&#39; =&gt; &#39;uncorrected_71&#39; [73], &#39;uncorrected&#39; =&gt; &#39;uncorrected_72&#39; [74], &#39;uncorrected&#39; =&gt; &#39;uncorrected_73&#39; [75], &#39;uncorrected&#39; =&gt; &#39;uncorrected_74&#39; [76], &#39;uncorrected&#39; =&gt; &#39;uncorrected_75&#39; [77], &#39;uncorrected&#39; =&gt; &#39;uncorrected_76&#39; [78], &#39;uncorrected&#39; =&gt; &#39;uncorrected_77&#39; [79], &#39;uncorrected&#39; =&gt; &#39;uncorrected_78&#39; [80], &#39;uncorrected&#39; =&gt; &#39;uncorrected_79&#39; [81], &#39;uncorrected&#39; =&gt; &#39;uncorrected_80&#39; [82], &#39;uncorrected&#39; =&gt; &#39;uncorrected_81&#39; [83], &#39;uncorrected&#39; =&gt; &#39;uncorrected_82&#39; [84], &#39;uncorrected&#39; =&gt; &#39;uncorrected_83&#39; [85], &#39;uncorrected&#39; =&gt; &#39;uncorrected_84&#39; [86], &#39;uncorrected&#39; =&gt; &#39;uncorrected_85&#39; [87], &#39;uncorrected&#39; =&gt; &#39;uncorrected_86&#39; [88], &#39;uncorrected&#39; =&gt; &#39;uncorrected_87&#39; [89], &#39;uncorrected&#39; =&gt; &#39;uncorrected_88&#39; [90], &#39;uncorrected&#39; =&gt; &#39;uncorrected_89&#39; [91], &#39;uncorrected&#39; =&gt; &#39;uncorrected_90&#39; [92], &#39;uncorrected&#39; =&gt; &#39;uncorrected_91&#39; [93], &#39;uncorrected&#39; =&gt; &#39;uncorrected_92&#39; [94], &#39;uncorrected&#39; =&gt; &#39;uncorrected_93&#39; [95], &#39;uncorrected&#39; =&gt; &#39;uncorrected_94&#39; [96], &#39;uncorrected&#39; =&gt; &#39;uncorrected_95&#39; [97], &#39;uncorrected&#39; =&gt; &#39;uncorrected_96&#39; [98], &#39;uncorrected&#39; =&gt; &#39;uncorrected_97&#39; [99], &#39;uncorrected&#39; =&gt; &#39;uncorrected_98&#39; [100], &#39;uncorrected&#39; =&gt; &#39;uncorrected_99&#39; [101], &#39;uncorrected&#39; =&gt; &#39;uncorrected_100&#39; [102], &#39;uncorrected&#39; =&gt; &#39;uncorrected_101&#39; [103], &#39;uncorrected&#39; =&gt; &#39;uncorrected_102&#39; [104], &#39;uncorrected&#39; =&gt; &#39;uncorrected_103&#39; [105], &#39;uncorrected&#39; =&gt; &#39;uncorrected_104&#39; [106], &#39;uncorrected&#39; =&gt; &#39;uncorrected_105&#39; [107], &#39;uncorrected&#39; =&gt; &#39;uncorrected_106&#39; [108], &#39;uncorrected&#39; =&gt; &#39;uncorrected_107&#39; [109], &#39;uncorrected&#39; =&gt; &#39;uncorrected_108&#39; [110], &#39;uncorrected&#39; =&gt; &#39;uncorrected_109&#39; [111], &#39;uncorrected&#39; =&gt; &#39;uncorrected_110&#39; [112], &#39;uncorrected&#39; =&gt; &#39;uncorrected_111&#39; [113], &#39;uncorrected&#39; =&gt; &#39;uncorrected_112&#39; [114], &#39;uncorrected&#39; =&gt; &#39;uncorrected_113&#39; [115], &#39;uncorrected&#39; =&gt; &#39;uncorrected_114&#39; [116], &#39;uncorrected&#39; =&gt; &#39;uncorrected_115&#39; [117], &#39;uncorrected&#39; =&gt; &#39;uncorrected_116&#39; [118], &#39;uncorrected&#39; =&gt; &#39;uncorrected_117&#39; [119], &#39;uncorrected&#39; =&gt; &#39;uncorrected_118&#39; [120], &#39;uncorrected&#39; =&gt; &#39;uncorrected_119&#39; [121], &#39;uncorrected&#39; =&gt; &#39;uncorrected_120&#39; [122], &#39;uncorrected&#39; =&gt; &#39;uncorrected_121&#39; [123], &#39;uncorrected&#39; =&gt; &#39;uncorrected_122&#39; [124], &#39;uncorrected&#39; =&gt; &#39;uncorrected_123&#39; [125], &#39;uncorrected&#39; =&gt; &#39;uncorrected_124&#39; [126], &#39;uncorrected&#39; =&gt; &#39;uncorrected_125&#39; [127], &#39;uncorrected&#39; =&gt; &#39;uncorrected_126&#39; [128], &#39;uncorrected&#39; =&gt; &#39;uncorrected_127&#39; [129], &#39;uncorrected&#39; =&gt; &#39;uncorrected_128&#39; [130], &#39;uncorrected&#39; =&gt; &#39;uncorrected_129&#39; [131], &#39;uncorrected&#39; =&gt; &#39;uncorrected_130&#39; [132], &#39;uncorrected&#39; =&gt; &#39;uncorrected_131&#39; [133], &#39;uncorrected&#39; =&gt; &#39;uncorrected_132&#39; [134], &#39;uncorrected&#39; =&gt; &#39;uncorrected_133&#39; [135], &#39;uncorrected&#39; =&gt; &#39;uncorrected_134&#39; [136], &#39;uncorrected&#39; =&gt; &#39;uncorrected_135&#39; [137], &#39;uncorrected&#39; =&gt; &#39;uncorrected_136&#39; [138], &#39;uncorrected&#39; =&gt; &#39;uncorrected_137&#39; [139], &#39;uncorrected&#39; =&gt; &#39;uncorrected_138&#39; [140], &#39;uncorrected&#39; =&gt; &#39;uncorrected_139&#39; [141], &#39;uncorrected&#39; =&gt; &#39;uncorrected_140&#39; [142], &#39;uncorrected&#39; =&gt; &#39;uncorrected_141&#39; [143], &#39;uncorrected&#39; =&gt; &#39;uncorrected_142&#39; [144], &#39;uncorrected&#39; =&gt; &#39;uncorrected_143&#39; [145], &#39;uncorrected&#39; =&gt; &#39;uncorrected_144&#39; [146], &#39;uncorrected&#39; =&gt; &#39;uncorrected_145&#39; [147], &#39;uncorrected&#39; =&gt; &#39;uncorrected_146&#39; [148], &#39;uncorrected&#39; =&gt; &#39;uncorrected_147&#39; [149], &#39;uncorrected&#39; =&gt; &#39;uncorrected_148&#39; [150], &#39;uncorrected&#39; =&gt; &#39;uncorrected_149&#39; [151], &#39;uncorrected&#39; =&gt; &#39;uncorrected_150&#39; [152], &#39;uncorrected&#39; =&gt; &#39;uncorrected_151&#39; [153], &#39;uncorrected&#39; =&gt; &#39;uncorrected_152&#39; [154], &#39;uncorrected&#39; =&gt; &#39;uncorrected_153&#39; [155], &#39;uncorrected&#39; =&gt; &#39;uncorrected_154&#39; [156], &#39;uncorrected&#39; =&gt; &#39;uncorrected_155&#39; [157], &#39;uncorrected&#39; =&gt; &#39;uncorrected_156&#39; [158], &#39;uncorrected&#39; =&gt; &#39;uncorrected_157&#39; [159], &#39;uncorrected&#39; =&gt; &#39;uncorrected_158&#39; [160], &#39;uncorrected&#39; =&gt; &#39;uncorrected_159&#39; [161], &#39;uncorrected&#39; =&gt; &#39;uncorrected_160&#39; [162], &#39;uncorrected&#39; =&gt; &#39;uncorrected_161&#39; [163], &#39;uncorrected&#39; =&gt; &#39;uncorrected_162&#39; [164], &#39;uncorrected&#39; =&gt; &#39;uncorrected_163&#39; [165], &#39;uncorrected&#39; =&gt; &#39;uncorrected_164&#39; [166], &#39;uncorrected&#39; =&gt; &#39;uncorrected_165&#39; [167], &#39;uncorrected&#39; =&gt; &#39;uncorrected_166&#39; [168], &#39;uncorrected&#39; =&gt; &#39;uncorrected_167&#39; [169], &#39;uncorrected&#39; =&gt; &#39;uncorrected_168&#39; [170], &#39;uncorrected&#39; =&gt; &#39;uncorrected_169&#39; [171], &#39;uncorrected&#39; =&gt; &#39;uncorrected_170&#39; [172], &#39;uncorrected&#39; =&gt; &#39;uncorrected_171&#39; [173], &#39;uncorrected&#39; =&gt; &#39;uncorrected_172&#39; [174], &#39;uncorrected&#39; =&gt; &#39;uncorrected_173&#39; [175], &#39;uncorrected&#39; =&gt; &#39;uncorrected_174&#39; [176], &#39;uncorrected&#39; =&gt; &#39;uncorrected_175&#39; [177], &#39;uncorrected&#39; =&gt; &#39;uncorrected_176&#39; [178], &#39;uncorrected&#39; =&gt; &#39;uncorrected_177&#39; [179], &#39;uncorrected&#39; =&gt; &#39;uncorrected_178&#39; [180], &#39;uncorrected&#39; =&gt; &#39;uncorrected_179&#39; [181], &#39;uncorrected&#39; =&gt; &#39;uncorrected_180&#39; [182], &#39;uncorrected&#39; =&gt; &#39;uncorrected_181&#39; [183], &#39;uncorrected&#39; =&gt; &#39;uncorrected_182&#39; [184], &#39;uncorrected&#39; =&gt; &#39;uncorrected_183&#39; [185], &#39;uncorrected&#39; =&gt; &#39;uncorrected_184&#39; [186], &#39;uncorrected&#39; =&gt; &#39;uncorrected_185&#39; [187], &#39;uncorrected&#39; =&gt; &#39;uncorrected_186&#39; [188], &#39;uncorrected&#39; =&gt; &#39;uncorrected_187&#39; [189], &#39;uncorrected&#39; =&gt; &#39;uncorrected_188&#39; [190], &#39;uncorrected&#39; =&gt; &#39;uncorrected_189&#39; [191], &#39;uncorrected&#39; =&gt; &#39;uncorrected_190&#39; [192], &#39;uncorrected&#39; =&gt; &#39;uncorrected_191&#39; [193], &#39;uncorrected&#39; =&gt; &#39;uncorrected_192&#39; [194], &#39;uncorrected&#39; =&gt; &#39;uncorrected_193&#39; [195], &#39;uncorrected&#39; =&gt; &#39;uncorrected_194&#39; [196], &#39;uncorrected&#39; =&gt; &#39;uncorrected_195&#39; [197], &#39;uncorrected&#39; =&gt; &#39;uncorrected_196&#39; [198], &#39;uncorrected&#39; =&gt; &#39;uncorrected_197&#39; [199], &#39;uncorrected&#39; =&gt; &#39;uncorrected_198&#39; [200], &#39;uncorrected&#39; =&gt; &#39;uncorrected_199&#39; [201], &#39;uncor”
+
+<span class="ansi-cyan-fg">──</span> <span class="ansi-bold">Column specification</span> <span class="ansi-cyan-fg">────────────────────────────────────────────────────────</span>
+cols(
+  .default = col_double(),
+  X1 = <span class="ansi-red-fg">col_character()</span>
+)
+<span class="ansi-cyan-fg">ℹ</span> Use <span class="ansi-black-fg ansi-white-bg">`spec()`</span> for the full column specifications.
+
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">scm</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table class="dataframe">
+<caption>A data.frame: 58 × 2274</caption>
+<thead>
+    <tr><th></th><th scope=col>uncorrected</th><th scope=col>uncorrected_1</th><th scope=col>uncorrected_2</th><th scope=col>uncorrected_3</th><th scope=col>uncorrected_4</th><th scope=col>uncorrected_5</th><th scope=col>uncorrected_6</th><th scope=col>uncorrected_7</th><th scope=col>uncorrected_8</th><th scope=col>uncorrected_9</th><th scope=col>⋯</th><th scope=col>ISM correction_1127</th><th scope=col>ISM correction_1128</th><th scope=col>ISM correction_1129</th><th scope=col>ISM correction_1130</th><th scope=col>ISM correction_1131</th><th scope=col>ISM correction_1132</th><th scope=col>ISM correction_1133</th><th scope=col>ISM correction_1134</th><th scope=col>ISM correction_1135</th><th scope=col>ISM correction_1136</th></tr>
+    <tr><th></th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>⋯</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+    <tr><th scope=row>C16H30O2</th><td> 265.80838</td><td> 296.73480</td><td> 472.5576</td><td> 323.413420</td><td> 472.5576</td><td> 142.261020</td><td> 242.3104</td><td>116.0415</td><td> 135.04773</td><td>  60.52071</td><td>⋯</td><td> 552.72310</td><td> 552.72310</td><td> 491.73578</td><td> 491.02158</td><td> 552.72310</td><td> 403.07750</td><td> 356.51788</td><td> 537.6353</td><td> 520.5389</td><td> 537.6353</td></tr>
+    <tr><th scope=row>C18H34O2</th><td> 489.95820</td><td> 567.77740</td><td> 836.5371</td><td> 653.158750</td><td> 836.5371</td><td> 757.007260</td><td> 832.3491</td><td>  0.0000</td><td> 176.75543</td><td> 623.16520</td><td>⋯</td><td>1603.15120</td><td>1603.15120</td><td>1186.84750</td><td> 942.90630</td><td>1603.15120</td><td>1028.86500</td><td>1080.97900</td><td>2135.7856</td><td>1993.1793</td><td>2135.7856</td></tr>
+    <tr><th scope=row>C18H36O2</th><td> 870.39610</td><td>1188.54050</td><td>2210.9346</td><td>1518.867000</td><td>2210.9346</td><td>1864.638900</td><td>1858.0277</td><td>711.5842</td><td>1888.14840</td><td>1868.12330</td><td>⋯</td><td>1365.77510</td><td>1365.77510</td><td>1142.10340</td><td>1082.69380</td><td>1365.77510</td><td> 701.53560</td><td>1063.41220</td><td>1632.4603</td><td>1513.6025</td><td>1632.4603</td></tr>
+    <tr><th scope=row>C19H37O6P</th><td>1267.84280</td><td>1355.58600</td><td>2427.7292</td><td>1503.450800</td><td>2427.7292</td><td>2480.910000</td><td>2788.9856</td><td>635.2651</td><td>2517.28420</td><td>2416.20200</td><td>⋯</td><td>2698.88530</td><td>2698.88530</td><td>2464.45020</td><td>2598.02080</td><td>2698.88530</td><td>1887.39820</td><td>2342.51300</td><td>2615.2750</td><td>2528.4695</td><td>2615.2750</td></tr>
+    <tr><th scope=row>C19H39O7P</th><td> 313.79956</td><td> 373.47574</td><td> 257.8283</td><td> 446.733920</td><td> 257.8283</td><td> 509.651920</td><td> 747.5887</td><td>111.0669</td><td> 241.92204</td><td> 407.44492</td><td>⋯</td><td> 916.36900</td><td> 916.36900</td><td> 521.20100</td><td> 540.95170</td><td> 916.36900</td><td> 369.40660</td><td> 517.47130</td><td> 542.6717</td><td> 520.9230</td><td> 542.6717</td></tr>
+    <tr><th scope=row>C20H32O2</th><td> 560.95590</td><td> 551.22000</td><td>   0.0000</td><td> 537.969670</td><td>   0.0000</td><td> 339.876800</td><td> 461.6155</td><td>  0.0000</td><td>   0.00000</td><td> 165.75848</td><td>⋯</td><td>1551.63610</td><td>1551.63610</td><td> 923.51690</td><td> 789.73254</td><td>1551.63610</td><td> 822.52040</td><td> 804.36810</td><td>2053.2397</td><td>1905.6130</td><td>2053.2397</td></tr>
+    <tr><th scope=row>C21H39O6P</th><td> 607.01764</td><td> 566.84790</td><td>   0.0000</td><td> 541.970640</td><td>   0.0000</td><td> 578.262270</td><td> 852.5914</td><td>  0.0000</td><td> 748.03300</td><td> 355.31976</td><td>⋯</td><td>1954.64170</td><td>1954.64170</td><td>1347.12120</td><td>1268.01700</td><td>1954.64170</td><td> 982.64954</td><td>1086.60790</td><td>2234.0562</td><td>2081.2883</td><td>2234.0562</td></tr>
+    <tr><th scope=row>C21H41O6P</th><td> 878.77295</td><td>1464.34180</td><td>3108.3145</td><td>2120.899200</td><td>3108.3145</td><td>2906.697800</td><td>3765.0505</td><td>827.0142</td><td>2198.45700</td><td>1968.66920</td><td>⋯</td><td>2595.77690</td><td>2595.77690</td><td>2140.06670</td><td>2221.59670</td><td>2595.77690</td><td>1463.73820</td><td>1805.77800</td><td>2418.6208</td><td>2299.4190</td><td>2418.6208</td></tr>
+    <tr><th scope=row>C21H41O7P</th><td> 291.28760</td><td> 240.56963</td><td>   0.0000</td><td> 208.978680</td><td>   0.0000</td><td> 629.588900</td><td> 597.3608</td><td>137.5127</td><td> 144.82014</td><td> 588.04175</td><td>⋯</td><td> 793.52790</td><td> 793.52790</td><td> 373.32663</td><td> 301.45337</td><td> 793.52790</td><td> 549.84470</td><td> 512.56824</td><td>1060.8722</td><td>1003.2903</td><td>1060.8722</td></tr>
+    <tr><th scope=row>C21H43O7P</th><td> 113.10226</td><td> 322.03647</td><td> 779.1768</td><td> 547.869750</td><td> 779.1768</td><td> 707.903560</td><td> 957.4809</td><td>430.1796</td><td> 950.36460</td><td> 476.80508</td><td>⋯</td><td> 493.36932</td><td> 493.36932</td><td> 526.96796</td><td> 578.00037</td><td> 493.36932</td><td> 403.99103</td><td> 566.83700</td><td> 484.8943</td><td> 475.9490</td><td> 484.8943</td></tr>
+    <tr><th scope=row>C22H32O2</th><td> 109.54904</td><td>  54.43075</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 297.09476</td><td> 297.09476</td><td>  58.72654</td><td>  44.09542</td><td> 297.09476</td><td> 234.27896</td><td>  15.45682</td><td> 212.4712</td><td> 218.0383</td><td> 212.4712</td></tr>
+    <tr><th scope=row>C22H34O2</th><td> 115.71298</td><td>  57.49337</td><td>   0.0000</td><td>   7.320935</td><td>   0.0000</td><td>  83.307190</td><td> 161.0606</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 232.65915</td><td> 232.65915</td><td>  60.10675</td><td>  40.46485</td><td> 232.65915</td><td>  80.82845</td><td>   0.00000</td><td> 279.1768</td><td> 256.4042</td><td> 279.1768</td></tr>
+    <tr><th scope=row>C23H46NO7P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  91.448990</td><td>   0.0000</td><td>  0.0000</td><td> 230.65166</td><td> 220.39288</td><td>⋯</td><td> 447.52997</td><td> 447.52997</td><td> 167.07233</td><td> 124.93462</td><td> 447.52997</td><td> 142.14148</td><td> 294.62840</td><td> 696.6241</td><td> 631.2423</td><td> 696.6241</td></tr>
+    <tr><th scope=row>C23H48NO7P</th><td> 480.29877</td><td> 409.65230</td><td> 768.7972</td><td> 347.574130</td><td> 768.7972</td><td> 531.521060</td><td> 509.0015</td><td>  0.0000</td><td> 610.87366</td><td> 605.27527</td><td>⋯</td><td> 685.30365</td><td> 685.30365</td><td> 585.30676</td><td> 546.56604</td><td> 685.30365</td><td> 566.27450</td><td> 630.19904</td><td> 852.5877</td><td> 817.4194</td><td> 852.5877</td></tr>
+    <tr><th scope=row>C25H44NO7P</th><td> 120.92986</td><td>  60.08544</td><td>   0.0000</td><td>  25.889444</td><td>   0.0000</td><td> 386.489800</td><td> 569.5678</td><td>277.9422</td><td>   0.00000</td><td> 229.21782</td><td>⋯</td><td> 712.81440</td><td> 712.81440</td><td> 136.43994</td><td>  65.45651</td><td> 712.81440</td><td> 129.65288</td><td> 353.86540</td><td> 676.3893</td><td> 610.8082</td><td> 676.3893</td></tr>
+    <tr><th scope=row>C25H50NO7P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 306.28064</td><td> 306.28064</td><td> 103.76095</td><td>  92.50238</td><td> 306.28064</td><td>  23.39122</td><td>  18.91521</td><td> 344.0341</td><td> 305.2885</td><td> 344.0341</td></tr>
+    <tr><th scope=row>C27H51O12P</th><td>   0.00000</td><td>   0.00000</td><td> 278.0701</td><td>   0.000000</td><td> 278.0701</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>  14.53961</td><td>   0.00000</td><td>⋯</td><td>  96.56229</td><td>  96.56229</td><td> 222.75699</td><td> 202.23279</td><td>  96.56229</td><td> 158.28604</td><td>  96.80270</td><td> 513.3424</td><td> 471.1341</td><td> 513.3424</td></tr>
+    <tr><th scope=row>C27H53O12P</th><td> 542.28590</td><td> 612.95264</td><td> 847.0953</td><td> 675.323900</td><td> 847.0953</td><td> 581.664700</td><td> 519.6295</td><td>400.7967</td><td> 660.07050</td><td> 672.27045</td><td>⋯</td><td>1356.34470</td><td>1356.34470</td><td>1109.33390</td><td>1110.94640</td><td>1356.34470</td><td> 933.11680</td><td> 988.03284</td><td>1483.7635</td><td>1418.6276</td><td>1483.7635</td></tr>
+    <tr><th scope=row>C29H49O12P</th><td> 107.21553</td><td>  53.27131</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 346.48236</td><td> 346.48236</td><td>  67.55263</td><td>  50.65832</td><td> 346.48236</td><td>  21.06862</td><td>  17.75732</td><td> 280.7000</td><td> 249.0872</td><td> 280.7000</td></tr>
+    <tr><th scope=row>C34H68NO6P</th><td> 390.99573</td><td> 648.89870</td><td>   0.0000</td><td> 935.990360</td><td>   0.0000</td><td>1196.458600</td><td>1616.5115</td><td>188.6147</td><td> 492.98755</td><td> 636.34534</td><td>⋯</td><td> 484.25333</td><td> 484.25333</td><td> 398.50922</td><td> 428.35070</td><td> 484.25333</td><td> 438.24686</td><td>  79.49010</td><td> 562.5029</td><td> 551.3161</td><td> 562.5029</td></tr>
+    <tr><th scope=row>C35H67O8P</th><td> 128.35420</td><td> 253.43643</td><td> 349.5985</td><td> 366.950130</td><td> 349.5985</td><td> 172.002790</td><td> 156.7765</td><td>  0.0000</td><td>  18.27966</td><td> 187.79301</td><td>⋯</td><td> 710.83386</td><td> 710.83386</td><td> 520.67630</td><td> 454.76562</td><td> 710.83386</td><td> 377.87637</td><td> 465.36072</td><td> 721.4957</td><td> 675.6843</td><td> 721.4957</td></tr>
+    <tr><th scope=row>C35H69O8P</th><td> 776.69770</td><td> 754.65030</td><td> 330.1092</td><td> 744.459600</td><td> 330.1092</td><td> 761.986940</td><td> 987.6733</td><td>409.6000</td><td> 576.00340</td><td> 597.83010</td><td>⋯</td><td> 772.20590</td><td> 772.20590</td><td> 813.43750</td><td> 806.54190</td><td> 772.20590</td><td> 621.88354</td><td> 456.05252</td><td> 596.0585</td><td> 594.1188</td><td> 596.0585</td></tr>
+    <tr><th scope=row>C36H69O8P</th><td>   0.00000</td><td>  51.62598</td><td>   0.0000</td><td> 108.245155</td><td>   0.0000</td><td> 122.527440</td><td> 226.6256</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 118.84217</td><td> 118.84217</td><td> 176.74860</td><td> 116.67982</td><td> 118.84217</td><td>  57.22186</td><td> 124.23043</td><td> 232.7877</td><td> 206.5708</td><td> 232.7877</td></tr>
+    <tr><th scope=row>C37H69O8P</th><td>  87.06710</td><td>  43.26033</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  63.340560</td><td>   0.0000</td><td>109.0704</td><td>   0.00000</td><td> 160.38278</td><td>⋯</td><td> 445.65152</td><td> 445.65152</td><td> 406.57657</td><td> 233.41904</td><td> 445.65152</td><td> 411.76070</td><td> 305.87253</td><td> 891.6937</td><td> 828.0323</td><td> 891.6937</td></tr>
+    <tr><th scope=row>C37H71O8P</th><td> 892.20540</td><td>1045.12290</td><td> 874.3597</td><td>1203.276000</td><td> 874.3597</td><td>1127.917600</td><td>1353.2804</td><td>404.9041</td><td> 729.86200</td><td> 847.58490</td><td>⋯</td><td>1505.17870</td><td>1505.17870</td><td>1159.07570</td><td>1131.29830</td><td>1505.17870</td><td>1131.79270</td><td> 834.25260</td><td>1758.3353</td><td>1685.1981</td><td>1758.3353</td></tr>
+    <tr><th scope=row>C37H74NO8P</th><td> 101.40762</td><td> 221.31976</td><td>   0.0000</td><td> 357.842740</td><td>   0.0000</td><td> 488.601780</td><td> 738.0820</td><td>174.5194</td><td> 189.25797</td><td> 168.91095</td><td>⋯</td><td> 216.65051</td><td> 216.65051</td><td> 169.66563</td><td> 116.17185</td><td> 216.65051</td><td>  53.21922</td><td> 406.42180</td><td> 278.6088</td><td> 247.2315</td><td> 278.6088</td></tr>
+    <tr><th scope=row>C38H73O8P</th><td>   0.00000</td><td>  57.68198</td><td>   0.0000</td><td> 109.433330</td><td>   0.0000</td><td>   5.929885</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 477.06195</td><td> 477.06195</td><td>  83.37893</td><td>   0.00000</td><td> 477.06195</td><td> 268.09213</td><td>  74.65699</td><td> 364.4614</td><td> 353.0562</td><td> 364.4614</td></tr>
+    <tr><th scope=row>C39H71O8P</th><td>   0.00000</td><td>  49.96685</td><td>   0.0000</td><td>  94.796300</td><td>   0.0000</td><td>   5.136745</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 137.35829</td><td> 137.35829</td><td> 164.25426</td><td>  63.50886</td><td> 137.35829</td><td> 175.12181</td><td> 118.73429</td><td> 494.0394</td><td> 452.7509</td><td> 494.0394</td></tr>
+    <tr><th scope=row>C39H73O8P</th><td> 247.98083</td><td> 340.36655</td><td>   0.0000</td><td> 437.783720</td><td>   0.0000</td><td> 409.927860</td><td> 567.6455</td><td>  0.0000</td><td> 127.56682</td><td> 233.63483</td><td>⋯</td><td>1292.95190</td><td>1292.95190</td><td> 755.41630</td><td> 625.20526</td><td>1292.95190</td><td> 769.44240</td><td> 651.83150</td><td>2341.2134</td><td>2157.3489</td><td>2341.2134</td></tr>
+    <tr><th scope=row>C39H75O8P</th><td> 100.90800</td><td> 121.70232</td><td>   0.0000</td><td> 148.169850</td><td>   0.0000</td><td> 218.312940</td><td> 272.7543</td><td>  0.0000</td><td>   0.00000</td><td> 132.22572</td><td>⋯</td><td> 363.95730</td><td> 363.95730</td><td> 268.10135</td><td> 230.71666</td><td> 363.95730</td><td> 170.25322</td><td> 129.12576</td><td> 675.4587</td><td> 614.6386</td><td> 675.4587</td></tr>
+    <tr><th scope=row>C39H76NO8P</th><td> 288.66855</td><td> 286.56744</td><td>   0.0000</td><td> 278.682220</td><td>   0.0000</td><td>  95.749146</td><td> 156.6658</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 606.19700</td><td> 606.19700</td><td> 458.99963</td><td> 301.09766</td><td> 606.19700</td><td> 372.54553</td><td> 338.84583</td><td>1183.5244</td><td>1082.4966</td><td>1183.5244</td></tr>
+    <tr><th scope=row>C40H76NO10P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td>  96.33249</td><td>  96.33249</td><td>  25.17877</td><td>   0.00000</td><td>  96.33249</td><td>  15.41443</td><td>   0.00000</td><td> 284.4237</td><td> 252.3916</td><td> 284.4237</td></tr>
+    <tr><th scope=row>C41H71O8P</th><td> 272.08090</td><td> 135.18663</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 165.62186</td><td> 165.62186</td><td> 203.39694</td><td> 137.72144</td><td> 165.62186</td><td> 137.85318</td><td>  17.71262</td><td> 477.5174</td><td> 434.0453</td><td> 477.5174</td></tr>
+    <tr><th scope=row>C41H73O8P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 393.23383</td><td> 393.23383</td><td> 225.35594</td><td> 142.59750</td><td> 393.23383</td><td> 382.67636</td><td> 122.34628</td><td> 573.9789</td><td> 551.3632</td><td> 573.9789</td></tr>
+    <tr><th scope=row>C41H74NO7P</th><td>   0.00000</td><td>  66.55279</td><td>   0.0000</td><td> 126.262870</td><td>   0.0000</td><td>   6.841831</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 104.20492</td><td> 104.20492</td><td>  80.41133</td><td>   0.00000</td><td> 104.20492</td><td> 112.67511</td><td>   0.00000</td><td> 412.0053</td><td> 374.2694</td><td> 412.0053</td></tr>
+    <tr><th scope=row>C41H74NO8P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 130.99165</td><td> 130.99165</td><td>  65.24387</td><td>   0.00000</td><td> 130.99165</td><td> 104.26772</td><td>  86.53082</td><td> 271.0638</td><td> 249.3209</td><td> 271.0638</td></tr>
+    <tr><th scope=row>C41H75O8P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 155.13606</td><td> 155.13606</td><td> 104.50829</td><td>   0.00000</td><td> 155.13606</td><td> 141.13878</td><td> 240.45276</td><td> 585.8909</td><td> 530.4443</td><td> 585.8909</td></tr>
+    <tr><th scope=row>C41H78NO8P</th><td> 147.05423</td><td> 231.92220</td><td>   0.0000</td><td> 301.380100</td><td>   0.0000</td><td>  16.330940</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td>1041.00590</td><td>1041.00590</td><td> 493.74320</td><td> 253.62813</td><td>1041.00590</td><td> 617.08356</td><td> 417.91537</td><td>1182.0719</td><td>1107.6439</td><td>1182.0719</td></tr>
+    <tr><th scope=row>C41H80NO8P</th><td> 473.40424</td><td> 495.26617</td><td>   0.0000</td><td> 524.200700</td><td>   0.0000</td><td> 623.603150</td><td> 678.4512</td><td>  0.0000</td><td>   0.00000</td><td> 514.32404</td><td>⋯</td><td>1365.35000</td><td>1365.35000</td><td> 794.44480</td><td> 619.60090</td><td>1365.35000</td><td> 628.39954</td><td> 587.47034</td><td>2120.2456</td><td>1938.9968</td><td>2120.2456</td></tr>
+    <tr><th scope=row>C42H80NO10P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>  16.766401</td><td>   0.0000</td><td> 190.790070</td><td> 368.8608</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 301.47590</td><td> 301.47590</td><td>  30.38545</td><td>   0.00000</td><td> 301.47590</td><td> 206.10394</td><td>   0.00000</td><td> 787.2128</td><td> 724.1620</td><td> 787.2128</td></tr>
+    <tr><th scope=row>C42H82NO6P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   8.706229</td><td>   0.0000</td><td>  99.070885</td><td> 191.5370</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 143.29074</td><td> 143.29074</td><td>  97.19405</td><td>   0.00000</td><td> 143.29074</td><td> 157.42792</td><td>  68.16138</td><td> 473.3586</td><td> 433.4215</td><td> 473.3586</td></tr>
+    <tr><th scope=row>C43H73O8P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 112.67853</td><td> 112.67853</td><td>  78.80516</td><td>   0.00000</td><td> 112.67853</td><td> 144.98987</td><td>   0.00000</td><td> 102.0417</td><td> 103.7616</td><td> 102.0417</td></tr>
+    <tr><th scope=row>C43H75O8P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td>   0.00000</td><td>   0.00000</td><td> 114.58621</td><td> 116.32962</td><td>   0.00000</td><td> 223.63452</td><td>  68.47192</td><td> 281.8351</td><td> 278.6895</td><td> 281.8351</td></tr>
+    <tr><th scope=row>C43H76NO7P</th><td> 295.16360</td><td> 237.80681</td><td>   0.0000</td><td> 172.930660</td><td>   0.0000</td><td>   9.370627</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td>   0.00000</td><td>   0.00000</td><td>  87.35571</td><td>   0.00000</td><td>   0.00000</td><td>  53.47910</td><td> 191.67085</td><td> 791.5919</td><td> 702.4418</td><td> 791.5919</td></tr>
+    <tr><th scope=row>C43H76NO8P</th><td> 138.99450</td><td> 144.45805</td><td> 244.9418</td><td> 143.041930</td><td> 244.9418</td><td>   7.751041</td><td>   0.0000</td><td>  0.0000</td><td>  12.80741</td><td>   0.00000</td><td>⋯</td><td> 693.70984</td><td> 693.70984</td><td> 282.28885</td><td>  61.13907</td><td> 693.70984</td><td> 436.57614</td><td> 368.61530</td><td> 931.5353</td><td> 865.9883</td><td> 931.5353</td></tr>
+    <tr><th scope=row>C43H78NO7P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td>  82.97433</td><td>  82.97433</td><td>  30.94581</td><td>   0.00000</td><td>  82.97433</td><td>  18.94500</td><td>   0.00000</td><td> 385.0613</td><td> 341.6952</td><td> 385.0613</td></tr>
+    <tr><th scope=row>C43H78NO8P</th><td> 375.67276</td><td> 390.42350</td><td>   0.0000</td><td> 398.053650</td><td>   0.0000</td><td> 151.492360</td><td> 252.3862</td><td>  0.0000</td><td> 161.03772</td><td>   0.00000</td><td>⋯</td><td>1260.19730</td><td>1260.19730</td><td> 833.10900</td><td> 557.84860</td><td>1260.19730</td><td> 949.24620</td><td> 905.86910</td><td>2005.1929</td><td>1872.8538</td><td>2005.1929</td></tr>
+    <tr><th scope=row>C43H79O13P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 124.99303</td><td> 124.99303</td><td> 106.73185</td><td>   0.00000</td><td> 124.99303</td><td> 127.19521</td><td>   0.00000</td><td> 665.4139</td><td> 598.9212</td><td> 665.4139</td></tr>
+    <tr><th scope=row>C43H81O13P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td>1060.09840</td><td>1060.09840</td><td> 298.67215</td><td> 155.22192</td><td>1060.09840</td><td> 517.82227</td><td> 529.03030</td><td>1887.9675</td><td>1729.5769</td><td>1887.9675</td></tr>
+    <tr><th scope=row>C43H82NO8P</th><td> 100.19222</td><td>  49.78170</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 260.51340</td><td> 260.51340</td><td>  35.29611</td><td>   0.00000</td><td> 260.51340</td><td>  21.60825</td><td> 205.93005</td><td> 518.2213</td><td> 459.8585</td><td> 518.2213</td></tr>
+    <tr><th scope=row>C44H78NO10P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td>   0.00000</td><td>   0.00000</td><td>  27.22561</td><td>   0.00000</td><td>   0.00000</td><td>  16.66750</td><td>   0.00000</td><td> 322.8525</td><td> 286.4925</td><td> 322.8525</td></tr>
+    <tr><th scope=row>C44H84NO6P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 247.21252</td><td> 247.21252</td><td>  64.26588</td><td>   0.00000</td><td> 247.21252</td><td>  96.42180</td><td>   0.00000</td><td> 372.1137</td><td> 338.0006</td><td> 372.1137</td></tr>
+    <tr><th scope=row>C45H78NO8P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 193.53731</td><td> 193.53731</td><td> 170.39713</td><td>  99.48507</td><td> 193.53731</td><td>  60.92940</td><td>  19.34925</td><td> 184.7463</td><td> 163.9400</td><td> 184.7463</td></tr>
+    <tr><th scope=row>C45H80NO8P</th><td>   0.00000</td><td>  85.14265</td><td>   0.0000</td><td> 161.531280</td><td>   0.0000</td><td>   8.752926</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td>   0.00000</td><td>⋯</td><td> 246.73894</td><td> 246.73894</td><td> 164.12239</td><td> 105.09291</td><td> 246.73894</td><td> 115.75390</td><td> 102.01701</td><td> 134.1351</td><td> 127.5672</td><td> 134.1351</td></tr>
+    <tr><th scope=row>C45H82NO8P</th><td>   0.00000</td><td>   0.00000</td><td>   0.0000</td><td>   0.000000</td><td>   0.0000</td><td>  57.977940</td><td>   0.0000</td><td>  0.0000</td><td>   0.00000</td><td> 109.71111</td><td>⋯</td><td> 111.06776</td><td> 111.06776</td><td>  65.68634</td><td>   0.00000</td><td> 111.06776</td><td>  40.21313</td><td>   0.00000</td><td> 403.9488</td><td> 358.4556</td><td> 403.9488</td></tr>
+    <tr><th scope=row>C6H11O8P</th><td>1625.24570</td><td>1462.99070</td><td>4024.9673</td><td>1369.842500</td><td>4024.9673</td><td>2739.197500</td><td>2778.5818</td><td>767.3178</td><td>3016.49000</td><td>2914.04050</td><td>⋯</td><td>6204.44000</td><td>6204.44000</td><td>3415.45680</td><td>3536.94600</td><td>6204.44000</td><td>3005.81180</td><td>3419.60420</td><td>7431.5723</td><td>6932.0474</td><td>7431.5723</td></tr>
+    <tr><th scope=row>C6H13O9P</th><td>1010.62616</td><td> 991.39370</td><td>2035.7566</td><td> 990.259160</td><td>2035.7566</td><td>1590.794000</td><td>1365.2786</td><td>369.8683</td><td>1212.97470</td><td>1982.79870</td><td>⋯</td><td>2521.78050</td><td>2521.78050</td><td>1693.74150</td><td>1764.97780</td><td>2521.78050</td><td>1897.59780</td><td>1795.42040</td><td>3101.3171</td><td>2974.7278</td><td>3101.3171</td></tr>
+    <tr><th scope=row>C9H19O11P</th><td>  73.30754</td><td>  36.42372</td><td> 254.2510</td><td>   7.437679</td><td> 254.2510</td><td> 154.415620</td><td> 163.6289</td><td>106.1347</td><td>  13.29417</td><td> 132.04398</td><td>⋯</td><td> 296.67282</td><td> 296.67282</td><td> 285.32068</td><td> 252.19482</td><td> 296.67282</td><td> 162.12416</td><td> 145.47978</td><td> 669.9057</td><td> 608.5909</td><td> 669.9057</td></tr>
+</tbody>
+</table></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">myTestRun</span> <span class="o">&lt;-</span>
+  <span class="nf">initEnrichment</span><span class="p">(</span><span class="n">scmatrix</span> <span class="o">=</span> <span class="n">scm</span><span class="p">,</span>
+                 <span class="n">annotations</span> <span class="o">=</span> <span class="n">annot</span><span class="p">,</span>
+                 <span class="n">conditions</span> <span class="o">=</span> <span class="n">cond</span><span class="p">,</span>
+                 <span class="n">condition.x</span> <span class="o">=</span> <span class="s">&quot;uncorrected&quot;</span><span class="p">,</span>
+                 <span class="n">condition.y</span> <span class="o">=</span> <span class="s">&quot;ISM correction&quot;</span><span class="p">)</span>
+<span class="n">myTestRun</span> <span class="o">&lt;-</span> <span class="nf">rankScore</span><span class="p">(</span><span class="n">myTestRun</span><span class="p">,</span> <span class="n">ranking.by</span> <span class="o">=</span> <span class="s">&#39;t.test&#39;</span><span class="p">)</span>
+<span class="n">myTestRun</span> <span class="o">&lt;-</span> <span class="nf">calcEnrichment</span><span class="p">(</span><span class="n">myTestRun</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Parsing isomers...
+single-cell metabolomics matrix of 58 metabolites and 2274 cells
+active pathway: LION
+
+conditions: uncorrected, ISM correction
+
+condition.x: uncorrected
+condition.y: ISM correction
+
+Bootstrapping...
+
+Match to pathway...
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+93.1% of annotations were matched to pathway
+
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Perform enrichment analysis...
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">plotEnrichment</span><span class="p">(</span><span class="n">myTestRun</span><span class="p">,</span> <span class="n">min.annotations</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span> <span class="n">q.value.cutoff</span> <span class="o">=</span> <span class="n">.</span><span class="m">05</span><span class="p">,</span> <span class="n">by.statistic</span> <span class="o">=</span> <span class="s">&quot;ES&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/data_Mx_Co_Cultured_Lion_R_4_0.png" class="no-scaled-link" src="../../_images/data_Mx_Co_Cultured_Lion_R_4_0.png" style="width: 420px; height: 420px;" />
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/data/Mx_Co_Cultured/Lion_R.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Marius Klein.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
