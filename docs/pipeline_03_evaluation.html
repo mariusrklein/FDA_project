@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Evaluation of ion suppression correction &#8212; Ion suppression correction  documentation</title>
+    <title>Evaluation &#8212; Ion suppression correction  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -28,7 +28,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="nav-item nav-item-0"><a href="index.html">Ion suppression correction  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Evaluation of ion suppression correction</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Evaluation</a></li> 
       </ul>
     </div>  
 
@@ -294,11 +294,11 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<section id="Evaluation-of-ion-suppression-correction">
-<h1>Evaluation of ion suppression correction<a class="headerlink" href="#Evaluation-of-ion-suppression-correction" title="Permalink to this heading">¶</a></h1>
+<section id="Evaluation">
+<h1>Evaluation<a class="headerlink" href="#Evaluation" title="Permalink to this heading">¶</a></h1>
 <p>In this notebook, different measures are investigated to quantify the effect of correcting SpaceM ion intensity data for partial pixel-cell overlap. Moreover, The effects of the correction on different metabolites is visualized.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">platform</span>
@@ -325,7 +325,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
@@ -344,8 +344,8 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <p>Loading the uncorrected and ISM-corrected dataset from file. Additionally, loading the metadata CSV file to filter out excluded wells.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="s2">&quot;gen_batch_sm_matrix.h5ad&quot;</span><span class="p">))</span>
@@ -353,8 +353,60 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">FileNotFoundError</span>                         Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In [3], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> adata <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">ad</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">read</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">os</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">path</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">join</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">target_path</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#34;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">gen_batch_sm_matrix.h5ad</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#34;</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> adata_cor <span style="color: rgb(98,98,98)">=</span> ad<span style="color: rgb(98,98,98)">.</span>read(os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>join(target_path, <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">corrected_batch_sm_matrix.h5ad</span><span style="color: rgb(175,0,0)">&#34;</span>))
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/anndata/_io/h5ad.py:224</span>, in <span class="ansi-cyan-fg">read_h5ad</span><span class="ansi-blue-fg">(filename, backed, as_sparse, as_sparse_fmt, chunk_size)</span>
+<span class="ansi-green-intense-fg ansi-bold">    216</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">NotImplementedError</span>(
+<span class="ansi-green-intense-fg ansi-bold">    217</span>             <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">Currently only `X` and `raw/X` can be read as sparse.</span><span style="color: rgb(175,0,0)">&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">    218</span>         )
+<span class="ansi-green-intense-fg ansi-bold">    220</span> rdasp <span style="color: rgb(98,98,98)">=</span> partial(
+<span class="ansi-green-intense-fg ansi-bold">    221</span>     read_dense_as_sparse, sparse_format<span style="color: rgb(98,98,98)">=</span>as_sparse_fmt, axis_chunk<span style="color: rgb(98,98,98)">=</span>chunk_size
+<span class="ansi-green-intense-fg ansi-bold">    222</span> )
+<span class="ansi-green-fg">--&gt; 224</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> <span class="ansi-yellow-bg">h5py</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">File</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">filename</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#34;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">r</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#34;</span><span class="ansi-yellow-bg">)</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> f:
+<span class="ansi-green-intense-fg ansi-bold">    225</span>     d <span style="color: rgb(98,98,98)">=</span> {}
+<span class="ansi-green-intense-fg ansi-bold">    226</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> f<span style="color: rgb(98,98,98)">.</span>keys():
+<span class="ansi-green-intense-fg ansi-bold">    227</span>         <span style="color: rgb(95,135,135)"># Backwards compat for old raw</span>
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/h5py/_hl/files.py:533</span>, in <span class="ansi-cyan-fg">File.__init__</span><span class="ansi-blue-fg">(self, name, mode, driver, libver, userblock_size, swmr, rdcc_nslots, rdcc_nbytes, rdcc_w0, track_order, fs_strategy, fs_persist, fs_threshold, fs_page_size, page_buf_size, min_meta_keep, min_raw_keep, locking, alignment_threshold, alignment_interval, **kwds)</span>
+<span class="ansi-green-intense-fg ansi-bold">    525</span>     fapl <span style="color: rgb(98,98,98)">=</span> make_fapl(driver, libver, rdcc_nslots, rdcc_nbytes, rdcc_w0,
+<span class="ansi-green-intense-fg ansi-bold">    526</span>                      locking, page_buf_size, min_meta_keep, min_raw_keep,
+<span class="ansi-green-intense-fg ansi-bold">    527</span>                      alignment_threshold<span style="color: rgb(98,98,98)">=</span>alignment_threshold,
+<span class="ansi-green-intense-fg ansi-bold">    528</span>                      alignment_interval<span style="color: rgb(98,98,98)">=</span>alignment_interval,
+<span class="ansi-green-intense-fg ansi-bold">    529</span>                      <span style="color: rgb(98,98,98)">*</span><span style="color: rgb(98,98,98)">*</span>kwds)
+<span class="ansi-green-intense-fg ansi-bold">    530</span>     fcpl <span style="color: rgb(98,98,98)">=</span> make_fcpl(track_order<span style="color: rgb(98,98,98)">=</span>track_order, fs_strategy<span style="color: rgb(98,98,98)">=</span>fs_strategy,
+<span class="ansi-green-intense-fg ansi-bold">    531</span>                      fs_persist<span style="color: rgb(98,98,98)">=</span>fs_persist, fs_threshold<span style="color: rgb(98,98,98)">=</span>fs_threshold,
+<span class="ansi-green-intense-fg ansi-bold">    532</span>                      fs_page_size<span style="color: rgb(98,98,98)">=</span>fs_page_size)
+<span class="ansi-green-fg">--&gt; 533</span>     fid <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">make_fid</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">mode</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">userblock_size</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fapl</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fcpl</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">swmr</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">swmr</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    535</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">isinstance</span>(libver, <span style="color: rgb(0,135,0)">tuple</span>):
+<span class="ansi-green-intense-fg ansi-bold">    536</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_libver <span style="color: rgb(98,98,98)">=</span> libver
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/h5py/_hl/files.py:226</span>, in <span class="ansi-cyan-fg">make_fid</span><span class="ansi-blue-fg">(name, mode, userblock_size, fapl, fcpl, swmr)</span>
+<span class="ansi-green-intense-fg ansi-bold">    224</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> swmr <span class="ansi-bold" style="color: rgb(175,0,255)">and</span> swmr_support:
+<span class="ansi-green-intense-fg ansi-bold">    225</span>         flags <span style="color: rgb(98,98,98)">|</span><span style="color: rgb(98,98,98)">=</span> h5f<span style="color: rgb(98,98,98)">.</span>ACC_SWMR_READ
+<span class="ansi-green-fg">--&gt; 226</span>     fid <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">h5f</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">open</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">flags</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fapl</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">fapl</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    227</span> <span class="ansi-bold" style="color: rgb(0,135,0)">elif</span> mode <span style="color: rgb(98,98,98)">==</span> <span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">r+</span><span style="color: rgb(175,0,0)">&#39;</span>:
+<span class="ansi-green-intense-fg ansi-bold">    228</span>     fid <span style="color: rgb(98,98,98)">=</span> h5f<span style="color: rgb(98,98,98)">.</span>open(name, h5f<span style="color: rgb(98,98,98)">.</span>ACC_RDWR, fapl<span style="color: rgb(98,98,98)">=</span>fapl)
+
+File <span class="ansi-green-fg">h5py/_objects.pyx:54</span>, in <span class="ansi-cyan-fg">h5py._objects.with_phil.wrapper</span><span class="ansi-blue-fg">()</span>
+
+File <span class="ansi-green-fg">h5py/_objects.pyx:55</span>, in <span class="ansi-cyan-fg">h5py._objects.with_phil.wrapper</span><span class="ansi-blue-fg">()</span>
+
+File <span class="ansi-green-fg">h5py/h5f.pyx:106</span>, in <span class="ansi-cyan-fg">h5py.h5f.open</span><span class="ansi-blue-fg">()</span>
+
+<span class="ansi-red-fg">FileNotFoundError</span>: [Errno 2] Unable to open file (unable to open file: name = &#39;/home/mklein/FDA_project/data/Lx_Glioblastoma/gen_batch_sm_matrix.h5ad&#39;, errno = 2, error message = &#39;No such file or directory&#39;, flags = 0, o_flags = 0)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metadata_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="s1">&#39;metadata.csv&#39;</span><span class="p">)</span>
@@ -381,73 +433,19 @@ div.rendered_html tbody tr:hover {
 
 <span class="n">adata</span> <span class="o">=</span> <span class="n">assign_conditions</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
 <span class="n">adata_cor</span> <span class="o">=</span> <span class="n">assign_conditions</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">)</span>
-
-<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">condition_name</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Naive_WT       3149
-TMD_CD95_WT    2089
-TMD_dM         1962
-TMD_CD95_KO    1613
-TMD_sM         1467
-TMD_tM         1296
-Name: condition, dtype: int64
-</pre></div></div>
-</div>
-<p>The loaded datasets are preprocessed in the same way:</p>
-<ul class="simple">
-<li><p>cells need non-zero intensities for at least 10 ions.</p></li>
-<li><p>ions need non-zero intensities for at least 200 cells.</p></li>
-<li><p>intensties are normalized to TIC and log-transformed (log(x+1))</p></li>
-</ul>
-<p>After that, both datasets are subset to contain the same ions and cells (intersection).</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">condition_name</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
-
-    <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_cells</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_genes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-    <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-    <span class="n">adata</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">adata</span>
-    <span class="c1"># sc.pp.scale(adata)</span>
-    <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="c1"># sc.pp.log1p(adata)</span>
-
-    <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;median_intensity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="c1"># adata_x = adata.X.copy()</span>
-    <span class="c1"># adata_x[adata_x == 0] = np.nan</span>
-    <span class="c1"># adata.var[&#39;median_intensity_nonzero&#39;] = np.nanmedian(adata_x, axis=0)</span>
-
-
-
-<span class="n">preprocess</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">preprocess</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<br/></pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(10811, 965)
-(10811, 965)
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">included_molecules</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
@@ -465,475 +463,63 @@ Name: condition, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(10811, 965)
-(10811, 965)
-</pre></div></div>
-</div>
-<p>Before analysis, asserting that the two data files were deconvoluted in the same way. Specifically, the corrected dataframe cannot have non-zero values at positions where the uncorrected dataframe has zero values.</p>
+<p>First of all, the loaded datasets are filtered:</p>
+<ul class="simple">
+<li><p>cells need non-zero intensities for at least 10 ions.</p></li>
+<li><p>ions need non-zero intensities for at least 200 cells.</p></li>
+</ul>
+<p>After that, the sets are preprocessed in different ways:</p>
+<ul class="simple">
+<li><p>intensties are normalized to TIC and/or log-transformed (log(x+1))</p></li>
+</ul>
+<p>After that, both datasets are subset to contain the same ions and cells (intersection).</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">!=</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;correction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;uncorrected&#39;</span>
-<span class="n">adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;correction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ISM correction&#39;</span>
-</pre></div>
-</div>
-</div>
-<section id="Effects-of-the-correction-on-different-molecules">
-<h2>Effects of the correction on different molecules<a class="headerlink" href="#Effects-of-the-correction-on-different-molecules" title="Permalink to this heading">¶</a></h2>
-<p>The ISM correction is performed per ion on the logarithmized intensity / sampling proportion ratio. The underlying quantile regression can only be computed with a minimum number of datapoints. If an ion has less than 10 datapoints, the quantile regression is instead computed based on a reference pool of ions. In the following, the resulting slopes by which all ions have been corrected are visualized. Ions that were corrected using the reference pool are shown separately.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[[</span><span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">]],</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">grid</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">,</span> <span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">)</span>
-<span class="n">cor_pool</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_13_0.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_13_0.png" style="width: 589px; height: 290px;" />
-</div>
-</div>
-<p>Based on the slopes of the correction but also the logfoldchanges between corrected and uncorrected cells, one can infer the extent of alteration of different metabolites in the correction. These measures not necessarily correlate, thus the degree of correction of ions has to be evaluated on individual datasets.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">src.evaluation</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">reload</span>
-<span class="n">reload</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">evaluation</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">MetaboliteAnalysis</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span> <span class="o">=</span> <span class="n">MetaboliteAnalysis</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="o">=</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span>
-                        <span class="n">obs_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;list_TPO&#39;</span><span class="p">],</span>
-                        <span class="n">var_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">,</span>
-                                       <span class="s1">&#39;n_cells&#39;</span><span class="p">,</span><span class="s1">&#39;median_intensity&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_intensity&#39;</span><span class="p">,</span> <span class="s1">&#39;sum_correction_using_ion_pool&#39;</span><span class="p">],</span>
-                       <span class="n">use_raw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
-  self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
-  self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
-  self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">pair_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_17_0.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_17_0.png" style="width: 1436px; height: 1231px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
-  result = getattr(ufunc, method)(*inputs, **kwargs)
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_18_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_18_1.png" style="width: 1005px; height: 454px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups_tracksplot</span><span class="p">(</span><span class="n">ma_raw</span><span class="o">.</span><span class="n">conc_adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">dendrogram</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
-  obs_tidy.index.value_counts(sort=False).iteritems()
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_19_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_19_1.png" style="width: 1058px; height: 539px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">quotient_plot</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_20_0.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_20_0.png" style="width: 1749px; height: 871px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_20_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_20_1.png" style="width: 1984px; height: 590px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">top_ion_plot</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:181: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-  plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:181: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-  plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:181: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-  plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:181: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-  plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_21_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_21_1.png" style="width: 1508px; height: 289px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_21_2.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_21_2.png" style="width: 1495px; height: 290px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_21_3.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_21_3.png" style="width: 1506px; height: 290px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_21_4.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_21_4.png" style="width: 1506px; height: 290px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ma_raw</span><span class="o">.</span><span class="n">save_matrix</span><span class="p">(</span><span class="n">save_to_path</span> <span class="o">=</span> <span class="n">analysis_path</span><span class="p">,</span> <span class="n">safe_to_name</span> <span class="o">=</span> <span class="n">project</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In [18], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> _ <span style="color: rgb(98,98,98)">=</span> ma_raw<span style="color: rgb(98,98,98)">.</span>save_matrix(save_to_path <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">analysis_path</span>, safe_to_name <span style="color: rgb(98,98,98)">=</span> project)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
 
-<span class="ansi-red-fg">NameError</span>: name &#39;analysis_path&#39; is not defined
-</pre></div></div>
-</div>
-<p>The same analysis is then carried out for the TIC-corrected and log-transformed data: Here, the differences between uncorrected and ISM-corrected data are much more subtle. This corresponds better with the UMAPs further down, as they also show very little noticebly differences between uncorrected and ISM-corrected datasets.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span> <span class="o">=</span> <span class="n">MetaboliteAnalysis</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="o">=</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span>
-                        <span class="n">obs_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;list_TPO&#39;</span><span class="p">],</span>
-                        <span class="n">var_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">,</span>
-                                       <span class="s1">&#39;n_cells&#39;</span><span class="p">,</span><span class="s1">&#39;median_intensity&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_intensity&#39;</span><span class="p">,</span> <span class="s1">&#39;sum_correction_using_ion_pool&#39;</span><span class="p">],</span>
-                       <span class="n">use_raw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
-  self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
-  self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
-  self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups_tracksplot</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">conc_adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">dendrogram</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_cells</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_genes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_cells</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">adata</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;raw_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="c1"># sc.pp.scale(adata)</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;norm_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;1e4_norm_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
+
+    <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_raw_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;raw_counts&quot;</span><span class="p">],</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_norm_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;norm_counts&quot;</span><span class="p">],</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;1e4_log_norm_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;1e4_norm_counts&quot;</span><span class="p">],</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_norm_counts&quot;</span><span class="p">]</span>
+
+    <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;median_intensity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># adata_x = adata.X.copy()</span>
+    <span class="c1"># adata_x[adata_x == 0] = np.nan</span>
+    <span class="c1"># adata.var[&#39;median_intensity_nonzero&#39;] = np.nanmedian(adata_x, axis=0)</span>
+
+
+<span class="n">preprocess</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">preprocess</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
-  obs_tidy.index.value_counts(sort=False).iteritems()
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_25_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_25_1.png" style="width: 1058px; height: 539px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">quotient_plot</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_26_0.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_26_0.png" style="width: 1749px; height: 871px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_26_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_26_1.png" style="width: 1985px; height: 590px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">top_ion_plot</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:181: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-  plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:181: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-  plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:181: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-  plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:181: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-  plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_27_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_27_1.png" style="width: 1506px; height: 290px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_27_2.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_27_2.png" style="width: 1496px; height: 290px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_27_3.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_27_3.png" style="width: 1508px; height: 288px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_27_4.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_27_4.png" style="width: 1508px; height: 284px;" />
-</div>
-</div>
-</section>
-<section id="Comparison-of-the-datasets">
-<h2>Comparison of the datasets<a class="headerlink" href="#Comparison-of-the-datasets" title="Permalink to this heading">¶</a></h2>
-<p>In the following, the uncorrected and ISM-corrected datasets are compared using methods of a typical single-cell analysis.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_pca</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+
     <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-    <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">pca_overview</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;cividis&#39;</span><span class="p">)</span>
-
-<span class="n">dimred_pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">dimred_pca</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_29_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_29_1.png" style="width: 1315px; height: 435px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_29_2.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_29_2.png" style="width: 1593px; height: 506px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_29_3.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_29_3.png" style="width: 566px; height: 454px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_29_5.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_29_5.png" style="width: 1315px; height: 435px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_29_6.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_29_6.png" style="width: 1593px; height: 507px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_29_7.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_29_7.png" style="width: 566px; height: 454px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_dist</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
     <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;cosine&#39;</span><span class="p">)</span>
     <span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="n">min_dist</span><span class="p">,</span> <span class="n">spread</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;cividis&#39;</span><span class="p">)</span>
+    <span class="c1">#sc.pl.umap(adata, color=[&#39;well&#39;, condition_name], palette=&#39;cividis&#39;)</span>
     <span class="n">f</span> <span class="o">=</span> <span class="n">osm</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">highlight_scatterplot</span><span class="p">(</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
         <span class="n">obsm_key</span> <span class="o">=</span> <span class="s2">&quot;X_umap&quot;</span><span class="p">,</span>
@@ -947,64 +533,284 @@ Cell <span class="ansi-green-fg">In [18], line 1</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">add_legend</span><span class="p">(</span><span class="n">markerscale</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+        <span class="n">adata_cor</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">X</span>
+        <span class="n">adata_cor</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
 
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+    <span class="n">summaries</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">({</span><span class="s1">&#39;uncorrected&#39;</span><span class="p">:</span> <span class="n">adata</span><span class="p">,</span> <span class="s1">&#39;ISM correction&#39;</span><span class="p">:</span> <span class="n">adata_cor</span><span class="p">},</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="n">measures</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span>
+        <span class="n">adata_cor</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span>
+
+    <span class="k">return</span>
+</pre></div>
+</div>
+</div>
+<p>The different options for scaling and transforming the data are shown in the following:</p>
+<ol class="arabic simple">
+<li><p>raw values</p></li>
+<li><p>log transformation</p></li>
+<li><p>TIC normalization</p></li>
+<li><p>TIC normalization and log transformation</p></li>
+<li><p>normalization to a fixed count (10^4)</p></li>
+<li><p>normalization to a fixed count (10^4) and log transformation</p></li>
+</ol>
+<p>The normalization to a fixed count has a slightly different effect than TIC normalization. The former normalizes all counts per cell to the given target sum so that all cells from the uncorrected and the corrected set are scaled to this count. In contrast, the latter retains the differences between the datasets by normalizing to the median count across cells in a dataset.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
+<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
+<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
+<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
+<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
+<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
+<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
+<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
+<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_norm_counts&#39;</span><span class="p">)</span>
+<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_norm_counts&#39;</span><span class="p">)</span>
+<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_norm_counts&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
+<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
+<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Before analysis, asserting that the two data files were deconvoluted in the same way. Specifically, the corrected dataframe cannot have non-zero values at positions where the uncorrected dataframe has zero values.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">!=</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;correction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;uncorrected&#39;</span>
+<span class="n">adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;correction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ISM correction&#39;</span>
+</pre></div>
+</div>
+</div>
+<section id="Effects-of-the-correction-on-different-molecules">
+<h2>Effects of the correction on different molecules<a class="headerlink" href="#Effects-of-the-correction-on-different-molecules" title="Permalink to this heading">¶</a></h2>
+<p>The ISM correction is performed per ion on the logarithmized intensity / sampling proportion ratio. The underlying quantile regression can only be computed with a minimum number of datapoints. If an ion has less than 10 datapoints, the quantile regression is instead computed based on a reference pool of ions. In the following, the resulting slopes by which all ions have been corrected are visualized. Ions that were corrected using the reference pool are shown separately.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[[</span><span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">]],</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">,</span> <span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">cor_pool</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Based on the slopes of the correction but also the logfoldchanges between corrected and uncorrected cells, one can infer the extent of alteration of different metabolites in the correction. These measures not necessarily correlate, thus the degree of correction of ions has to be evaluated on individual datasets.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">src.evaluation</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">reload</span>
+<span class="n">reload</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">evaluation</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">MetaboliteAnalysis</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span> <span class="o">=</span> <span class="n">MetaboliteAnalysis</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="o">=</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span>
+                        <span class="n">obs_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;list_TPO&#39;</span><span class="p">],</span>
+                        <span class="n">var_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;n_cells&#39;</span><span class="p">,</span><span class="s1">&#39;median_intensity&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_intensity&#39;</span><span class="p">,</span> <span class="s1">&#39;sum_correction_using_ion_pool&#39;</span><span class="p">],</span>
+                       <span class="n">use_raw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">pair_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups_tracksplot</span><span class="p">(</span><span class="n">ma_raw</span><span class="o">.</span><span class="n">conc_adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">dendrogram</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;n_pixels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;list_TPO&#39;</span><span class="p">]]</span>
+<span class="n">strat_cell_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_pixels&#39;</span><span class="p">,</span> <span class="n">group_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">index</span><span class="p">)[:</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">strat_cell_list</span>
+</pre></div>
+</div>
+</div>
+<p>The following plot shows the metabolic profiles of sampled cell generated from 1 and increasing numbers of ablation marks. The first row has the uncorrected raw ion intensities, the second row the corrected raw ion intensities and the third row the correction ratio/quotient between the two ( <span class="math notranslate nohighlight">\(correction\_ratio = \frac{I_{corrected}}{I_{uncorrected}}\)</span> ). Most ions have the same correction ratio in a given cells, some have a higher ratio (smaller slope, less ISM correction) and some have a
+lower ratio (steeper slope, stronger ISM correction). The distribution of ion-specific correction ratios in the same cells is shown, separately for self-corrected and pool-corrected ions, in density plots underneath the metabolic profiles. Black horizontal and vertical lines show the sampling proportion of all ablation marks that were combined to the respective cell. Especially from the density plots, it becomes obvious that the majority of ions have correction ratios that colocalize with the
+pixels’ sampling ratios. This can be explained by the fact that most ions had a correction slope of ~-1, the pool-corrected ions had all the same slope close to -1. Thus, these ions are down-corrected by multiplying with ~1 times their sampling proportion. Since many ions seem to occur only in one of the underlying ablation marks, the distribution of correction ratios has prominent peaks and few values between them.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">quotient_plot</span><span class="p">(</span><span class="n">show_cells</span><span class="o">=</span><span class="n">strat_cell_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">top_ion_plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ma_raw</span><span class="o">.</span><span class="n">save_matrix</span><span class="p">(</span><span class="n">save_to_path</span> <span class="o">=</span> <span class="n">analysis_path</span><span class="p">,</span> <span class="n">safe_to_name</span> <span class="o">=</span> <span class="n">project</span><span class="p">,</span> <span class="n">save_figures</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The same analysis is then carried out for the TIC-corrected and log-transformed data: Here, the differences between uncorrected and ISM-corrected data are much more subtle. This corresponds better with the UMAPs further down, as they also show very little noticebly differences between uncorrected and ISM-corrected datasets.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span> <span class="o">=</span> <span class="n">MetaboliteAnalysis</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="o">=</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span>
+                        <span class="n">obs_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;list_TPO&#39;</span><span class="p">],</span>
+                        <span class="n">var_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;n_cells&#39;</span><span class="p">,</span><span class="s1">&#39;median_intensity&#39;</span><span class="p">,</span> <span class="s1">&#39;mean_intensity&#39;</span><span class="p">,</span> <span class="s1">&#39;sum_correction_using_ion_pool&#39;</span><span class="p">],</span>
+                       <span class="n">use_raw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups_tracksplot</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">conc_adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">dendrogram</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">quotient_plot</span><span class="p">(</span><span class="n">show_cells</span><span class="o">=</span><span class="n">strat_cell_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">top_ion_plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Comparison-of-the-datasets">
+<h2>Comparison of the datasets<a class="headerlink" href="#Comparison-of-the-datasets" title="Permalink to this heading">¶</a></h2>
+<p>In the following, the uncorrected and ISM-corrected datasets are compared using methods of a typical single-cell analysis. Unless specified otherwise, the data was preprocessed using TOC normalization and log transformation.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_pca</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">pca_overview</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;cividis&#39;</span><span class="p">)</span>
+
+<span class="n">dimred_pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">dimred_pca</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
 <span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_30_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_30_1.png" style="width: 1315px; height: 435px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_30_3.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_30_3.png" style="width: 3137px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_30_4.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_30_4.png" style="width: 1315px; height: 435px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_30_5.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_30_5.png" style="width: 3137px; height: 471px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># from sklearn.metrics.cluster import completeness_score</span>
@@ -1037,97 +843,12 @@ Cell <span class="ansi-green-fg">In [18], line 1</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_31_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_31_1.png" style="width: 2480px; height: 435px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Curated leiden acccuracy score: 0.6946
-KMeans completeness score: 0.3772
-KMeans silhouette coefficient: 0.1534
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
-  cax = scatter(
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_31_4.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_31_4.png" style="width: 2480px; height: 435px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Curated leiden acccuracy score: 0.7574
-KMeans completeness score: 0.4351
-KMeans silhouette coefficient: 0.1412
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summaries</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">({</span><span class="s1">&#39;uncorrected&#39;</span><span class="p">:</span> <span class="n">adata</span><span class="p">,</span> <span class="s1">&#39;ISM correction&#39;</span><span class="p">:</span> <span class="n">adata_cor</span><span class="p">},</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">])</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.262892  0.268036          0.091837
-X_pca_ISM correction  10  0.251835  0.278273          0.091837
-X_umap_uncorrected    10  0.352798  0.259578          0.091837
-X_umap_ISM correction 10  0.342838  0.256682          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_32_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_32_1.png" style="width: 787px; height: 470px;" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -1164,84 +885,60 @@ X_umap_ISM correction 10  0.342838  0.256682          0.091837
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[132]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
 
-<span class="k">def</span> <span class="nf">get_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">size_factor</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="n">predictors</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">*</span> <span class="n">size_factor</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">condition_name</span><span class="p">]</span>
-    <span class="n">clf</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">predictors</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-    <span class="n">margin_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;condition&#39;</span><span class="p">:</span> <span class="n">clf</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span> <span class="s1">&#39;margin&#39;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">coef_</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))})</span>
-    <span class="c1">#print(margin_df)</span>
-    <span class="k">return</span> <span class="n">margin_df</span>
+<span class="k">def</span> <span class="nf">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+        <span class="n">adata_cor</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">X</span>
+        <span class="n">adata_cor</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">get_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">),</span> <span class="n">get_svm_margin</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">size_factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">X</span><span class="p">)),</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_uncorrected&#39;</span><span class="p">,</span> <span class="s1">&#39;_ISM_corrected&#39;</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">get_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">size_factor</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">predictors</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">*</span> <span class="n">size_factor</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">condition_name</span><span class="p">]</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">predictors</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="n">margin_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;condition&#39;</span><span class="p">:</span> <span class="n">clf</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span> <span class="s1">&#39;margin&#39;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">coef_</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))})</span>
+
+        <span class="c1">#print(margin_df)</span>
+        <span class="k">return</span> <span class="n">margin_df</span>
+
+    <span class="n">size_factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">get_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">),</span>
+                  <span class="n">get_svm_margin</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">size_factor</span> <span class="o">=</span> <span class="n">size_factor</span><span class="p">),</span>
+                  <span class="n">on</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_uncorrected&#39;</span><span class="p">,</span> <span class="s1">&#39;_ISM_corrected&#39;</span><span class="p">])</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">)})</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;margin&#39;</span><span class="p">),</span>
+                <span class="n">x</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;margin&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Comparison of SVM margins for layer </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">layer</span>)
+
+
+
+    <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span>
+        <span class="n">adata_cor</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/sklearn/svm/_base.py:1225: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-  warnings.warn(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/sklearn/svm/_base.py:1225: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
-  warnings.warn(
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[138]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">)})</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;margin&#39;</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;margin&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[138]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;AxesSubplot: xlabel=&#39;condition&#39;, ylabel=&#39;margin&#39;&gt;
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/pipeline_03_evaluation_36_1.png" class="no-scaled-link" src="_images/pipeline_03_evaluation_36_1.png" style="width: 1014px; height: 455px;" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.discriminant_analysis</span> <span class="kn">import</span> <span class="n">LinearDiscriminantAnalysis</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">RepeatedStratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_score</span>
-
-<span class="k">def</span> <span class="nf">LDA</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
-    <span class="n">predictors</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">condition_name</span><span class="p">]</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">LinearDiscriminantAnalysis</span><span class="p">()</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">predictors</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-
-    <span class="n">cv</span> <span class="o">=</span> <span class="n">RepeatedStratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">predictors</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
-
-    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;lda&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
-    <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">condition_name</span><span class="p">,</span> <span class="s1">&#39;lda&#39;</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;cividis&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LDA accuracy after 10-fold cross-validation: </span><span class="si">%1.4f</span><span class="s2"> (±</span><span class="si">%1.4f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">scores</span><span class="p">)))</span>
-
-
-<span class="n">LDA</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
-<span class="n">LDA</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1258,7 +955,7 @@ X_umap_ISM correction 10  0.342838  0.256682          0.091837
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Evaluation of ion suppression correction</a><ul>
+<li><a class="reference internal" href="#">Evaluation</a><ul>
 <li><a class="reference internal" href="#Effects-of-the-correction-on-different-molecules">Effects of the correction on different molecules</a></li>
 <li><a class="reference internal" href="#Comparison-of-the-datasets">Comparison of the datasets</a></li>
 </ul>
@@ -1294,7 +991,7 @@ X_umap_ISM correction 10  0.342838  0.256682          0.091837
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="nav-item nav-item-0"><a href="index.html">Ion suppression correction  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Evaluation of ion suppression correction</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Evaluation</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

@@ -1,0 +1,741 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "90daf9e7",
+   "metadata": {
+    "papermill": {
+     "duration": 0.008051,
+     "end_time": "2022-12-07T21:30:45.671596",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:45.663545",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "# High-throughput ion suppression correction\n",
+    "\n",
+    "SpaceM datasets are usually stored as annotated data-matrices, separately for individual wells. With this notebooks, these individual files are corrected for ion suppression on the pixel-level and then deconvoluted to cell-level. All resulting files are saved separately by well to the target_path and the impact of the correction briefly shown for visual inspection."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "58e23b39",
+   "metadata": {
+    "papermill": {
+     "duration": 3.964463,
+     "end_time": "2022-12-07T21:30:49.642478",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:45.678015",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "import platform\n",
+    "import scanpy as sc\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import anndata as ad\n",
+    "import statistics as st\n",
+    "import multiprocessing\n",
+    "from joblib import Parallel, delayed\n",
+    "from tqdm import tqdm\n",
+    "import statsmodels.formula.api as smf\n",
+    "import seaborn as sns\n",
+    "import re\n",
+    "from importlib import reload\n",
+    "import json\n",
+    "import sys\n",
+    "sys.path.append('/home/mklein/spacem')\n",
+    "sys.path.append('/home/mklein/FDA_project')\n",
+    "\n",
+    "from src.correction import (add_normalization_factors, \n",
+    "                            correct_quantile_inplace,\n",
+    "                            deconvolution_spacem,\n",
+    "                            get_overlap_data,\n",
+    "                            add_overlap_matrix_spacem\n",
+    "                           )\n",
+    "from src import const \n",
+    "from SpaceM.lib.modules import (\n",
+    "    overlap_analysis,\n",
+    "    single_cell_analysis_normalization\n",
+    ")\n",
+    "\n",
+    "%matplotlib inline\n",
+    "%config InlineBackend.figure_formats = ['retina']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "eb844cda",
+   "metadata": {
+    "papermill": {
+     "duration": 0.006719,
+     "end_time": "2022-12-07T21:30:49.657503",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:49.650784",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "The original data lies on the groups shared data storage. Corrected files will be saved in a separate location, preserving the well-specific folder structure."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "1a6f0dcf",
+   "metadata": {
+    "papermill": {
+     "duration": 0.017315,
+     "end_time": "2022-12-07T21:30:49.681288",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:49.663973",
+     "status": "completed"
+    },
+    "tags": [
+     "parameters"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "if platform.system() == \"Darwin\":\n",
+    "    source_path = '/Volumes/alexandr/smenon/2022-07-13_Glioblastoma/processed_files'\n",
+    "    target_path = '/Volumes/mklein/FDA_project/data/Lx_Glioblastoma'\n",
+    "else:\n",
+    "    source_path = '/g/alexandr/smenon/2022-07-13_Glioblastoma/processed_files'\n",
+    "    target_path = '/home/mklein/FDA_project/data/Lx_Glioblastoma'\n",
+    "    \n",
+    "# TODO: implement topX reference ion pool.\n",
+    "reference_pool = {'top': 10}\n",
+    "deconv_default_min_overlap = 0.0"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "42112eeb",
+   "metadata": {
+    "papermill": {
+     "duration": 0.015223,
+     "end_time": "2022-12-07T21:30:49.702735",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:49.687512",
+     "status": "completed"
+    },
+    "tags": [
+     "injected-parameters"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# Parameters\n",
+    "source_path = \"/home/mklein/Raw Data/2022-02-18_FDA_SpaceM\"\n",
+    "target_path = \"/home/mklein/FDA_project/data/Mx_FDA\"\n",
+    "condition_name = \"celltype\"\n",
+    "well_name = \"rowcol\"\n",
+    "analysis_path = \"/home/mklein/FDA_project/analysis/Mx_FDA\"\n",
+    "notebooks = [\n",
+    "    \"pipeline_01_correction.ipynb\",\n",
+    "    \"pipeline_02_processing.ipynb\",\n",
+    "    \"pipeline_03_evaluation.ipynb\",\n",
+    "]\n",
+    "project = \"Mx_FDA\"\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "e5423471",
+   "metadata": {
+    "papermill": {
+     "duration": 1.261432,
+     "end_time": "2022-12-07T21:30:50.969833",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:49.708401",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "['w4', 'w2', 'w3', 'w5', 'w6', 'w7', 'w8']"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "samples = []\n",
+    "for dirpath, dirnames, filenames in os.walk(source_path):\n",
+    "        if 'analysis' in dirnames:\n",
+    "            samples.append(re.sub(source_path+'/?', '', dirpath))\n",
+    "samples"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "15593ee0",
+   "metadata": {
+    "papermill": {
+     "duration": 0.017409,
+     "end_time": "2022-12-07T21:30:50.995584",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:50.978175",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "files = {\n",
+    "        'config': '../config.json',\n",
+    "        'sm_matrix': 'ablation_mark_analysis/spatiomolecular_adata.h5ad',\n",
+    "        'overlap_regions': 'overlap_analysis2/overlap.regions.csv',\n",
+    "        'mark_regions': 'overlap_analysis2/ablation_mark.regions.csv',\n",
+    "        'cell_regions': 'overlap_analysis2/cell.regions.csv',\n",
+    "        'cell_sm_matrix': 'single_cell_analysis/spatiomolecular_adata.h5ad',\n",
+    "    }"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "53a59f7f",
+   "metadata": {
+    "papermill": {
+     "duration": 0.018675,
+     "end_time": "2022-12-07T21:30:51.021387",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:51.002712",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "def assign_average_tpo(am_adata, overlap_data, min_overlap, method=np.mean):\n",
+    "    if min_overlap is None:\n",
+    "        min_overlap = 0\n",
+    "    \n",
+    "    overlap = overlap_data.overlap_regions\n",
+    "    overlap['am_id'] = overlap['am_id'].astype(str)\n",
+    "    overlap['cell_id'] = overlap['cell_id'].astype(str)\n",
+    "    merged_df = pd.merge(overlap[['am_id', 'cell_id']], am_adata.obs[const.TPO], left_on='am_id', right_index=True)\n",
+    "    merged_df = merged_df[merged_df[const.TPO] >= min_overlap]\n",
+    "    \n",
+    "    mean_df = merged_df[['cell_id', 'correction_total_pixel_overlap']].groupby('cell_id', group_keys=False).agg(method)\n",
+    "#     mean_df = merged_df[['cell_id', 'correction_total_pixel_overlap']].groupby('cell_id', group_keys=False).agg(lambda x: method(x))\n",
+    "    return mean_df[const.TPO]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "788b1868",
+   "metadata": {
+    "papermill": {
+     "duration": 0.026525,
+     "end_time": "2022-12-07T21:30:51.054879",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:51.028354",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "def correct_sample_spacem(sample):\n",
+    "    \n",
+    "    sample_path = os.path.join(source_path, sample, \"analysis\")\n",
+    "    sample = re.sub('/', '_', sample)\n",
+    "    \n",
+    "    if not os.path.exists(os.path.join(target_path, sample)):\n",
+    "        os.makedirs(os.path.join(target_path, sample))\n",
+    "\n",
+    "    # get appropriate file paths for the processed well\n",
+    "    project_files = {k: os.path.join(sample_path, v) for k, v in files.items()}\n",
+    "\n",
+    "    if os.path.exists(project_files['config']):\n",
+    "        with open(project_files['config']) as json_file:\n",
+    "            data = json.load(json_file)\n",
+    "        deconv_info = data['single_cell_analysis']\n",
+    "        if deconv_info['ablation_marks_min_overlap_ratio'] is None:\n",
+    "            deconv_info['ablation_marks_min_overlap_ratio'] = deconv_default_min_overlap\n",
+    "    else:\n",
+    "        deconv_info = None\n",
+    "        print('No well config file found. Using default deconvolution parameters.')\n",
+    "    # load required files\n",
+    "    cell_regions = pd.read_csv(project_files['cell_regions'])\n",
+    "    mark_regions = pd.read_csv(project_files['mark_regions'])\n",
+    "    overlap_regions = pd.read_csv(project_files['overlap_regions'])\n",
+    "    \n",
+    "    sm_matrix = sc.read(os.path.join(sample_path, files['sm_matrix']))\n",
+    "    cell_sm_matrix = sc.read(os.path.join(sample_path, files['cell_sm_matrix']))\n",
+    "       \n",
+    "    add_overlap_matrix_spacem(sm_matrix, cell_regions, mark_regions, overlap_regions)\n",
+    "    \n",
+    "    add_normalization_factors(adata=sm_matrix, method=st.median)\n",
+    "\n",
+    "    # perform the actual quantile regression\n",
+    "    corr_sm_matrix = correct_quantile_inplace(adata=sm_matrix, \n",
+    "        reference_ions=sm_matrix.var_names, \n",
+    "        correct_intersect = True,\n",
+    "        n_jobs=5)\n",
+    "    \n",
+    "    # perform pixel-cell-deconvolution\n",
+    "    overlap_data = get_overlap_data(cell_regions, mark_regions, overlap_regions)\n",
+    "    corr_cell_sm_matrix = deconvolution_spacem(adata=corr_sm_matrix, \n",
+    "        overlap_data=overlap_data,\n",
+    "        raw_adata=cell_sm_matrix,\n",
+    "        deconvolution_params=deconv_info)\n",
+    "    gen_cell_sm_matrix = deconvolution_spacem(adata=sm_matrix,\n",
+    "        overlap_data=overlap_data,\n",
+    "        raw_adata=cell_sm_matrix,\n",
+    "        deconvolution_params=deconv_info)\n",
+    "    \n",
+    "    # hand over TPOs to spatiomolecular matrix for downstream analysis\n",
+    "    min_overlap = deconv_info['ablation_marks_min_overlap_ratio']\n",
+    "    corr_cell_sm_matrix.obs['list_TPO'] = assign_average_tpo(sm_matrix, overlap_data, min_overlap, method=lambda x: \";\".join(x.astype(str)))\n",
+    "    gen_cell_sm_matrix.obs['list_TPO'] = assign_average_tpo(sm_matrix, overlap_data, min_overlap, method=lambda x: \";\".join(x.astype(str)))\n",
+    "    \n",
+    "    # write the generated files to the dedicated project location.\n",
+    "    corr_sm_matrix.write(os.path.join(target_path, sample, 'am_spatiomolecular_adata_corrected.h5ad'))\n",
+    "    sm_matrix.write(os.path.join(target_path, sample, 'am_spatiomolecular_adata.h5ad'))\n",
+    "    corr_cell_sm_matrix.write(os.path.join(target_path, sample, 'cells_spatiomolecular_adata_corrected.h5ad'))\n",
+    "    cell_sm_matrix.write(os.path.join(target_path, sample, 'cells_spatiomolecular_adata_spacem.h5ad'))\n",
+    "    gen_cell_sm_matrix.write(os.path.join(target_path, sample, 'cells_spatiomolecular_adata.h5ad'))\n",
+    "    \n",
+    "    return (sample, cell_sm_matrix, corr_cell_sm_matrix, sm_matrix, corr_sm_matrix, deconv_info)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e5de60c9",
+   "metadata": {
+    "papermill": {
+     "duration": 0.00635,
+     "end_time": "2022-12-07T21:30:51.067398",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:51.061048",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "This is the actual correction pipeline."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "d42a6aa3",
+   "metadata": {
+    "papermill": {
+     "duration": 46.712509,
+     "end_time": "2022-12-07T21:31:37.786165",
+     "exception": false,
+     "start_time": "2022-12-07T21:30:51.073656",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "100%|██████████| 7/7 [00:00<00:00, 65.33it/s]\n"
+     ]
+    }
+   ],
+   "source": [
+    "adata_list = Parallel(n_jobs=7)(delayed(correct_sample_spacem)(sample) for sample in tqdm(samples))\n",
+    "# adata_list = [correct_sample_spacem(sample) for sample in tqdm(['I4'])]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "f1fd0c71",
+   "metadata": {
+    "papermill": {
+     "duration": 3.402419,
+     "end_time": "2022-12-07T21:31:41.198404",
+     "exception": false,
+     "start_time": "2022-12-07T21:31:37.795985",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>cell_normalization_method</th>\n",
+       "      <th>ablation_marks_min_overlap_ratio</th>\n",
+       "      <th>fluorescence_channels</th>\n",
+       "      <th>cell_ion_max_correlation_distance</th>\n",
+       "      <th>ions_of_interest</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>w4</th>\n",
+       "      <td>biggest_overlap_raw</td>\n",
+       "      <td>0.3</td>\n",
+       "      <td>[DAPI, FITC]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>[]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>w2</th>\n",
+       "      <td>biggest_overlap_raw</td>\n",
+       "      <td>0.3</td>\n",
+       "      <td>[DAPI, FITC]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>[]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>w3</th>\n",
+       "      <td>biggest_overlap_raw</td>\n",
+       "      <td>0.3</td>\n",
+       "      <td>[FITC, DAPI]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>[]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>w5</th>\n",
+       "      <td>biggest_overlap_raw</td>\n",
+       "      <td>0.3</td>\n",
+       "      <td>[DAPI, FITC]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>[]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>w6</th>\n",
+       "      <td>biggest_overlap_raw</td>\n",
+       "      <td>0.3</td>\n",
+       "      <td>[FITC, DAPI]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>[]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>w7</th>\n",
+       "      <td>biggest_overlap_raw</td>\n",
+       "      <td>0.3</td>\n",
+       "      <td>[DAPI, FITC]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>[]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>w8</th>\n",
+       "      <td>biggest_overlap_raw</td>\n",
+       "      <td>0.3</td>\n",
+       "      <td>[DAPI, FITC]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>[]</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   cell_normalization_method ablation_marks_min_overlap_ratio  \\\n",
+       "w4       biggest_overlap_raw                              0.3   \n",
+       "w2       biggest_overlap_raw                              0.3   \n",
+       "w3       biggest_overlap_raw                              0.3   \n",
+       "w5       biggest_overlap_raw                              0.3   \n",
+       "w6       biggest_overlap_raw                              0.3   \n",
+       "w7       biggest_overlap_raw                              0.3   \n",
+       "w8       biggest_overlap_raw                              0.3   \n",
+       "\n",
+       "   fluorescence_channels cell_ion_max_correlation_distance ions_of_interest  \n",
+       "w4          [DAPI, FITC]                              None               []  \n",
+       "w2          [DAPI, FITC]                              None               []  \n",
+       "w3          [FITC, DAPI]                              None               []  \n",
+       "w5          [DAPI, FITC]                              None               []  \n",
+       "w6          [FITC, DAPI]                              None               []  \n",
+       "w7          [DAPI, FITC]                              None               []  \n",
+       "w8          [DAPI, FITC]                              None               []  "
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# reshape data for immediate analysis\n",
+    "am_adata_dict = {item[0]: item[3] for item in adata_list}\n",
+    "am_adata_cor_dict = {item[0]: item[4] for item in adata_list}\n",
+    "adata_dict = {item[0]: item[1] for item in adata_list}\n",
+    "adata_cor_dict = {item[0]: item[2] for item in adata_list}\n",
+    "\n",
+    "am_adata = ad.concat(am_adata_dict, label='well', index_unique=\"_\", merge=\"first\")\n",
+    "am_adata_cor = ad.concat(am_adata_cor_dict, label='well', index_unique=\"_\", merge='first')\n",
+    "adata = ad.concat(adata_dict, label='well', index_unique=\"_\", merge=\"first\")\n",
+    "adata_cor = ad.concat(adata_cor_dict, label='well', index_unique=\"_\", merge=\"first\")\n",
+    "\n",
+    "deconv_dict = {item[0]: item[5] for item in adata_list}\n",
+    "deconv_table = pd.DataFrame(deconv_dict).T\n",
+    "deconv_table"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "774dd40d-8063-4357-9d51-236fbb54c10a",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "05c340ea",
+   "metadata": {
+    "papermill": {
+     "duration": 0.008078,
+     "end_time": "2022-12-07T21:31:41.216015",
+     "exception": false,
+     "start_time": "2022-12-07T21:31:41.207937",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "Every analysed pixel is characterized by its total overlap with cellular regions. The raw data shows no clear association between this overlap and acquired ion intensities. However, after the ion suppression correction, pixels with smaller overlap clearly have lower corresponding intensities (only shown for one metabolite). "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "b79fbf4d",
+   "metadata": {
+    "papermill": {
+     "duration": 0.029567,
+     "end_time": "2022-12-07T21:31:41.254257",
+     "exception": false,
+     "start_time": "2022-12-07T21:31:41.224690",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import warnings\n",
+    "warnings.filterwarnings('ignore')\n",
+    "from src.correction import normalize_proportion_ratios\n",
+    "       \n",
+    "\n",
+    "def plot_all_wells(adata, ions=None, row='well', x=const.TPO, ratio=True):\n",
+    "    \n",
+    "    top_wells = list(set(adata.obs[row]))[:5]\n",
+    "    adata = adata[adata.obs[row].isin(top_wells)]\n",
+    "    \n",
+    "    if ions is None and not ratio:\n",
+    "        ions = list(adata.var_names[:5])\n",
+    "    elif ions is None and ratio:\n",
+    "        ions = list(normalize_proportion_ratios(intensities_ad=adata).to_df().sum().sort_values().tail().index)\n",
+    "        \n",
+    "    yscale = 'intensity'\n",
+    "    if ratio:\n",
+    "        adata = normalize_proportion_ratios(intensities_ad=adata)\n",
+    "        yscale = 'intensity_proportion_ratio'\n",
+    "\n",
+    "    plot_df = sc.get.obs_df(adata, keys=[row, x] + ions).melt(id_vars=[row, x], var_name='ion', value_name=yscale)\n",
+    "    plot_df= plot_df[plot_df[yscale] > 0]\n",
+    "    \n",
+    "    if ratio:\n",
+    "        plot_df[yscale] = np.log10(plot_df[yscale])\n",
+    "        plot_df[x] = np.log10(plot_df[x])\n",
+    "       \n",
+    "    graph = sns.FacetGrid(plot_df, row=row, col='ion', sharey=False, margin_titles=True)\n",
+    "    graph.map(sns.histplot, x, yscale, bins=50, stat='proportion').add_legend()\n",
+    "        \n",
+    "    params = []\n",
+    "\n",
+    "    for well in list(set(plot_df[row])):\n",
+    "        for i in ions:\n",
+    "            q_df = plot_df[(plot_df['ion'] == i) & (plot_df[row] == well)]\n",
+    "            if len(q_df) == 0:\n",
+    "                params[i] = {'Intercept': np.nan, x: np.nan}\n",
+    "                continue\n",
+    "            model = smf.quantreg(yscale+' ~ '+x, q_df)\n",
+    "            qrmodel = model.fit(q=0.5)\n",
+    "            params.append({'ion': i, row: well, 'Intercept': qrmodel.params[0], x: qrmodel.params[1]})\n",
+    "    \n",
+    "        \n",
+    "    return pd.DataFrame(params).sort_values(['ion', row]).set_index(['ion', row])\n",
+    "    \n",
+    "def compare_pre_post_correction(adata, adata_cor, ions=None, ratio=True):\n",
+    "    if ions is None and not ratio:\n",
+    "        ions = list(adata.var_names[:5])\n",
+    "    elif ions is None and ratio:\n",
+    "        ions = list(normalize_proportion_ratios(intensities_ad=adata).to_df().sum().sort_values().tail().index)\n",
+    "        \n",
+    "    df1 = plot_all_wells(adata, ions=ions, ratio=ratio)\n",
+    "    df2 = plot_all_wells(adata_cor, ions=ions, ratio=ratio)\n",
+    "    return pd.merge(df1, df2, right_index=True, left_index=True, suffixes=('_uncorrected', '_ISM_correction'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "cda67c76",
+   "metadata": {
+    "papermill": {
+     "duration": 0.023858,
+     "end_time": "2022-12-07T21:31:41.286298",
+     "exception": false,
+     "start_time": "2022-12-07T21:31:41.262440",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "am_adata.obs[const.TPO] = am_adata_cor.obs[const.TPO]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "57b09c1b",
+   "metadata": {
+    "papermill": {
+     "duration": 3.471006,
+     "end_time": "2022-12-07T21:31:44.765568",
+     "exception": true,
+     "start_time": "2022-12-07T21:31:41.294562",
+     "status": "failed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "ename": "ValueError",
+     "evalue": "Number of columns must be a positive integer, not 0",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mValueError\u001b[0m                                Traceback (most recent call last)",
+      "Cell \u001b[0;32mIn [12], line 1\u001b[0m\n\u001b[0;32m----> 1\u001b[0m \u001b[43mcompare_pre_post_correction\u001b[49m\u001b[43m(\u001b[49m\u001b[43mam_adata\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mam_adata_cor\u001b[49m\u001b[43m)\u001b[49m\n",
+      "Cell \u001b[0;32mIn [10], line 52\u001b[0m, in \u001b[0;36mcompare_pre_post_correction\u001b[0;34m(adata, adata_cor, ions, ratio)\u001b[0m\n\u001b[1;32m     49\u001b[0m \u001b[38;5;28;01melif\u001b[39;00m ions \u001b[38;5;129;01mis\u001b[39;00m \u001b[38;5;28;01mNone\u001b[39;00m \u001b[38;5;129;01mand\u001b[39;00m ratio:\n\u001b[1;32m     50\u001b[0m     ions \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mlist\u001b[39m(normalize_proportion_ratios(intensities_ad\u001b[38;5;241m=\u001b[39madata)\u001b[38;5;241m.\u001b[39mto_df()\u001b[38;5;241m.\u001b[39msum()\u001b[38;5;241m.\u001b[39msort_values()\u001b[38;5;241m.\u001b[39mtail()\u001b[38;5;241m.\u001b[39mindex)\n\u001b[0;32m---> 52\u001b[0m df1 \u001b[38;5;241m=\u001b[39m \u001b[43mplot_all_wells\u001b[49m\u001b[43m(\u001b[49m\u001b[43madata\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mions\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mions\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mratio\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mratio\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m     53\u001b[0m df2 \u001b[38;5;241m=\u001b[39m plot_all_wells(adata_cor, ions\u001b[38;5;241m=\u001b[39mions, ratio\u001b[38;5;241m=\u001b[39mratio)\n\u001b[1;32m     54\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m pd\u001b[38;5;241m.\u001b[39mmerge(df1, df2, right_index\u001b[38;5;241m=\u001b[39m\u001b[38;5;28;01mTrue\u001b[39;00m, left_index\u001b[38;5;241m=\u001b[39m\u001b[38;5;28;01mTrue\u001b[39;00m, suffixes\u001b[38;5;241m=\u001b[39m(\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m_uncorrected\u001b[39m\u001b[38;5;124m'\u001b[39m, \u001b[38;5;124m'\u001b[39m\u001b[38;5;124m_ISM_correction\u001b[39m\u001b[38;5;124m'\u001b[39m))\n",
+      "Cell \u001b[0;32mIn [10], line 28\u001b[0m, in \u001b[0;36mplot_all_wells\u001b[0;34m(adata, ions, row, x, ratio)\u001b[0m\n\u001b[1;32m     25\u001b[0m     plot_df[yscale] \u001b[38;5;241m=\u001b[39m np\u001b[38;5;241m.\u001b[39mlog10(plot_df[yscale])\n\u001b[1;32m     26\u001b[0m     plot_df[x] \u001b[38;5;241m=\u001b[39m np\u001b[38;5;241m.\u001b[39mlog10(plot_df[x])\n\u001b[0;32m---> 28\u001b[0m graph \u001b[38;5;241m=\u001b[39m \u001b[43msns\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mFacetGrid\u001b[49m\u001b[43m(\u001b[49m\u001b[43mplot_df\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mrow\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mrow\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mcol\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[38;5;124;43mion\u001b[39;49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43msharey\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;28;43;01mFalse\u001b[39;49;00m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mmargin_titles\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;28;43;01mTrue\u001b[39;49;00m\u001b[43m)\u001b[49m\n\u001b[1;32m     29\u001b[0m graph\u001b[38;5;241m.\u001b[39mmap(sns\u001b[38;5;241m.\u001b[39mhistplot, x, yscale, bins\u001b[38;5;241m=\u001b[39m\u001b[38;5;241m50\u001b[39m, stat\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mproportion\u001b[39m\u001b[38;5;124m'\u001b[39m)\u001b[38;5;241m.\u001b[39madd_legend()\n\u001b[1;32m     31\u001b[0m params \u001b[38;5;241m=\u001b[39m []\n",
+      "File \u001b[0;32m~/.conda/envs/ion_suppression/lib/python3.10/site-packages/seaborn/axisgrid.py:456\u001b[0m, in \u001b[0;36mFacetGrid.__init__\u001b[0;34m(self, data, row, col, hue, col_wrap, sharex, sharey, height, aspect, palette, row_order, col_order, hue_order, hue_kws, dropna, legend_out, despine, margin_titles, xlim, ylim, subplot_kws, gridspec_kws)\u001b[0m\n\u001b[1;32m    449\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m col_wrap \u001b[38;5;129;01mis\u001b[39;00m \u001b[38;5;28;01mNone\u001b[39;00m:\n\u001b[1;32m    451\u001b[0m     kwargs \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mdict\u001b[39m(squeeze\u001b[38;5;241m=\u001b[39m\u001b[38;5;28;01mFalse\u001b[39;00m,\n\u001b[1;32m    452\u001b[0m                   sharex\u001b[38;5;241m=\u001b[39msharex, sharey\u001b[38;5;241m=\u001b[39msharey,\n\u001b[1;32m    453\u001b[0m                   subplot_kw\u001b[38;5;241m=\u001b[39msubplot_kws,\n\u001b[1;32m    454\u001b[0m                   gridspec_kw\u001b[38;5;241m=\u001b[39mgridspec_kws)\n\u001b[0;32m--> 456\u001b[0m     axes \u001b[38;5;241m=\u001b[39m \u001b[43mfig\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43msubplots\u001b[49m\u001b[43m(\u001b[49m\u001b[43mnrow\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mncol\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[43mkwargs\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m    458\u001b[0m     \u001b[38;5;28;01mif\u001b[39;00m col \u001b[38;5;129;01mis\u001b[39;00m \u001b[38;5;28;01mNone\u001b[39;00m \u001b[38;5;129;01mand\u001b[39;00m row \u001b[38;5;129;01mis\u001b[39;00m \u001b[38;5;28;01mNone\u001b[39;00m:\n\u001b[1;32m    459\u001b[0m         axes_dict \u001b[38;5;241m=\u001b[39m {}\n",
+      "File \u001b[0;32m~/.conda/envs/ion_suppression/lib/python3.10/site-packages/matplotlib/figure.py:894\u001b[0m, in \u001b[0;36mFigureBase.subplots\u001b[0;34m(self, nrows, ncols, sharex, sharey, squeeze, width_ratios, height_ratios, subplot_kw, gridspec_kw)\u001b[0m\n\u001b[1;32m    890\u001b[0m         \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mValueError\u001b[39;00m(\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mwidth_ratios\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m must not be defined both as \u001b[39m\u001b[38;5;124m\"\u001b[39m\n\u001b[1;32m    891\u001b[0m                          \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mparameter and as key in \u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mgridspec_kw\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m\"\u001b[39m)\n\u001b[1;32m    892\u001b[0m     gridspec_kw[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mwidth_ratios\u001b[39m\u001b[38;5;124m'\u001b[39m] \u001b[38;5;241m=\u001b[39m width_ratios\n\u001b[0;32m--> 894\u001b[0m gs \u001b[38;5;241m=\u001b[39m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43madd_gridspec\u001b[49m\u001b[43m(\u001b[49m\u001b[43mnrows\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mncols\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mfigure\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[43mgridspec_kw\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m    895\u001b[0m axs \u001b[38;5;241m=\u001b[39m gs\u001b[38;5;241m.\u001b[39msubplots(sharex\u001b[38;5;241m=\u001b[39msharex, sharey\u001b[38;5;241m=\u001b[39msharey, squeeze\u001b[38;5;241m=\u001b[39msqueeze,\n\u001b[1;32m    896\u001b[0m                   subplot_kw\u001b[38;5;241m=\u001b[39msubplot_kw)\n\u001b[1;32m    897\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m axs\n",
+      "File \u001b[0;32m~/.conda/envs/ion_suppression/lib/python3.10/site-packages/matplotlib/figure.py:1514\u001b[0m, in \u001b[0;36mFigureBase.add_gridspec\u001b[0;34m(self, nrows, ncols, **kwargs)\u001b[0m\n\u001b[1;32m   1475\u001b[0m \u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[1;32m   1476\u001b[0m \u001b[38;5;124;03mReturn a `.GridSpec` that has this figure as a parent.  This allows\u001b[39;00m\n\u001b[1;32m   1477\u001b[0m \u001b[38;5;124;03mcomplex layout of Axes in the figure.\u001b[39;00m\n\u001b[0;32m   (...)\u001b[0m\n\u001b[1;32m   1510\u001b[0m \n\u001b[1;32m   1511\u001b[0m \u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[1;32m   1513\u001b[0m _ \u001b[38;5;241m=\u001b[39m kwargs\u001b[38;5;241m.\u001b[39mpop(\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mfigure\u001b[39m\u001b[38;5;124m'\u001b[39m, \u001b[38;5;28;01mNone\u001b[39;00m)  \u001b[38;5;66;03m# pop in case user has added this...\u001b[39;00m\n\u001b[0;32m-> 1514\u001b[0m gs \u001b[38;5;241m=\u001b[39m \u001b[43mGridSpec\u001b[49m\u001b[43m(\u001b[49m\u001b[43mnrows\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mnrows\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mncols\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mncols\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mfigure\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;28;43mself\u001b[39;49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[38;5;241;43m*\u001b[39;49m\u001b[43mkwargs\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m   1515\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m gs\n",
+      "File \u001b[0;32m~/.conda/envs/ion_suppression/lib/python3.10/site-packages/matplotlib/gridspec.py:388\u001b[0m, in \u001b[0;36mGridSpec.__init__\u001b[0;34m(self, nrows, ncols, figure, left, bottom, right, top, wspace, hspace, width_ratios, height_ratios)\u001b[0m\n\u001b[1;32m    385\u001b[0m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mhspace \u001b[38;5;241m=\u001b[39m hspace\n\u001b[1;32m    386\u001b[0m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mfigure \u001b[38;5;241m=\u001b[39m figure\n\u001b[0;32m--> 388\u001b[0m \u001b[38;5;28;43msuper\u001b[39;49m\u001b[43m(\u001b[49m\u001b[43m)\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[38;5;21;43m__init__\u001b[39;49m\u001b[43m(\u001b[49m\u001b[43mnrows\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mncols\u001b[49m\u001b[43m,\u001b[49m\n\u001b[1;32m    389\u001b[0m \u001b[43m                 \u001b[49m\u001b[43mwidth_ratios\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mwidth_ratios\u001b[49m\u001b[43m,\u001b[49m\n\u001b[1;32m    390\u001b[0m \u001b[43m                 \u001b[49m\u001b[43mheight_ratios\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mheight_ratios\u001b[49m\u001b[43m)\u001b[49m\n",
+      "File \u001b[0;32m~/.conda/envs/ion_suppression/lib/python3.10/site-packages/matplotlib/gridspec.py:52\u001b[0m, in \u001b[0;36mGridSpecBase.__init__\u001b[0;34m(self, nrows, ncols, height_ratios, width_ratios)\u001b[0m\n\u001b[1;32m     49\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mValueError\u001b[39;00m(\n\u001b[1;32m     50\u001b[0m         \u001b[38;5;124mf\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mNumber of rows must be a positive integer, not \u001b[39m\u001b[38;5;132;01m{\u001b[39;00mnrows\u001b[38;5;132;01m!r}\u001b[39;00m\u001b[38;5;124m\"\u001b[39m)\n\u001b[1;32m     51\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m \u001b[38;5;28misinstance\u001b[39m(ncols, Integral) \u001b[38;5;129;01mor\u001b[39;00m ncols \u001b[38;5;241m<\u001b[39m\u001b[38;5;241m=\u001b[39m \u001b[38;5;241m0\u001b[39m:\n\u001b[0;32m---> 52\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mValueError\u001b[39;00m(\n\u001b[1;32m     53\u001b[0m         \u001b[38;5;124mf\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mNumber of columns must be a positive integer, not \u001b[39m\u001b[38;5;132;01m{\u001b[39;00mncols\u001b[38;5;132;01m!r}\u001b[39;00m\u001b[38;5;124m\"\u001b[39m)\n\u001b[1;32m     54\u001b[0m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_nrows, \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_ncols \u001b[38;5;241m=\u001b[39m nrows, ncols\n\u001b[1;32m     55\u001b[0m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mset_height_ratios(height_ratios)\n",
+      "\u001b[0;31mValueError\u001b[0m: Number of columns must be a positive integer, not 0"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "<Figure size 0x1500 with 0 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Using 65 pixels to calculate full-pixel avereage intensities.\n",
+      "Using 76 pixels to calculate full-pixel avereage intensities.\n",
+      "Using 78 pixels to calculate full-pixel avereage intensities.\n",
+      "Using 70 pixels to calculate full-pixel avereage intensities.\n",
+      "Using 54 pixels to calculate full-pixel avereage intensities.\n",
+      "Using 82 pixels to calculate full-pixel avereage intensities.\n",
+      "Using 79 pixels to calculate full-pixel avereage intensities.\n"
+     ]
+    }
+   ],
+   "source": [
+    "compare_pre_post_correction(am_adata, am_adata_cor)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.6"
+  },
+  "papermill": {
+   "default_parameters": {},
+   "duration": 64.613937,
+   "end_time": "2022-12-07T21:31:47.897741",
+   "environment_variables": {},
+   "exception": true,
+   "input_path": "/home/mklein/FDA_project/pipeline_01_correction.ipynb",
+   "output_path": "/home/mklein/FDA_project/analysis/Mx_FDA/pipeline_01_correction.ipynb",
+   "parameters": {
+    "analysis_path": "/home/mklein/FDA_project/analysis/Mx_FDA",
+    "condition_name": "celltype",
+    "notebooks": [
+     "pipeline_01_correction.ipynb",
+     "pipeline_02_processing.ipynb",
+     "pipeline_03_evaluation.ipynb"
+    ],
+    "project": "Mx_FDA",
+    "source_path": "/home/mklein/Raw Data/2022-02-18_FDA_SpaceM",
+    "target_path": "/home/mklein/FDA_project/data/Mx_FDA",
+    "well_name": "rowcol"
+   },
+   "start_time": "2022-12-07T21:30:43.283804",
+   "version": "2.3.4"
+  },
+  "vscode": {
+   "interpreter": {
+    "hash": "89b4449ee30f46b148fb6825d70934bcbb1ebdb6d5b2015fe3835362773c7289"
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

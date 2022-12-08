@@ -532,8 +532,8 @@ div.rendered_html tbody tr:hover {
     <span class="n">gen_cell_sm_matrix</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;list_TPO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">assign_average_tpo</span><span class="p">(</span><span class="n">sm_matrix</span><span class="p">,</span> <span class="n">overlap_data</span><span class="p">,</span> <span class="n">min_overlap</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)))</span>
 
     <span class="c1"># write the generated files to the dedicated project location.</span>
-    <span class="n">corr_sm_matrix</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;am_spatiomolecular_adata_corrected.h5ad&#39;</span><span class="p">))</span>
-    <span class="n">sm_matrix</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;am_spatiomolecular_adata.h5ad&#39;</span><span class="p">))</span>
+    <span class="c1"># corr_sm_matrix.write(os.path.join(target_path, sample, &#39;am_spatiomolecular_adata_corrected.h5ad&#39;))</span>
+    <span class="c1"># sm_matrix.write(os.path.join(target_path, sample, &#39;am_spatiomolecular_adata.h5ad&#39;))</span>
     <span class="n">corr_cell_sm_matrix</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;cells_spatiomolecular_adata_corrected.h5ad&#39;</span><span class="p">))</span>
     <span class="n">cell_sm_matrix</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;cells_spatiomolecular_adata_spacem.h5ad&#39;</span><span class="p">))</span>
     <span class="n">gen_cell_sm_matrix</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;cells_spatiomolecular_adata.h5ad&#39;</span><span class="p">))</span>
@@ -557,11 +557,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-
-  0%|                                                                                                                                        | 0/35 [00:00&lt;?, ?it/s]
- 20%|█████████████████████████▌                                                                                                      | 7/35 [00:00&lt;00:00, 59.28it/s]
- 20%|█████████████████████████▌                                                                                                      | 7/35 [00:19&lt;00:00, 59.28it/s]
- 40%|██████████████████████████████████████████████████▊                                                                            | 14/35 [00:57&lt;01:41,  4.82s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 40%|████      | 14/35 [00:58&lt;01:43,  4.91s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -571,8 +567,7 @@ div.rendered_html tbody tr:hover {
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-
- 60%|████████████████████████████████████████████████████████████████████████████▏                                                  | 21/35 [01:50&lt;01:25,  6.09s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 60%|██████    | 21/35 [01:49&lt;01:24,  6.01s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -588,8 +583,7 @@ div.rendered_html tbody tr:hover {
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-
- 80%|█████████████████████████████████████████████████████████████████████████████████████████████████████▌                         | 28/35 [02:46&lt;00:47,  6.84s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 80%|████████  | 28/35 [02:46&lt;00:48,  6.86s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -607,11 +601,9 @@ div.rendered_html tbody tr:hover {
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+100%|██████████| 35/35 [03:42&lt;00:00,  6.37s/it]
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 35/35 [03:44&lt;00:00,  7.35s/it]
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 35/35 [03:44&lt;00:00,  6.41s/it]
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
@@ -636,7 +628,7 @@ div.rendered_html tbody tr:hover {
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
@@ -657,9 +649,324 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cell_normalization_method</th>
+      <th>ablation_marks_min_overlap_ratio</th>
+      <th>fluorescence_channels</th>
+      <th>cell_ion_max_correlation_distance</th>
+      <th>ions_of_interest</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>B1</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>B2</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>B3</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>B4</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>C1</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>C2</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>C3</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>C4</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>D1</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>D2</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>D3</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>D4</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>E1</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>E2</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>E3</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>E4</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>F1</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>F2</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>F3</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>F4</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>G1</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>G2</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>G3</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>G4</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>H2</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>H3</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>H4</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>I1</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>I2</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>I3</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>I4</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>1.0</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>J1</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>J2</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>J3</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+    <tr>
+      <th>J4</th>
+      <td>weighted_by_overlap_and_sampling_area</td>
+      <td>0.3</td>
+      <td>[DAPI]</td>
+      <td>None</td>
+      <td>[]</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
 <p>Every analysed pixel is characterized by its total overlap with cellular regions. The raw data shows no clear association between this overlap and acquired ion intensities. However, after the ion suppression correction, pixels with smaller overlap clearly have lower corresponding intensities (only shown for one metabolite).</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
@@ -720,19 +1027,256 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">am_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">const</span><span class="o">.</span><span class="n">TPO</span><span class="p">]</span> <span class="o">=</span> <span class="n">am_adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">const</span><span class="o">.</span><span class="n">TPO</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>Intercept_uncorrected</th>
+      <th>correction_total_pixel_overlap_uncorrected</th>
+      <th>Intercept_ISM_correction</th>
+      <th>correction_total_pixel_overlap_ISM_correction</th>
+    </tr>
+    <tr>
+      <th>ion</th>
+      <th>well</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="5" valign="top">C37H71O8P+Na</th>
+      <th>C1</th>
+      <td>0.538366</td>
+      <td>-1.116593</td>
+      <td>0.538366</td>
+      <td>0.346860</td>
+    </tr>
+    <tr>
+      <th>E3</th>
+      <td>0.722212</td>
+      <td>-0.857998</td>
+      <td>0.722212</td>
+      <td>0.213980</td>
+    </tr>
+    <tr>
+      <th>F2</th>
+      <td>0.594974</td>
+      <td>-1.073323</td>
+      <td>0.594974</td>
+      <td>0.331937</td>
+    </tr>
+    <tr>
+      <th>I1</th>
+      <td>0.611796</td>
+      <td>-1.033294</td>
+      <td>0.611796</td>
+      <td>0.356141</td>
+    </tr>
+    <tr>
+      <th>J2</th>
+      <td>0.665359</td>
+      <td>-0.948735</td>
+      <td>0.665359</td>
+      <td>0.250083</td>
+    </tr>
+    <tr>
+      <th rowspan="5" valign="top">C39H69O8P+H</th>
+      <th>C1</th>
+      <td>0.632177</td>
+      <td>-1.085789</td>
+      <td>0.632177</td>
+      <td>0.008920</td>
+    </tr>
+    <tr>
+      <th>E3</th>
+      <td>0.765795</td>
+      <td>-0.862291</td>
+      <td>0.765795</td>
+      <td>0.213681</td>
+    </tr>
+    <tr>
+      <th>F2</th>
+      <td>0.647288</td>
+      <td>-1.067524</td>
+      <td>0.647288</td>
+      <td>0.301975</td>
+    </tr>
+    <tr>
+      <th>I1</th>
+      <td>0.664136</td>
+      <td>-1.027754</td>
+      <td>0.664136</td>
+      <td>0.328792</td>
+    </tr>
+    <tr>
+      <th>J2</th>
+      <td>0.720741</td>
+      <td>-0.949632</td>
+      <td>0.720741</td>
+      <td>0.236286</td>
+    </tr>
+    <tr>
+      <th rowspan="5" valign="top">C39H79N2O6P+Na</th>
+      <th>C1</th>
+      <td>0.488088</td>
+      <td>-1.049450</td>
+      <td>0.488088</td>
+      <td>0.239124</td>
+    </tr>
+    <tr>
+      <th>E3</th>
+      <td>0.608744</td>
+      <td>-0.908041</td>
+      <td>0.608744</td>
+      <td>0.141400</td>
+    </tr>
+    <tr>
+      <th>F2</th>
+      <td>0.675291</td>
+      <td>-1.050282</td>
+      <td>0.675291</td>
+      <td>0.223933</td>
+    </tr>
+    <tr>
+      <th>I1</th>
+      <td>0.634946</td>
+      <td>-1.076714</td>
+      <td>0.634946</td>
+      <td>0.273182</td>
+    </tr>
+    <tr>
+      <th>J2</th>
+      <td>0.688929</td>
+      <td>-0.992466</td>
+      <td>0.688929</td>
+      <td>0.186395</td>
+    </tr>
+    <tr>
+      <th rowspan="5" valign="top">C40H79O10P+Na</th>
+      <th>C1</th>
+      <td>0.434184</td>
+      <td>-1.025472</td>
+      <td>0.434184</td>
+      <td>0.173710</td>
+    </tr>
+    <tr>
+      <th>E3</th>
+      <td>0.401511</td>
+      <td>-0.942550</td>
+      <td>0.401511</td>
+      <td>0.030494</td>
+    </tr>
+    <tr>
+      <th>F2</th>
+      <td>0.616398</td>
+      <td>-1.034800</td>
+      <td>0.616398</td>
+      <td>0.218888</td>
+    </tr>
+    <tr>
+      <th>I1</th>
+      <td>0.536105</td>
+      <td>-1.023692</td>
+      <td>0.536105</td>
+      <td>0.134008</td>
+    </tr>
+    <tr>
+      <th>J2</th>
+      <td>0.618784</td>
+      <td>-0.955324</td>
+      <td>0.618784</td>
+      <td>0.108529</td>
+    </tr>
+    <tr>
+      <th rowspan="5" valign="top">C45H74NO7P+H</th>
+      <th>C1</th>
+      <td>0.530155</td>
+      <td>-1.043130</td>
+      <td>0.530155</td>
+      <td>0.221473</td>
+    </tr>
+    <tr>
+      <th>E3</th>
+      <td>0.485833</td>
+      <td>-0.866078</td>
+      <td>0.485833</td>
+      <td>-0.000312</td>
+    </tr>
+    <tr>
+      <th>F2</th>
+      <td>0.737168</td>
+      <td>-1.032628</td>
+      <td>0.737168</td>
+      <td>0.218766</td>
+    </tr>
+    <tr>
+      <th>I1</th>
+      <td>0.652107</td>
+      <td>-1.008986</td>
+      <td>0.652107</td>
+      <td>0.205918</td>
+    </tr>
+    <tr>
+      <th>J2</th>
+      <td>0.738304</td>
+      <td>-0.901100</td>
+      <td>0.738304</td>
+      <td>0.119276</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" style="width: 1508px; height: 1490px;" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" style="width: 1508px; height: 1490px;" />
 </div>
 </div>
 </section>

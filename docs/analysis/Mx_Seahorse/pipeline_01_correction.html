@@ -515,8 +515,8 @@ div.rendered_html tbody tr:hover {
     <span class="n">gen_cell_sm_matrix</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;list_TPO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">assign_average_tpo</span><span class="p">(</span><span class="n">sm_matrix</span><span class="p">,</span> <span class="n">overlap_data</span><span class="p">,</span> <span class="n">min_overlap</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)))</span>
 
     <span class="c1"># write the generated files to the dedicated project location.</span>
-    <span class="n">corr_sm_matrix</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;am_spatiomolecular_adata_corrected.h5ad&#39;</span><span class="p">))</span>
-    <span class="n">sm_matrix</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;am_spatiomolecular_adata.h5ad&#39;</span><span class="p">))</span>
+    <span class="c1"># corr_sm_matrix.write(os.path.join(target_path, sample, &#39;am_spatiomolecular_adata_corrected.h5ad&#39;))</span>
+    <span class="c1"># sm_matrix.write(os.path.join(target_path, sample, &#39;am_spatiomolecular_adata.h5ad&#39;))</span>
     <span class="n">corr_cell_sm_matrix</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;cells_spatiomolecular_adata_corrected.h5ad&#39;</span><span class="p">))</span>
     <span class="n">cell_sm_matrix</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;cells_spatiomolecular_adata_spacem.h5ad&#39;</span><span class="p">))</span>
     <span class="n">gen_cell_sm_matrix</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="s1">&#39;cells_spatiomolecular_adata.h5ad&#39;</span><span class="p">))</span>
@@ -540,16 +540,13 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-
-  0%|                                                                                                                                        | 0/19 [00:00&lt;?, ?it/s]
- 37%|███████████████████████████████████████████████▏                                                                                | 7/19 [00:00&lt;00:00, 57.03it/s]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 37%|███▋      | 7/19 [00:00&lt;00:00, 63.20it/s]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-
- 37%|███████████████████████████████████████████████▏                                                                                | 7/19 [00:19&lt;00:00, 57.03it/s]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+ 37%|███▋      | 7/19 [00:19&lt;00:00, 63.20it/s]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -567,9 +564,7 @@ div.rendered_html tbody tr:hover {
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-
- 74%|█████████████████████████████████████████████████████████████████████████████████████████████▌                                 | 14/19 [00:45&lt;00:18,  3.79s/it]
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 19/19 [00:45&lt;00:00,  2.38s/it]
+100%|██████████| 19/19 [00:44&lt;00:00,  2.36s/it]
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
@@ -943,13 +938,6 @@ div.rendered_html tbody tr:hover {
   <tbody>
     <tr>
       <th rowspan="5" valign="top">C12H20N2O3S-H</th>
-      <th>A3</th>
-      <td>0.537944</td>
-      <td>-1.046915</td>
-      <td>0.537944</td>
-      <td>0.038194</td>
-    </tr>
-    <tr>
       <th>B3</th>
       <td>0.507042</td>
       <td>-1.073024</td>
@@ -957,35 +945,35 @@ div.rendered_html tbody tr:hover {
       <td>0.083699</td>
     </tr>
     <tr>
-      <th>B4</th>
-      <td>0.498521</td>
-      <td>-1.079621</td>
-      <td>0.498521</td>
-      <td>0.066345</td>
+      <th>D1</th>
+      <td>0.671968</td>
+      <td>-1.018381</td>
+      <td>0.671968</td>
+      <td>0.059697</td>
     </tr>
     <tr>
-      <th>C1</th>
-      <td>0.656022</td>
-      <td>-1.030717</td>
-      <td>0.656022</td>
-      <td>-0.006195</td>
+      <th>E1</th>
+      <td>0.670996</td>
+      <td>-1.020058</td>
+      <td>0.670996</td>
+      <td>0.126744</td>
     </tr>
     <tr>
-      <th>F3</th>
-      <td>0.533380</td>
-      <td>-1.066767</td>
-      <td>0.533380</td>
-      <td>-0.018526</td>
+      <th>E3</th>
+      <td>0.628881</td>
+      <td>-1.016422</td>
+      <td>0.628881</td>
+      <td>0.020688</td>
+    </tr>
+    <tr>
+      <th>H4</th>
+      <td>0.686244</td>
+      <td>-1.007335</td>
+      <td>0.686244</td>
+      <td>0.046070</td>
     </tr>
     <tr>
       <th rowspan="5" valign="top">C16H14O2-H</th>
-      <th>A3</th>
-      <td>-0.156905</td>
-      <td>-0.953732</td>
-      <td>-0.156905</td>
-      <td>-0.011713</td>
-    </tr>
-    <tr>
       <th>B3</th>
       <td>0.916030</td>
       <td>-0.921738</td>
@@ -993,35 +981,35 @@ div.rendered_html tbody tr:hover {
       <td>-0.054120</td>
     </tr>
     <tr>
-      <th>B4</th>
-      <td>-0.205752</td>
-      <td>-0.858051</td>
-      <td>-0.205752</td>
-      <td>-0.039594</td>
+      <th>D1</th>
+      <td>-0.392633</td>
+      <td>-0.937760</td>
+      <td>-0.392633</td>
+      <td>-0.066266</td>
     </tr>
     <tr>
-      <th>C1</th>
-      <td>-0.529931</td>
-      <td>-0.968823</td>
-      <td>-0.529931</td>
-      <td>-0.056719</td>
+      <th>E1</th>
+      <td>-0.414207</td>
+      <td>-1.000000</td>
+      <td>-0.414207</td>
+      <td>0.053087</td>
     </tr>
     <tr>
-      <th>F3</th>
-      <td>0.898944</td>
-      <td>-0.977679</td>
-      <td>0.898944</td>
-      <td>0.022318</td>
+      <th>E3</th>
+      <td>0.057993</td>
+      <td>-0.999999</td>
+      <td>0.057993</td>
+      <td>-0.063154</td>
+    </tr>
+    <tr>
+      <th>H4</th>
+      <td>0.980012</td>
+      <td>-0.927778</td>
+      <td>0.980012</td>
+      <td>0.072219</td>
     </tr>
     <tr>
       <th rowspan="5" valign="top">C17H16F6N2O-H</th>
-      <th>A3</th>
-      <td>0.501637</td>
-      <td>-1.040514</td>
-      <td>0.501637</td>
-      <td>0.044087</td>
-    </tr>
-    <tr>
       <th>B3</th>
       <td>0.497680</td>
       <td>-1.024226</td>
@@ -1029,35 +1017,35 @@ div.rendered_html tbody tr:hover {
       <td>0.023280</td>
     </tr>
     <tr>
-      <th>B4</th>
-      <td>0.567860</td>
-      <td>-1.012009</td>
-      <td>0.567860</td>
-      <td>0.093552</td>
+      <th>D1</th>
+      <td>0.610613</td>
+      <td>-0.988610</td>
+      <td>0.610613</td>
+      <td>0.026640</td>
     </tr>
     <tr>
-      <th>C1</th>
-      <td>0.614101</td>
-      <td>-1.006633</td>
-      <td>0.614101</td>
-      <td>-0.024988</td>
+      <th>E1</th>
+      <td>0.613788</td>
+      <td>-0.973362</td>
+      <td>0.613788</td>
+      <td>-0.014763</td>
     </tr>
     <tr>
-      <th>F3</th>
-      <td>0.481043</td>
-      <td>-1.015578</td>
-      <td>0.481043</td>
-      <td>0.027750</td>
+      <th>E3</th>
+      <td>0.592619</td>
+      <td>-1.002585</td>
+      <td>0.592619</td>
+      <td>-0.022117</td>
+    </tr>
+    <tr>
+      <th>H4</th>
+      <td>0.519892</td>
+      <td>-1.029490</td>
+      <td>0.519892</td>
+      <td>0.052405</td>
     </tr>
     <tr>
       <th rowspan="5" valign="top">C17H18FN3O3-H</th>
-      <th>A3</th>
-      <td>0.382553</td>
-      <td>-1.091891</td>
-      <td>0.382553</td>
-      <td>0.100169</td>
-    </tr>
-    <tr>
       <th>B3</th>
       <td>0.397377</td>
       <td>-1.109384</td>
@@ -1065,35 +1053,35 @@ div.rendered_html tbody tr:hover {
       <td>0.118442</td>
     </tr>
     <tr>
-      <th>B4</th>
-      <td>0.409996</td>
-      <td>-1.075061</td>
-      <td>0.409996</td>
-      <td>0.175370</td>
+      <th>D1</th>
+      <td>0.490063</td>
+      <td>-1.046815</td>
+      <td>0.490063</td>
+      <td>0.048554</td>
     </tr>
     <tr>
-      <th>C1</th>
-      <td>0.373349</td>
-      <td>-1.048728</td>
-      <td>0.373349</td>
-      <td>0.037001</td>
+      <th>E1</th>
+      <td>0.464626</td>
+      <td>-1.045280</td>
+      <td>0.464626</td>
+      <td>0.111125</td>
     </tr>
     <tr>
-      <th>F3</th>
-      <td>0.363441</td>
-      <td>-1.098098</td>
-      <td>0.363441</td>
-      <td>0.111870</td>
+      <th>E3</th>
+      <td>0.473585</td>
+      <td>-0.999991</td>
+      <td>0.473585</td>
+      <td>-0.033571</td>
+    </tr>
+    <tr>
+      <th>H4</th>
+      <td>0.413748</td>
+      <td>-1.077481</td>
+      <td>0.413748</td>
+      <td>0.051298</td>
     </tr>
     <tr>
       <th rowspan="5" valign="top">C8H18N2O4S-H</th>
-      <th>A3</th>
-      <td>-0.157525</td>
-      <td>-0.952819</td>
-      <td>-0.157525</td>
-      <td>0.001092</td>
-    </tr>
-    <tr>
       <th>B3</th>
       <td>0.916051</td>
       <td>-0.921222</td>
@@ -1101,25 +1089,32 @@ div.rendered_html tbody tr:hover {
       <td>-0.053608</td>
     </tr>
     <tr>
-      <th>B4</th>
-      <td>-0.243220</td>
-      <td>-0.912622</td>
-      <td>-0.243220</td>
-      <td>-0.094165</td>
+      <th>D1</th>
+      <td>-0.397207</td>
+      <td>-0.942738</td>
+      <td>-0.397207</td>
+      <td>-0.067745</td>
     </tr>
     <tr>
-      <th>C1</th>
-      <td>-0.529435</td>
-      <td>-0.969633</td>
-      <td>-0.529435</td>
-      <td>-0.042291</td>
+      <th>E1</th>
+      <td>-0.414207</td>
+      <td>-0.999998</td>
+      <td>-0.414207</td>
+      <td>0.000005</td>
     </tr>
     <tr>
-      <th>F3</th>
-      <td>0.898944</td>
-      <td>-0.977679</td>
-      <td>0.898944</td>
-      <td>0.022318</td>
+      <th>E3</th>
+      <td>0.057993</td>
+      <td>-0.999999</td>
+      <td>0.057993</td>
+      <td>-0.078001</td>
+    </tr>
+    <tr>
+      <th>H4</th>
+      <td>0.972891</td>
+      <td>-0.928877</td>
+      <td>0.972891</td>
+      <td>0.071120</td>
     </tr>
   </tbody>
 </table>

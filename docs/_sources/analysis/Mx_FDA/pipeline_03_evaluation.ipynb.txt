@@ -1,0 +1,1322 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "1f985ba7",
+   "metadata": {
+    "papermill": {
+     "duration": 0.017397,
+     "end_time": "2022-12-07T21:58:32.963171",
+     "exception": false,
+     "start_time": "2022-12-07T21:58:32.945774",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "# Evaluation\n",
+    "\n",
+    "In this notebook, different measures are investigated to quantify the effect of correcting SpaceM ion intensity data for partial pixel-cell overlap.\n",
+    "Moreover, The effects of the correction on different metabolites is visualized.\n",
+    " "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "39f4a160",
+   "metadata": {
+    "papermill": {
+     "duration": 4.579717,
+     "end_time": "2022-12-07T21:58:37.556808",
+     "exception": false,
+     "start_time": "2022-12-07T21:58:32.977091",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import platform\n",
+    "import os\n",
+    "import multiprocessing\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import anndata as ad\n",
+    "import scanpy as sc\n",
+    "import seaborn as sns\n",
+    "from sklearn.cluster import KMeans\n",
+    "import re\n",
+    "import outer_spacem as osm\n",
+    "import sys\n",
+    "sys.path.append('/home/mklein/spacem')\n",
+    "sys.path.append('/Volumes/mklein/spacem')\n",
+    "sys.path.append('/home/mklein/FDA_project')\n",
+    "from src.correction import *\n",
+    "from src.evaluation import intermixing, MetaboliteAnalysis\n",
+    "\n",
+    "%matplotlib inline\n",
+    "%config InlineBackend.figure_formats = ['retina']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "1c98cbbc",
+   "metadata": {
+    "papermill": {
+     "duration": 0.025584,
+     "end_time": "2022-12-07T21:58:37.598208",
+     "exception": false,
+     "start_time": "2022-12-07T21:58:37.572624",
+     "status": "completed"
+    },
+    "tags": [
+     "parameters"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "if platform.system() == \"Darwin\":\n",
+    "    target_path = '/Volumes/mklein/FDA_project/data/Lx_Glioblastoma'\n",
+    "    if True:\n",
+    "        target_path = '/Users/mariusklein/Local_Project_Files/FDA_project/data/Lx_Glioblastoma'\n",
+    "\n",
+    "else:\n",
+    "    target_path = '/home/mklein/FDA_project/data/Lx_Glioblastoma'\n",
+    "\n",
+    "condition_name = 'condition'\n",
+    "well_name = 'rowcol'\n",
+    "project = 'Lx_Glioblastoma'\n",
+    "analysis_path = target_path"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "b15143af",
+   "metadata": {
+    "papermill": {
+     "duration": 0.022827,
+     "end_time": "2022-12-07T21:58:37.634184",
+     "exception": false,
+     "start_time": "2022-12-07T21:58:37.611357",
+     "status": "completed"
+    },
+    "tags": [
+     "injected-parameters"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# Parameters\n",
+    "source_path = \"/home/mklein/Raw Data/2022-02-18_FDA_SpaceM\"\n",
+    "target_path = \"/home/mklein/FDA_project/data/Mx_FDA\"\n",
+    "condition_name = \"celltype\"\n",
+    "well_name = \"rowcol\"\n",
+    "analysis_path = \"/home/mklein/FDA_project/analysis/Mx_FDA\"\n",
+    "notebooks = [\n",
+    "    \"pipeline_01_correction.ipynb\",\n",
+    "    \"pipeline_02_processing.ipynb\",\n",
+    "    \"pipeline_03_evaluation.ipynb\",\n",
+    "]\n",
+    "project = \"Mx_FDA\"\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "afd3b06c",
+   "metadata": {
+    "papermill": {
+     "duration": 0.011287,
+     "end_time": "2022-12-07T21:58:37.658470",
+     "exception": false,
+     "start_time": "2022-12-07T21:58:37.647183",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "Loading the uncorrected and ISM-corrected dataset from file. Additionally, loading the metadata CSV file to filter out excluded wells."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "531b2a3b",
+   "metadata": {
+    "papermill": {
+     "duration": 0.340613,
+     "end_time": "2022-12-07T21:58:38.009798",
+     "exception": false,
+     "start_time": "2022-12-07T21:58:37.669185",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "adata = ad.read(os.path.join(target_path, \"gen_batch_sm_matrix.h5ad\"))\n",
+    "adata_cor = ad.read(os.path.join(target_path, \"corrected_batch_sm_matrix.h5ad\"))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "14566ce0-056f-49d4-8817-54897c7ac1fd",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "AnnData object with n_obs × n_vars = 11175 × 0\n",
+       "    obs: 'center_x', 'center_y', 'cell_area', 'cell_sampling_area', 'cell_sampling_ratio', 'cell_nearest_am_distance', 'cell_nearest_cell_distance', 'centroid-0', 'centroid-1', 'bbox-0', 'bbox-1', 'bbox-2', 'bbox-3', 'local_centroid-0', 'local_centroid-1', 'area', 'filled_area', 'solidity', 'perimeter', 'eccentricity', 'euler_number', 'moments_hu-0', 'moments_hu-1', 'moments_hu-2', 'moments_hu-3', 'moments_hu-4', 'moments_hu-5', 'moments_hu-6', 'moments_central-0-0', 'moments_central-0-1', 'moments_central-0-2', 'moments_central-0-3', 'moments_central-1-0', 'moments_central-1-1', 'moments_central-1-2', 'moments_central-1-3', 'moments_central-2-0', 'moments_central-2-1', 'moments_central-2-2', 'moments_central-2-3', 'moments_central-3-0', 'moments_central-3-1', 'moments_central-3-2', 'moments_central-3-3', 'inertia_tensor_eigvals-0', 'inertia_tensor_eigvals-1', 'major_axis_length', 'minor_axis_length', 'weighted_moments_central-0-0-DAPI', 'weighted_moments_central-0-0-FITC', 'weighted_moments_central-0-1-DAPI', 'weighted_moments_central-0-1-FITC', 'weighted_moments_central-0-2-DAPI', 'weighted_moments_central-0-2-FITC', 'weighted_moments_central-0-3-DAPI', 'weighted_moments_central-0-3-FITC', 'weighted_moments_central-1-0-DAPI', 'weighted_moments_central-1-0-FITC', 'weighted_moments_central-1-1-DAPI', 'weighted_moments_central-1-1-FITC', 'weighted_moments_central-1-2-DAPI', 'weighted_moments_central-1-2-FITC', 'weighted_moments_central-1-3-DAPI', 'weighted_moments_central-1-3-FITC', 'weighted_moments_central-2-0-DAPI', 'weighted_moments_central-2-0-FITC', 'weighted_moments_central-2-1-DAPI', 'weighted_moments_central-2-1-FITC', 'weighted_moments_central-2-2-DAPI', 'weighted_moments_central-2-2-FITC', 'weighted_moments_central-2-3-DAPI', 'weighted_moments_central-2-3-FITC', 'weighted_moments_central-3-0-DAPI', 'weighted_moments_central-3-0-FITC', 'weighted_moments_central-3-1-DAPI', 'weighted_moments_central-3-1-FITC', 'weighted_moments_central-3-2-DAPI', 'weighted_moments_central-3-2-FITC', 'weighted_moments_central-3-3-DAPI', 'weighted_moments_central-3-3-FITC', 'weighted_moments_normalized-0-0-DAPI', 'weighted_moments_normalized-0-0-FITC', 'weighted_moments_normalized-0-1-DAPI', 'weighted_moments_normalized-0-1-FITC', 'weighted_moments_normalized-0-2-DAPI', 'weighted_moments_normalized-0-2-FITC', 'weighted_moments_normalized-0-3-DAPI', 'weighted_moments_normalized-0-3-FITC', 'weighted_moments_normalized-1-0-DAPI', 'weighted_moments_normalized-1-0-FITC', 'weighted_moments_normalized-1-1-DAPI', 'weighted_moments_normalized-1-1-FITC', 'weighted_moments_normalized-1-2-DAPI', 'weighted_moments_normalized-1-2-FITC', 'weighted_moments_normalized-1-3-DAPI', 'weighted_moments_normalized-1-3-FITC', 'weighted_moments_normalized-2-0-DAPI', 'weighted_moments_normalized-2-0-FITC', 'weighted_moments_normalized-2-1-DAPI', 'weighted_moments_normalized-2-1-FITC', 'weighted_moments_normalized-2-2-DAPI', 'weighted_moments_normalized-2-2-FITC', 'weighted_moments_normalized-2-3-DAPI', 'weighted_moments_normalized-2-3-FITC', 'weighted_moments_normalized-3-0-DAPI', 'weighted_moments_normalized-3-0-FITC', 'weighted_moments_normalized-3-1-DAPI', 'weighted_moments_normalized-3-1-FITC', 'weighted_moments_normalized-3-2-DAPI', 'weighted_moments_normalized-3-2-FITC', 'weighted_moments_normalized-3-3-DAPI', 'weighted_moments_normalized-3-3-FITC', 'weighted_moments_hu-0-DAPI', 'weighted_moments_hu-0-FITC', 'weighted_moments_hu-1-DAPI', 'weighted_moments_hu-1-FITC', 'weighted_moments_hu-2-DAPI', 'weighted_moments_hu-2-FITC', 'weighted_moments_hu-3-DAPI', 'weighted_moments_hu-3-FITC', 'weighted_moments_hu-4-DAPI', 'weighted_moments_hu-4-FITC', 'weighted_moments_hu-5-DAPI', 'weighted_moments_hu-5-FITC', 'weighted_moments_hu-6-DAPI', 'weighted_moments_hu-6-FITC', 'max_intensity-DAPI', 'max_intensity-FITC', 'min_intensity-DAPI', 'min_intensity-FITC', 'mean_intensity-DAPI', 'mean_intensity-FITC', 'median_intensity-DAPI', 'median_intensity-FITC', 'sum_intensity-DAPI', 'sum_intensity-FITC', 'sampled_max_intensity-DAPI', 'sampled_max_intensity-FITC', 'sampled_min_intensity-DAPI', 'sampled_min_intensity-FITC', 'sampled_mean_intensity-DAPI', 'sampled_mean_intensity-FITC', 'sampled_median_intensity-DAPI', 'sampled_median_intensity-FITC', 'sampled_sum_intensity-DAPI', 'sampled_sum_intensity-FITC', 'dataset', 'list_TPO', 'well', 'dataset_0', 'dataset_1'\n",
+       "    var: 'adduct', 'annotation_id', 'correction_full_pixel_avg_intensities', 'databases', 'fdr', 'formula', 'ion', 'ionFormula', 'moleculeIds', 'moleculeNames', 'msm', 'mz'"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "adata"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "b17e4132",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'metadata' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[0;32mIn [5], line 23\u001b[0m\n\u001b[1;32m     20\u001b[0m         adata \u001b[38;5;241m=\u001b[39m adata[adata\u001b[38;5;241m.\u001b[39mobs[condition_name]\u001b[38;5;241m.\u001b[39misin(keep_conditions), :]\u001b[38;5;241m.\u001b[39mcopy()\n\u001b[1;32m     21\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m adata\n\u001b[0;32m---> 23\u001b[0m adata \u001b[38;5;241m=\u001b[39m \u001b[43massign_conditions\u001b[49m\u001b[43m(\u001b[49m\u001b[43madata\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m     24\u001b[0m adata_cor \u001b[38;5;241m=\u001b[39m assign_conditions(adata_cor)\n",
+      "Cell \u001b[0;32mIn [5], line 14\u001b[0m, in \u001b[0;36massign_conditions\u001b[0;34m(adata)\u001b[0m\n\u001b[1;32m     11\u001b[0m index \u001b[38;5;241m=\u001b[39m adata\u001b[38;5;241m.\u001b[39mobs\u001b[38;5;241m.\u001b[39mindex\u001b[38;5;241m.\u001b[39mname\n\u001b[1;32m     12\u001b[0m new_obs \u001b[38;5;241m=\u001b[39m adata\u001b[38;5;241m.\u001b[39mobs\u001b[38;5;241m.\u001b[39mreset_index()\n\u001b[0;32m---> 14\u001b[0m new_obs \u001b[38;5;241m=\u001b[39m pd\u001b[38;5;241m.\u001b[39mmerge(new_obs, \u001b[43mmetadata\u001b[49m[[well_name, condition_name]], \n\u001b[1;32m     15\u001b[0m                    how\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124minner\u001b[39m\u001b[38;5;124m'\u001b[39m, left_on\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mwell\u001b[39m\u001b[38;5;124m'\u001b[39m, right_on\u001b[38;5;241m=\u001b[39mwell_name)\u001b[38;5;241m.\u001b[39mset_index(index)\n\u001b[1;32m     17\u001b[0m adata \u001b[38;5;241m=\u001b[39m adata[new_obs\u001b[38;5;241m.\u001b[39mindex, :]\u001b[38;5;241m.\u001b[39mcopy()\n\u001b[1;32m     18\u001b[0m adata\u001b[38;5;241m.\u001b[39mobs \u001b[38;5;241m=\u001b[39m new_obs\n",
+      "\u001b[0;31mNameError\u001b[0m: name 'metadata' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "metadata_path = os.path.join(target_path, 'metadata.csv')\n",
+    "samples = list(set(adata.obs['well']))\n",
+    "\n",
+    "if os.path.exists(metadata_path):\n",
+    "    metadata = pd.read_csv(metadata_path)\n",
+    "    if well_name not in metadata.columns:\n",
+    "        metadata[well_name] = metadata['row'].astype(str) + metadata['col'].astype(str)\n",
+    "    samples = list(metadata[well_name])\n",
+    "\n",
+    "def assign_conditions(adata):\n",
+    "    index = adata.obs.index.name\n",
+    "    new_obs = adata.obs.reset_index()\n",
+    "    \n",
+    "    new_obs = pd.merge(new_obs, metadata[[well_name, condition_name]], \n",
+    "                       how='inner', left_on='well', right_on=well_name).set_index(index)\n",
+    "    \n",
+    "    adata = adata[new_obs.index, :].copy()\n",
+    "    adata.obs = new_obs\n",
+    "    if 'keep_conditions' in globals():\n",
+    "        adata = adata[adata.obs[condition_name].isin(keep_conditions), :].copy()\n",
+    "    return adata\n",
+    "\n",
+    "adata = assign_conditions(adata)\n",
+    "adata_cor = assign_conditions(adata_cor)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0508f0e0",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "pd.crosstab(adata.obs['well'], adata.obs[condition_name], margins=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f4113409",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "included_molecules = adata.var_names.intersection(adata_cor.var_names)\n",
+    "included_cells = adata.obs_names.intersection(adata_cor.obs_names)\n",
+    "\n",
+    "def subset_molecules(adata):\n",
+    "    \n",
+    "    return adata[included_cells, included_molecules].copy()\n",
+    "\n",
+    "adata = subset_molecules(adata)\n",
+    "adata_cor = subset_molecules(adata_cor)\n",
+    "\n",
+    "print(adata.shape)\n",
+    "print(adata_cor.shape)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "dbff90a8",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "First of all, the loaded datasets are filtered:\n",
+    "\n",
+    "- cells need non-zero intensities for at least 10 ions.\n",
+    "- ions need non-zero intensities for at least 200 cells.\n",
+    "\n",
+    "After that, the sets are preprocessed in different ways:\n",
+    "\n",
+    "- intensties are normalized to TIC and/or log-transformed (log(x+1))\n",
+    "\n",
+    "After that, both datasets are subset to contain the same ions and cells (intersection)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "cb8032bb",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "def preprocess(adata):\n",
+    "    \n",
+    "    sc.pp.filter_cells(adata, min_genes=10)\n",
+    "    sc.pp.filter_genes(adata, min_cells=200)\n",
+    "    adata.raw = adata\n",
+    "    adata.layers[\"raw_counts\"] = adata.X.copy()\n",
+    "    # sc.pp.scale(adata)\n",
+    "    adata.layers[\"norm_counts\"] = sc.pp.normalize_total(adata, layer='raw_counts', target_sum=None, inplace=False)['X']\n",
+    "    adata.layers[\"1e4_norm_counts\"] = sc.pp.normalize_total(adata, layer='raw_counts', target_sum=1e4, inplace=False)['X']\n",
+    "    \n",
+    "    adata.layers[\"log_raw_counts\"] = sc.pp.log1p(adata.layers[\"raw_counts\"], copy=True)\n",
+    "    adata.layers[\"log_norm_counts\"] = sc.pp.log1p(adata.layers[\"norm_counts\"], copy=True)\n",
+    "    adata.layers[\"1e4_log_norm_counts\"] = sc.pp.log1p(adata.layers[\"1e4_norm_counts\"], copy=True)\n",
+    "    adata.X = adata.layers[\"log_norm_counts\"]\n",
+    "    \n",
+    "    adata.var['median_intensity'] = np.median(adata.X, axis=0)\n",
+    "    adata.var['mean_intensity'] = np.mean(adata.X, axis=0)\n",
+    "    # adata_x = adata.X.copy()\n",
+    "    # adata_x[adata_x == 0] = np.nan\n",
+    "    # adata.var['median_intensity_nonzero'] = np.nanmedian(adata_x, axis=0)\n",
+    "    \n",
+    "    \n",
+    "preprocess(adata)\n",
+    "preprocess(adata_cor)\n",
+    "\n",
+    "print(adata.shape)\n",
+    "print(adata_cor.shape)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "72f22574",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "def dimred_umap(adata, layer=None, min_dist=0.5):\n",
+    "    if layer is not None:\n",
+    "        adata.layers['default_X'] = adata.X\n",
+    "        adata.X = adata.layers[layer]\n",
+    "    \n",
+    "    sc.pp.pca(adata)\n",
+    "    sc.pp.neighbors(adata, n_neighbors=50, metric='cosine')\n",
+    "    sc.tl.umap(adata, min_dist=min_dist, spread=1.0, random_state=1, n_components=2)\n",
+    "    #sc.pl.umap(adata, color=['well', condition_name], palette='cividis')\n",
+    "    f = osm.pl.highlight_scatterplot(\n",
+    "        data = adata,\n",
+    "        obsm_key = \"X_umap\",\n",
+    "        hue = condition_name,\n",
+    "        col = condition_name,\n",
+    "        palette = \"cividis\",\n",
+    "        trim_axes=True,\n",
+    "        height = 5,\n",
+    "        scatter_kwargs = dict(s=5)\n",
+    "    )\n",
+    "\n",
+    "    f.add_legend(markerscale=3)\n",
+    "    \n",
+    "    if layer is not None:\n",
+    "        adata.X = adata.layers['default_X']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3ede6184",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "def intermixing_layer(adata, adata_cor, condition_name, measures = ['X_pca', 'X_umap'], layer=None):\n",
+    "    if layer is not None:\n",
+    "        adata.layers['default_X'] = adata.X\n",
+    "        adata.X = adata.layers[layer]\n",
+    "        adata_cor.layers['default_X'] = adata_cor.X\n",
+    "        adata_cor.X = adata_cor.layers[layer]\n",
+    "    \n",
+    "    summaries = intermixing({'uncorrected': adata, 'ISM correction': adata_cor}, condition_name = condition_name, measures = measures)\n",
+    "    \n",
+    "    if layer is not None:\n",
+    "        adata.X = adata.layers['default_X']\n",
+    "        adata_cor.X = adata_cor.layers['default_X']\n",
+    "    \n",
+    "    return\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c6869653",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "The different options for scaling and transforming the data are shown in the following:\n",
+    "\n",
+    "1. raw values\n",
+    "2. log transformation\n",
+    "3. TIC normalization\n",
+    "4. TIC normalization and log transformation\n",
+    "5. normalization to a fixed count (10^4)\n",
+    "6. normalization to a fixed count (10^4) and log transformation\n",
+    "\n",
+    "The normalization to a fixed count has a slightly different effect than TIC normalization. The former normalizes all counts per cell to the given target sum so that all cells from the uncorrected and the corrected set are scaled to this count. In contrast, the latter retains the differences between the datasets by normalizing to the median count across cells in a dataset."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a0a00834",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "dimred_umap(adata, layer='raw_counts')\n",
+    "dimred_umap(adata_cor, layer='raw_counts')\n",
+    "intermixing_layer(adata, adata_cor, condition_name, measures = ['X_pca', 'X_umap'], layer='raw_counts')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3974aecc",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "dimred_umap(adata, layer='log_raw_counts')\n",
+    "dimred_umap(adata_cor, layer='log_raw_counts')\n",
+    "intermixing_layer(adata, adata_cor, condition_name, measures = ['X_pca', 'X_umap'], layer='log_raw_counts')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3c4a0890",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "dimred_umap(adata, layer='norm_counts')\n",
+    "dimred_umap(adata_cor, layer='norm_counts')\n",
+    "intermixing_layer(adata, adata_cor, condition_name, measures = ['X_pca', 'X_umap'], layer='norm_counts')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a6d8e0b7",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "dimred_umap(adata, layer='log_norm_counts')\n",
+    "dimred_umap(adata_cor, layer='log_norm_counts')\n",
+    "intermixing_layer(adata, adata_cor, condition_name, measures = ['X_pca', 'X_umap'], layer='log_norm_counts')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "48360734",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "dimred_umap(adata, layer='1e4_norm_counts')\n",
+    "dimred_umap(adata_cor, layer='1e4_norm_counts')\n",
+    "intermixing_layer(adata, adata_cor, condition_name, measures = ['X_pca', 'X_umap'], layer='1e4_norm_counts')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "115aac81",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "dimred_umap(adata, layer='1e4_log_norm_counts')\n",
+    "dimred_umap(adata_cor, layer='1e4_log_norm_counts')\n",
+    "intermixing_layer(adata, adata_cor, condition_name, measures = ['X_pca', 'X_umap'], layer='1e4_log_norm_counts')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5816ba15",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "Before analysis, asserting that the two data files were deconvoluted in the same way. Specifically, the corrected dataframe cannot have non-zero values at positions where the uncorrected dataframe has zero values."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8c5b8c6f",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "assert not any(pd.Series(np.array((adata.to_df() == 0) & (adata_cor.to_df()!= 0)).flatten()))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5df7da51",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "adata.obs['correction'] = 'uncorrected'\n",
+    "adata_cor.obs['correction'] = 'ISM correction'"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "03bd073d",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## Effects of the correction on different molecules\n",
+    "\n",
+    "The ISM correction is performed per ion on the logarithmized intensity / sampling proportion ratio. The underlying quantile regression can only be computed with a minimum number of datapoints. If an ion has less than 10 datapoints, the quantile regression is instead computed based on a reference pool of ions.\n",
+    "In the following, the resulting slopes by which all ions have been corrected are visualized. Ions that were corrected using the reference pool are shown separately.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "423c11ce",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "grid = sns.FacetGrid(adata_cor.var[['mean_correction_quantreg_slope', 'corrected_only_using_pool']], col='corrected_only_using_pool', hue='corrected_only_using_pool', sharey=False)\n",
+    "grid.map(sns.histplot, 'mean_correction_quantreg_slope', bins=30)\n",
+    "cor_pool = list(adata_cor.var[adata_cor.var['corrected_only_using_pool'] == True].index)\n",
+    "adata_cor.var['corrected_only_using_pool'].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "173d6891",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "Based on the slopes of the correction but also the logfoldchanges between corrected and uncorrected cells, one can infer the extent of alteration of different metabolites in the correction. These measures not necessarily correlate, thus the degree of correction of ions has to be evaluated on individual datasets."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d5cf6b5d",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import src.evaluation\n",
+    "from importlib import reload\n",
+    "reload(src.evaluation)\n",
+    "from src.evaluation import MetaboliteAnalysis"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c6b0b800",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "ma_raw = MetaboliteAnalysis(adata=adata, adata_cor=adata_cor, condition_name = condition_name, \n",
+    "                        obs_columns = ['list_TPO'],\n",
+    "                        var_columns = ['corrected_only_using_pool', 'mean_correction_quantreg_slope', \n",
+    "                                       'n_cells','median_intensity', 'mean_intensity', 'sum_correction_using_ion_pool'],\n",
+    "                       use_raw = True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a909531a",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "ma_raw.pair_plot(exclude_ref_corrected = False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f49e0262",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "ma_raw.volcano_plot(exclude_ref_corrected = False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "79d2737f",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "sc.pl.rank_genes_groups_tracksplot(ma_raw.conc_adata, groupby='correction', dendrogram=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "99429e4b",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "adata_cor.obs['n_pixels'] = [i.count(';')+1 for i in adata_cor.obs['list_TPO']]\n",
+    "strat_cell_list = list(adata_cor.obs.groupby('n_pixels', group_keys=False).apply(lambda x: x.sample(1)).index)[:6]\n",
+    "strat_cell_list"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a69db8be",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "The following plot shows the metabolic profiles of sampled cell generated from 1 and increasing numbers of ablation marks. The first row has the uncorrected raw ion intensities, the second row the corrected raw ion intensities and the third row the correction ratio/quotient between the two ( $correction\\_ratio = \\frac{I_{corrected}}{I_{uncorrected}}$ ). Most ions have the same correction ratio in a given cells, some have a higher ratio (smaller slope, less ISM correction) and some have a lower ratio (steeper slope, stronger ISM correction). The distribution of ion-specific correction ratios in the same cells is shown, separately for self-corrected and pool-corrected ions, in density plots underneath the metabolic profiles. Black horizontal and vertical lines show the sampling proportion of all ablation marks that were combined to the respective cell. Especially from the density plots, it becomes obvious that the majority of ions have correction ratios that colocalize with the pixels' sampling ratios. This can be explained by the fact that most ions had a correction slope of ~-1, the pool-corrected ions had all the same slope close to -1. Thus, these ions are down-corrected by multiplying with ~1 times their sampling proportion. Since many ions seem to occur only in one of the underlying ablation marks, the distribution of correction ratios has prominent peaks and few values between them."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "21733370",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "ma_raw.quotient_plot(show_cells=strat_cell_list)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "dc598adb",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "ma_raw.top_ion_plot()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "eb097562",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "_ = ma_raw.save_matrix(save_to_path = analysis_path, safe_to_name = project, save_figures=6)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f33afc75",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "The same analysis is then carried out for the TIC-corrected and log-transformed data: Here, the differences between uncorrected and ISM-corrected data are much more subtle. This corresponds better with the UMAPs further down, as they also show very little noticebly differences between uncorrected and ISM-corrected datasets."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1c33b334",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "ma = MetaboliteAnalysis(adata=adata, adata_cor=adata_cor, condition_name = condition_name, \n",
+    "                        obs_columns = ['list_TPO'],\n",
+    "                        var_columns = ['corrected_only_using_pool', 'mean_correction_quantreg_slope', \n",
+    "                                       'n_cells','median_intensity', 'mean_intensity', 'sum_correction_using_ion_pool'],\n",
+    "                       use_raw = False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ae330bdd",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "sc.pl.rank_genes_groups_tracksplot(ma.conc_adata, groupby='correction', dendrogram=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f5f088f6",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "ma.quotient_plot(show_cells=strat_cell_list)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "11f2ef06",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "ma.top_ion_plot()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "fe0559d4",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## Comparison of the datasets\n",
+    "\n",
+    "In the following, the uncorrected and ISM-corrected datasets are compared using methods of a typical single-cell analysis. Unless specified otherwise, the data was preprocessed using TOC normalization and log transformation."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "55baa8ef",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "def dimred_pca(adata):\n",
+    "    sc.pp.pca(adata)\n",
+    "    sc.pl.pca_overview(adata, color=['well', condition_name], palette='cividis')\n",
+    "\n",
+    "dimred_pca(adata)\n",
+    "dimred_pca(adata_cor)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "51c2722d",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "dimred_umap(adata)\n",
+    "dimred_umap(adata_cor)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "1077371c",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# from sklearn.metrics.cluster import completeness_score\n",
+    "# from sklearn.metrics import accuracy_score, silhouette_score\n",
+    "# \n",
+    "# def kmeans_clust(adata):\n",
+    "#     n_clusters = len(adata.obs[condition_name].value_counts())\n",
+    "#     kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(adata.X)\n",
+    "#     adata.obs['kmeans'] = kmeans.labels_.astype(str)\n",
+    "# \n",
+    "#     sc.tl.leiden(adata, resolution=2)\n",
+    "# \n",
+    "#     leiden = np.array(adata.obs['leiden'].values)\n",
+    "#     leiden_curated = np.copy(leiden)\n",
+    "#     fc = np.array(adata.obs[condition_name].values)\n",
+    "#     for cluster in np.unique(leiden):\n",
+    "#         labels, counts = np.unique(fc[leiden == cluster], return_counts=True)\n",
+    "#         leiden_curated[leiden == cluster] = str(labels[counts == np.max(counts)][0])\n",
+    "#     adata.obs['leiden_curated'] = leiden_curated\n",
+    "# \n",
+    "#     sc.pl.umap(adata, color=['kmeans', 'leiden', 'leiden_curated', condition_name], palette='cividis')\n",
+    "#     # print('Leiden acccuracy score: %1.4f' % accuracy_score(y_true = adata.obs[condition_name].replace(['HeLa', 'NIH3T3'], ['0', '1']), y_pred = adata.obs['leiden']))\n",
+    "#     print('Curated leiden acccuracy score: %1.4f' % accuracy_score(y_true = adata.obs[condition_name], y_pred = adata.obs['leiden_curated']))\n",
+    "#     print('KMeans completeness score: %1.4f' % completeness_score(adata.obs[condition_name], adata.obs['kmeans']))\n",
+    "#     print('KMeans silhouette coefficient: %1.4f' % silhouette_score(adata.X, adata.obs['kmeans']))\n",
+    "# \n",
+    "# kmeans_clust(adata)\n",
+    "# kmeans_clust(adata_cor)\n",
+    "# "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "faa7b28d",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "summaries = intermixing({'uncorrected': adata, 'ISM correction': adata_cor}, condition_name = condition_name, measures = ['X_pca', 'X_umap'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "03b4a4f4",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "s = intermixing(\n",
+    "    adata_dict = {'uncorrected': adata, 'ISM correction': adata_cor},\n",
+    "    condition_name = condition_name,\n",
+    "    sample_frac=0.1,\n",
+    "    measures =['X_umap', 'X_pca'],\n",
+    "    n_datapoints = 50,\n",
+    "    sample_log = True,\n",
+    "    neighborhood_size = None,\n",
+    "    normalized = False,\n",
+    "    show_table = [],\n",
+    "    n_jobs = multiprocessing.cpu_count()\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c78729db",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from scipy.integrate import trapz, simps\n",
+    "\n",
+    "def auc_intermixing(summary_dict):\n",
+    "    for name, data in summary_dict.items():\n",
+    "        print('Area under the curve for %s: %1.4f'%(name, trapz(data['mean'], data.index) / max(data.index)))\n",
+    "\n",
+    "\n",
+    "auc_intermixing(s[1])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "57238507",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from sklearn.svm import LinearSVC\n",
+    "\n",
+    "def analyse_svm_margin(adata, adata_cor, condition_name, layer=None):\n",
+    "    print(layer)\n",
+    "    if layer is not None:\n",
+    "        adata.layers['default_X'] = adata.X\n",
+    "        adata.X = adata.layers[layer]\n",
+    "        adata_cor.layers['default_X'] = adata_cor.X\n",
+    "        adata_cor.X = adata_cor.layers[layer]\n",
+    "    \n",
+    "    def get_svm_margin(adata, condition_name, size_factor = 1):\n",
+    "        predictors = adata.X * size_factor\n",
+    "        result = adata.obs[condition_name]\n",
+    "        clf = LinearSVC(random_state=0, dual=False)\n",
+    "        clf.fit(predictors, result)  \n",
+    "        margin_df = pd.DataFrame({'condition': clf.classes_, 'margin': 1 / np.sqrt(np.sum(clf.coef_**2, axis=1))})\n",
+    "\n",
+    "        #print(margin_df)\n",
+    "        return margin_df\n",
+    "    \n",
+    "    size_factor = np.sum(adata.X) / np.sum(adata_cor.X)\n",
+    "\n",
+    "    df = pd.merge(get_svm_margin(adata, condition_name), \n",
+    "                  get_svm_margin(adata_cor, condition_name, size_factor = size_factor), \n",
+    "                  on='condition', suffixes=['_uncorrected', '_ISM_corrected'])\n",
+    "    sns.set(rc={\"figure.figsize\":(12, 5)})\n",
+    "    sns.barplot(df.melt(id_vars='condition', var_name='correction', value_name='margin'), \n",
+    "                x='condition', y='margin', hue='correction').set_title('Comparison of SVM margins for layer %s'%layer)\n",
+    "    \n",
+    "    \n",
+    "    \n",
+    "    if layer is not None:\n",
+    "        adata.X = adata.layers['default_X']\n",
+    "        adata_cor.X = adata_cor.layers['default_X']\n",
+    "   "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "33160549",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "analyse_svm_margin(adata, adata_cor, condition_name, layer='log_norm_counts')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "cdb32e77",
+   "metadata": {
+    "papermill": {
+     "duration": null,
+     "end_time": null,
+     "exception": null,
+     "start_time": null,
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "analyse_svm_margin(adata, adata_cor, condition_name, layer='log_norm_counts')"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.6"
+  },
+  "papermill": {
+   "default_parameters": {},
+   "duration": 9.211997,
+   "end_time": "2022-12-07T21:58:39.848732",
+   "environment_variables": {},
+   "exception": null,
+   "input_path": "/home/mklein/FDA_project/pipeline_03_evaluation.ipynb",
+   "output_path": "/home/mklein/FDA_project/analysis/Mx_FDA/pipeline_03_evaluation.ipynb",
+   "parameters": {
+    "analysis_path": "/home/mklein/FDA_project/analysis/Mx_FDA",
+    "condition_name": "celltype",
+    "notebooks": [
+     "pipeline_01_correction.ipynb",
+     "pipeline_02_processing.ipynb",
+     "pipeline_03_evaluation.ipynb"
+    ],
+    "project": "Mx_FDA",
+    "source_path": "/home/mklein/Raw Data/2022-02-18_FDA_SpaceM",
+    "target_path": "/home/mklein/FDA_project/data/Mx_FDA",
+    "well_name": "rowcol"
+   },
+   "start_time": "2022-12-07T21:58:30.636735",
+   "version": "2.3.4"
+  },
+  "vscode": {
+   "interpreter": {
+    "hash": "89b4449ee30f46b148fb6825d70934bcbb1ebdb6d5b2015fe3835362773c7289"
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

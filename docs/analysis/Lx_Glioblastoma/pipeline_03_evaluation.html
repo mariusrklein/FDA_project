@@ -869,7 +869,7 @@ div.rendered_html tbody tr:hover {
 <p>The normalization to a fixed count has a slightly different effect than TIC normalization. The former normalizes all counts per cell to the given target sum so that all cells from the uncorrected and the corrected set are scaled to this count. In contrast, the latter retains the differences between the datasets by normalizing to the median count across cells in a dataset. Across modes of normalization, the corrected dataset shows a better separation visually and using the intermixing metric.
 However, this effect is very subtle after the data was log-transformed.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
@@ -886,10 +886,10 @@ However, this effect is very subtle after the data was log-transformed.</p>
 X_pca
 X_umap
                               mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.292367  0.273838          0.091837
-X_pca_ISM correction  10  0.261284  0.290717          0.091837
-X_umap_uncorrected    10  0.420327  0.250271          0.091837
-X_umap_ISM correction 10  0.433033  0.262468          0.091837
+X_pca_uncorrected     10  0.290734  0.272778          0.091837
+X_pca_ISM correction  10  0.265228  0.289773          0.091837
+X_umap_uncorrected    10  0.419023  0.251847          0.091837
+X_umap_ISM correction 10  0.424936  0.265487          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -914,7 +914,7 @@ X_umap_ISM correction 10  0.433033  0.262468          0.091837
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
@@ -931,17 +931,17 @@ X_umap_ISM correction 10  0.433033  0.262468          0.091837
 X_pca
 X_umap
                               mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.255830  0.264228          0.091837
-X_pca_ISM correction  10  0.251861  0.275565          0.091837
-X_umap_uncorrected    10  0.355201  0.252346          0.091837
-X_umap_ISM correction 10  0.342691  0.250908          0.091837
+X_pca_uncorrected     10  0.254777  0.267311          0.091837
+X_pca_ISM correction  10  0.250086  0.276414          0.091837
+X_umap_uncorrected    10  0.347361  0.262376          0.091837
+X_umap_ISM correction 10  0.346258  0.250731          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_14_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_14_1.png" style="width: 3137px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_14_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_14_1.png" style="width: 3128px; height: 471px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -959,7 +959,7 @@ X_umap_ISM correction 10  0.342691  0.250908          0.091837
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
@@ -976,10 +976,10 @@ X_umap_ISM correction 10  0.342691  0.250908          0.091837
 X_pca
 X_umap
                               mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.262892  0.268036          0.091837
-X_pca_ISM correction  10  0.251835  0.278273          0.091837
-X_umap_uncorrected    10  0.352798  0.259578          0.091837
-X_umap_ISM correction 10  0.342838  0.256682          0.091837
+X_pca_uncorrected     10  0.265907  0.269558          0.091837
+X_pca_ISM correction  10  0.255112  0.275521          0.091837
+X_umap_uncorrected    10  0.344932  0.262054          0.091837
+X_umap_ISM correction 10  0.337670  0.265741          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1004,7 +1004,7 @@ X_umap_ISM correction 10  0.342838  0.256682          0.091837
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
@@ -1021,17 +1021,17 @@ X_umap_ISM correction 10  0.342838  0.256682          0.091837
 X_pca
 X_umap
                               mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.248760  0.269697          0.091837
-X_pca_ISM correction  10  0.247476  0.271360          0.091837
-X_umap_uncorrected    10  0.348649  0.256044          0.091837
-X_umap_ISM correction 10  0.338775  0.258618          0.091837
+X_pca_uncorrected     10  0.247967  0.272224          0.091837
+X_pca_ISM correction  10  0.247273  0.274605          0.091837
+X_umap_uncorrected    10  0.348974  0.254529          0.091837
+X_umap_ISM correction 10  0.342024  0.254298          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_16_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_16_1.png" style="width: 3137px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_16_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_16_1.png" style="width: 3128px; height: 471px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -1049,7 +1049,7 @@ X_umap_ISM correction 10  0.338775  0.258618          0.091837
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_norm_counts&#39;</span><span class="p">)</span>
@@ -1066,10 +1066,10 @@ X_umap_ISM correction 10  0.338775  0.258618          0.091837
 X_pca
 X_umap
                               mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.262892  0.268036          0.091837
-X_pca_ISM correction  10  0.251835  0.278273          0.091837
-X_umap_uncorrected    10  0.353317  0.260231          0.091837
-X_umap_ISM correction 10  0.336149  0.264737          0.091837
+X_pca_uncorrected     10  0.265907  0.269558          0.091837
+X_pca_ISM correction  10  0.255112  0.275521          0.091837
+X_umap_uncorrected    10  0.354556  0.262996          0.091837
+X_umap_ISM correction 10  0.334884  0.263961          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1083,7 +1083,7 @@ X_umap_ISM correction 10  0.336149  0.264737          0.091837
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_17_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_17_2.png" style="width: 3137px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_17_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_17_2.png" style="width: 3125px; height: 471px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1094,7 +1094,7 @@ X_umap_ISM correction 10  0.336149  0.264737          0.091837
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
@@ -1111,10 +1111,10 @@ X_umap_ISM correction 10  0.336149  0.264737          0.091837
 X_pca
 X_umap
                               mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.233104  0.273271          0.091837
-X_pca_ISM correction  10  0.230445  0.276276          0.091837
-X_umap_uncorrected    10  0.303848  0.259812          0.091837
-X_umap_ISM correction 10  0.309261  0.249992          0.091837
+X_pca_uncorrected     10  0.230366  0.273937          0.091837
+X_pca_ISM correction  10  0.225958  0.274036          0.091837
+X_umap_uncorrected    10  0.306771  0.253314          0.091837
+X_umap_ISM correction 10  0.299940  0.253693          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1128,7 +1128,7 @@ X_umap_ISM correction 10  0.309261  0.249992          0.091837
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_18_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_18_2.png" style="width: 3125px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_18_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_18_2.png" style="width: 3128px; height: 471px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1140,7 +1140,7 @@ X_umap_ISM correction 10  0.309261  0.249992          0.091837
 </div>
 <p>Before analysis, asserting that the two data files were deconvoluted in the same way. Specifically, the corrected dataframe cannot have non-zero values at positions where the uncorrected dataframe has zero values.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">!=</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
@@ -1148,7 +1148,7 @@ X_umap_ISM correction 10  0.309261  0.249992          0.091837
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;correction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;uncorrected&#39;</span>
@@ -1161,7 +1161,7 @@ X_umap_ISM correction 10  0.309261  0.249992          0.091837
 <p>The ISM correction is performed per ion on the logarithmized intensity / sampling proportion ratio. The underlying quantile regression can only be computed with a minimum number of datapoints. If an ion has less than 10 datapoints, the quantile regression is instead computed based on a reference pool of ions. In the following, the resulting slopes by which all ions have been corrected are visualized. Ions that were corrected using the reference pool are shown separately.</p>
 <p><strong>For simplicity, not all modes of preprocessing are investigated in theis step. Only the non-transformed raw counts and the TIC-normalized and log-transformed counts are included here.</strong></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[[</span><span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">]],</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1172,7 +1172,7 @@ X_umap_ISM correction 10  0.309261  0.249992          0.091837
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1191,7 +1191,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <p>Based on the slopes of the correction but also the logfoldchanges between corrected and uncorrected cells, one can infer the extent of alteration of different metabolites in the correction. These measures not necessarily correlate, thus the degree of correction of ions has to be evaluated on individual datasets.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">src.evaluation</span>
@@ -1202,7 +1202,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span> <span class="o">=</span> <span class="n">MetaboliteAnalysis</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="o">=</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span>
@@ -1235,7 +1235,7 @@ Name: corrected_only_using_pool, dtype: int64
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">pair_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -1250,7 +1250,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -1274,7 +1274,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups_tracksplot</span><span class="p">(</span><span class="n">ma_raw</span><span class="o">.</span><span class="n">conc_adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">dendrogram</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1298,7 +1298,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;n_pixels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;list_TPO&#39;</span><span class="p">]]</span>
@@ -1308,19 +1308,19 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;419_H2&#39;, &#39;114_B3&#39;, &#39;812_C3&#39;, &#39;82_G4&#39;, &#39;74_H4&#39;, &#39;179_H3&#39;]
+[&#39;6_C2&#39;, &#39;82_J1&#39;, &#39;375_D2&#39;, &#39;272_C1&#39;, &#39;141_C2&#39;, &#39;642_B3&#39;]
 </pre></div></div>
 </div>
 <p>The following plot shows the metabolic profiles of sampled cell generated from 1 and increasing numbers of ablation marks. The first row has the uncorrected raw ion intensities, the second row the corrected raw ion intensities and the third row the correction ratio/quotient between the two ( <span class="math notranslate nohighlight">\(correction\_ratio = \frac{I_{corrected}}{I_{uncorrected}}\)</span> ). Most ions have the same correction ratio in a given cells, some have a higher ratio (smaller slope, less ISM correction) and some have a
 lower ratio (steeper slope, stronger ISM correction). The distribution of ion-specific correction ratios in the same cells is shown, separately for self-corrected and pool-corrected ions, in density plots underneath the metabolic profiles. Black horizontal and vertical lines show the sampling proportion of all ablation marks that were combined to the respective cell. Especially from the density plots, it becomes obvious that the majority of ions have correction ratios that colocalize with the
 pixels’ sampling ratios. This can be explained by the fact that most ions had a correction slope of ~-1, the pool-corrected ions had all the same slope close to -1. Thus, these ions are down-corrected by multiplying with ~1 times their sampling proportion. Since many ions seem to occur only in one of the underlying ablation marks, the distribution of correction ratios has prominent peaks and few values between them.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">quotient_plot</span><span class="p">(</span><span class="n">show_cells</span><span class="o">=</span><span class="n">strat_cell_list</span><span class="p">)</span>
@@ -1331,18 +1331,18 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_32_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_32_0.png" style="width: 1982px; height: 871px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_32_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_32_0.png" style="width: 1983px; height: 871px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_32_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_32_1.png" style="width: 1986px; height: 590px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_32_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_32_1.png" style="width: 1984px; height: 590px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">top_ion_plot</span><span class="p">()</span>
@@ -1393,7 +1393,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ma_raw</span><span class="o">.</span><span class="n">save_matrix</span><span class="p">(</span><span class="n">save_to_path</span> <span class="o">=</span> <span class="n">analysis_path</span><span class="p">,</span> <span class="n">safe_to_name</span> <span class="o">=</span> <span class="n">project</span><span class="p">,</span> <span class="n">save_figures</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
@@ -1402,7 +1402,16 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <p>The same analysis is then carried out for the TIC-corrected and log-transformed data: Here, the differences between uncorrected and ISM-corrected data are much more subtle. This corresponds better with the UMAPs further down, as they also show very little noticebly differences between uncorrected and ISM-corrected datasets.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">]</span>
+<span class="n">adata_cor</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span> <span class="o">=</span> <span class="n">MetaboliteAnalysis</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="o">=</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span>
@@ -1414,7 +1423,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups_tracksplot</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">conc_adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">dendrogram</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1434,12 +1443,12 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_37_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_37_1.png" style="width: 1058px; height: 539px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_38_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_38_1.png" style="width: 1058px; height: 539px;" />
 </div>
 </div>
 <p>After TIC normalization and log transformation, the distributions of correction ratios is moved and scaled down. Thus they do not co-localize with the pixels’ sampling proportions anymore and differences between datasets are smaller than for the raw data.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">quotient_plot</span><span class="p">(</span><span class="n">show_cells</span><span class="o">=</span><span class="n">strat_cell_list</span><span class="p">)</span>
@@ -1450,18 +1459,18 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_39_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_39_0.png" style="width: 1985px; height: 871px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_0.png" style="width: 1985px; height: 871px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_39_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_39_1.png" style="width: 1984px; height: 590px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_1.png" style="width: 1985px; height: 590px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">top_ion_plot</span><span class="p">()</span>
@@ -1487,28 +1496,28 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_1.png" style="width: 1492px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_41_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_41_1.png" style="width: 1492px; height: 290px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_2.png" style="width: 1493px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_41_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_41_2.png" style="width: 1493px; height: 290px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_3.png" style="width: 1497px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_41_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_41_3.png" style="width: 1497px; height: 290px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_4.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_40_4.png" style="width: 1480px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_41_4.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_41_4.png" style="width: 1480px; height: 290px;" />
 </div>
 </div>
 </section>
@@ -1516,7 +1525,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <h2>Comparison of the datasets<a class="headerlink" href="#Comparison-of-the-datasets" title="Permalink to this heading">¶</a></h2>
 <p>In the following, the uncorrected and ISM-corrected datasets are compared using methods of a typical single-cell analysis. Unless specified otherwise, the data was preprocessed using TOC normalization and log transformation.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_pca</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
@@ -1543,21 +1552,21 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_1.png" style="width: 1315px; height: 435px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_1.png" style="width: 1315px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_2.png" style="width: 1601px; height: 509px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_2.png" style="width: 1601px; height: 509px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_3.png" style="width: 566px; height: 454px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_3.png" style="width: 566px; height: 454px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -1575,25 +1584,25 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_5.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_5.png" style="width: 1315px; height: 435px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_5.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_5.png" style="width: 1315px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_6.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_6.png" style="width: 1601px; height: 513px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_6.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_6.png" style="width: 1601px; height: 513px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_7.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_42_7.png" style="width: 566px; height: 454px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_7.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_7.png" style="width: 566px; height: 454px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
@@ -1605,18 +1614,18 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_0.png" style="width: 3137px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_44_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_44_0.png" style="width: 3128px; height: 471px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_43_1.png" style="width: 3137px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_44_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_44_1.png" style="width: 3137px; height: 471px;" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># from sklearn.metrics.cluster import completeness_score</span>
@@ -1650,7 +1659,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summaries</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">({</span><span class="s1">&#39;uncorrected&#39;</span><span class="p">:</span> <span class="n">adata</span><span class="p">,</span> <span class="s1">&#39;ISM correction&#39;</span><span class="p">:</span> <span class="n">adata_cor</span><span class="p">},</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">])</span>
@@ -1665,21 +1674,21 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 X_pca
 X_umap
                               mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.248760  0.269697          0.091837
-X_pca_ISM correction  10  0.247476  0.271360          0.091837
-X_umap_uncorrected    10  0.348649  0.256044          0.091837
-X_umap_ISM correction 10  0.338775  0.258618          0.091837
+X_pca_uncorrected     10  0.247967  0.272224          0.091837
+X_pca_ISM correction  10  0.247273  0.274605          0.091837
+X_umap_uncorrected    10  0.348974  0.254529          0.091837
+X_umap_ISM correction 10  0.342024  0.254298          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_45_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_45_1.png" style="width: 787px; height: 470px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_46_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_46_1.png" style="width: 787px; height: 470px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">(</span>
@@ -1713,11 +1722,11 @@ Index: []
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_46_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_46_1.png" style="width: 789px; height: 466px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_47_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_47_1.png" style="width: 789px; height: 466px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">trapz</span><span class="p">,</span> <span class="n">simps</span>
@@ -1736,14 +1745,14 @@ Index: []
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Area under the curve for X_umap_uncorrected: 0.6222
-Area under the curve for X_umap_ISM correction: 0.6187
-Area under the curve for X_pca_uncorrected: 0.6480
-Area under the curve for X_pca_ISM correction: 0.6462
+Area under the curve for X_umap_uncorrected: 0.6223
+Area under the curve for X_umap_ISM correction: 0.6191
+Area under the curve for X_pca_uncorrected: 0.6482
+Area under the curve for X_pca_ISM correction: 0.6465
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[63]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
@@ -1784,7 +1793,41 @@ Area under the curve for X_pca_ISM correction: 0.6462
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+norm_counts
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/sklearn/svm/_base.py:1225: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+  warnings.warn(
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/sklearn/svm/_base.py:1225: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_50_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_50_2.png" style="width: 1014px; height: 476px;" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
@@ -1803,11 +1846,11 @@ log_norm_counts
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_49_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_49_1.png" style="width: 1009px; height: 476px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_51_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_51_1.png" style="width: 1009px; height: 476px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[66]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
@@ -1826,7 +1869,7 @@ log_norm_counts
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_50_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_50_1.png" style="width: 1009px; height: 476px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_52_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_52_1.png" style="width: 1009px; height: 476px;" />
 </div>
 </div>
 </section>
