@@ -315,7 +315,6 @@ div.rendered_html tbody tr:hover {
 <span class="c1"># import outer_spacem as osm</span>
 
 <span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;retina&#39;]
 </pre></div>
 </div>
 </div>
@@ -450,6 +449,330 @@ Name: celltype, dtype: int64
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/preprocessing/_simple.py:140: ImplicitModificationWarning: Trying to modify attribute `.obs` of view, initializing view as actual.
   adata.obs[&#39;n_genes&#39;] = number
 </pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>C16H30O2</th>
+      <th>C18H34O2</th>
+      <th>C18H36O2</th>
+      <th>C19H37O6P</th>
+      <th>C19H39O7P</th>
+      <th>C20H32O2</th>
+      <th>C21H39O6P</th>
+      <th>C21H41O6P</th>
+      <th>C21H41O7P</th>
+      <th>C21H43O7P</th>
+      <th>...</th>
+      <th>C43H81O13P</th>
+      <th>C43H82NO8P</th>
+      <th>C44H78NO10P</th>
+      <th>C44H84NO6P</th>
+      <th>C45H78NO8P</th>
+      <th>C45H80NO8P</th>
+      <th>C45H82NO8P</th>
+      <th>C6H11O8P</th>
+      <th>C6H13O9P</th>
+      <th>C9H19O11P</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>11</th>
+      <td>-0.343104</td>
+      <td>-1.154572</td>
+      <td>-0.750122</td>
+      <td>-0.937810</td>
+      <td>-0.569837</td>
+      <td>-0.460775</td>
+      <td>-0.975843</td>
+      <td>-1.304777</td>
+      <td>-0.925107</td>
+      <td>-1.416744</td>
+      <td>...</td>
+      <td>-0.976771</td>
+      <td>-0.049168</td>
+      <td>-0.536197</td>
+      <td>-0.603671</td>
+      <td>-0.695573</td>
+      <td>-0.874809</td>
+      <td>-0.614489</td>
+      <td>-1.254650</td>
+      <td>-1.068847</td>
+      <td>-1.102130</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>-0.157685</td>
+      <td>-0.986695</td>
+      <td>-0.028326</td>
+      <td>-0.839321</td>
+      <td>-0.294151</td>
+      <td>-0.485685</td>
+      <td>-1.050713</td>
+      <td>-0.537178</td>
+      <td>-1.148260</td>
+      <td>-0.550851</td>
+      <td>...</td>
+      <td>-0.976771</td>
+      <td>-0.484254</td>
+      <td>-0.536197</td>
+      <td>-0.603671</td>
+      <td>-0.695573</td>
+      <td>-0.170776</td>
+      <td>-0.614489</td>
+      <td>-1.332278</td>
+      <td>-1.092861</td>
+      <td>-1.288837</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.896463</td>
+      <td>-0.406908</td>
+      <td>2.291250</td>
+      <td>0.364129</td>
+      <td>-0.828407</td>
+      <td>-1.896048</td>
+      <td>-2.107234</td>
+      <td>1.617841</td>
+      <td>-2.206739</td>
+      <td>1.343690</td>
+      <td>...</td>
+      <td>-0.976771</td>
+      <td>-0.913913</td>
+      <td>-0.536197</td>
+      <td>-0.603671</td>
+      <td>-0.695573</td>
+      <td>-0.874809</td>
+      <td>-0.614489</td>
+      <td>-0.106538</td>
+      <td>0.211139</td>
+      <td>-0.186186</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>0.002267</td>
+      <td>-0.802505</td>
+      <td>0.721109</td>
+      <td>-0.673347</td>
+      <td>0.044280</td>
+      <td>-0.519588</td>
+      <td>-1.097081</td>
+      <td>0.323478</td>
+      <td>-1.287257</td>
+      <td>0.385077</td>
+      <td>...</td>
+      <td>-0.976771</td>
+      <td>-0.913913</td>
+      <td>-0.536197</td>
+      <td>-0.603671</td>
+      <td>-0.695573</td>
+      <td>0.460871</td>
+      <td>-0.614489</td>
+      <td>-1.376844</td>
+      <td>-1.094278</td>
+      <td>-1.435566</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>0.896463</td>
+      <td>-0.406908</td>
+      <td>2.291250</td>
+      <td>0.364129</td>
+      <td>-0.828407</td>
+      <td>-1.896048</td>
+      <td>-2.107234</td>
+      <td>1.617841</td>
+      <td>-2.206739</td>
+      <td>1.343690</td>
+      <td>...</td>
+      <td>-0.976771</td>
+      <td>-0.913913</td>
+      <td>-0.536197</td>
+      <td>-0.603671</td>
+      <td>-0.695573</td>
+      <td>-0.874809</td>
+      <td>-0.614489</td>
+      <td>-0.106538</td>
+      <td>0.211139</td>
+      <td>-0.186186</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1500</th>
+      <td>0.580348</td>
+      <td>0.042098</td>
+      <td>-1.031028</td>
+      <td>-0.082217</td>
+      <td>-0.183018</td>
+      <td>0.198592</td>
+      <td>-0.249647</td>
+      <td>-0.403469</td>
+      <td>0.346531</td>
+      <td>-0.058963</td>
+      <td>...</td>
+      <td>0.018106</td>
+      <td>-0.727415</td>
+      <td>-0.323477</td>
+      <td>0.755782</td>
+      <td>-0.166832</td>
+      <td>0.123150</td>
+      <td>-0.075070</td>
+      <td>-0.524178</td>
+      <td>0.187262</td>
+      <td>-0.630858</td>
+    </tr>
+    <tr>
+      <th>1503</th>
+      <td>0.389527</td>
+      <td>0.212187</td>
+      <td>0.095763</td>
+      <td>0.706726</td>
+      <td>0.790500</td>
+      <td>0.138744</td>
+      <td>-0.013337</td>
+      <td>0.280318</td>
+      <td>0.334950</td>
+      <td>0.928234</td>
+      <td>...</td>
+      <td>0.038993</td>
+      <td>1.144128</td>
+      <td>-0.536197</td>
+      <td>-0.603671</td>
+      <td>-0.519835</td>
+      <td>0.092264</td>
+      <td>-0.614489</td>
+      <td>-0.224625</td>
+      <td>0.201069</td>
+      <td>-0.681926</td>
+    </tr>
+    <tr>
+      <th>1510</th>
+      <td>1.286637</td>
+      <td>2.395921</td>
+      <td>0.978826</td>
+      <td>0.574644</td>
+      <td>0.487483</td>
+      <td>3.357412</td>
+      <td>2.056716</td>
+      <td>0.713749</td>
+      <td>2.460975</td>
+      <td>0.124086</td>
+      <td>...</td>
+      <td>2.652172</td>
+      <td>3.558782</td>
+      <td>3.584242</td>
+      <td>4.322407</td>
+      <td>0.907643</td>
+      <td>0.234336</td>
+      <td>4.804086</td>
+      <td>1.523303</td>
+      <td>1.541606</td>
+      <td>1.917877</td>
+    </tr>
+    <tr>
+      <th>1512</th>
+      <td>1.197854</td>
+      <td>2.092937</td>
+      <td>0.723122</td>
+      <td>0.499079</td>
+      <td>0.404755</td>
+      <td>2.978343</td>
+      <td>1.775540</td>
+      <td>0.575860</td>
+      <td>2.225923</td>
+      <td>0.107804</td>
+      <td>...</td>
+      <td>2.347661</td>
+      <td>3.055061</td>
+      <td>3.120193</td>
+      <td>3.882151</td>
+      <td>0.727086</td>
+      <td>0.185599</td>
+      <td>4.193839</td>
+      <td>1.293867</td>
+      <td>1.403843</td>
+      <td>1.610459</td>
+    </tr>
+    <tr>
+      <th>1528</th>
+      <td>1.286637</td>
+      <td>2.395921</td>
+      <td>0.978826</td>
+      <td>0.574644</td>
+      <td>0.487483</td>
+      <td>3.357412</td>
+      <td>2.056716</td>
+      <td>0.713749</td>
+      <td>2.460975</td>
+      <td>0.124086</td>
+      <td>...</td>
+      <td>2.652172</td>
+      <td>3.558782</td>
+      <td>3.584242</td>
+      <td>4.322407</td>
+      <td>0.907643</td>
+      <td>0.234336</td>
+      <td>4.804086</td>
+      <td>1.523303</td>
+      <td>1.541606</td>
+      <td>1.917877</td>
+    </tr>
+  </tbody>
+</table>
+<p>1137 rows × 58 columns</p>
+</div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -1295,14 +1618,14 @@ Name: celltype, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_16_0.png" src="_images/correction_evaluation_16_0.png" />
+<img alt="_images/correction_evaluation_17_0.png" src="_images/correction_evaluation_17_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_16_1.png" src="_images/correction_evaluation_16_1.png" />
+<img alt="_images/correction_evaluation_17_1.png" src="_images/correction_evaluation_17_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -1348,7 +1671,7 @@ Name: celltype, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_18_2.png" src="_images/correction_evaluation_18_2.png" />
+<img alt="_images/correction_evaluation_19_2.png" src="_images/correction_evaluation_19_2.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -1397,7 +1720,7 @@ Name: celltype, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_20_1.png" src="_images/correction_evaluation_20_1.png" />
+<img alt="_images/correction_evaluation_21_1.png" src="_images/correction_evaluation_21_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -2041,21 +2364,21 @@ File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/si
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_32_1.png" class="no-scaled-link" src="_images/correction_evaluation_32_1.png" style="width: 648px; height: 435px;" />
+<img alt="_images/correction_evaluation_33_1.png" class="no-scaled-link" src="_images/correction_evaluation_33_1.png" style="width: 648px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_32_2.png" class="no-scaled-link" src="_images/correction_evaluation_32_2.png" style="width: 1590px; height: 479px;" />
+<img alt="_images/correction_evaluation_33_2.png" class="no-scaled-link" src="_images/correction_evaluation_33_2.png" style="width: 1590px; height: 479px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_32_3.png" class="no-scaled-link" src="_images/correction_evaluation_32_3.png" style="width: 566px; height: 454px;" />
+<img alt="_images/correction_evaluation_33_3.png" class="no-scaled-link" src="_images/correction_evaluation_33_3.png" style="width: 566px; height: 454px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -2071,21 +2394,21 @@ File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/si
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_32_5.png" class="no-scaled-link" src="_images/correction_evaluation_32_5.png" style="width: 648px; height: 435px;" />
+<img alt="_images/correction_evaluation_33_5.png" class="no-scaled-link" src="_images/correction_evaluation_33_5.png" style="width: 648px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_32_6.png" class="no-scaled-link" src="_images/correction_evaluation_32_6.png" style="width: 1590px; height: 480px;" />
+<img alt="_images/correction_evaluation_33_6.png" class="no-scaled-link" src="_images/correction_evaluation_33_6.png" style="width: 1590px; height: 480px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_32_7.png" class="no-scaled-link" src="_images/correction_evaluation_32_7.png" style="width: 557px; height: 454px;" />
+<img alt="_images/correction_evaluation_33_7.png" class="no-scaled-link" src="_images/correction_evaluation_33_7.png" style="width: 557px; height: 454px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -2130,7 +2453,7 @@ File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/si
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_33_1.png" class="no-scaled-link" src="_images/correction_evaluation_33_1.png" style="width: 648px; height: 435px;" />
+<img alt="_images/correction_evaluation_34_1.png" class="no-scaled-link" src="_images/correction_evaluation_34_1.png" style="width: 648px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -2146,7 +2469,7 @@ File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/si
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_33_3.png" class="no-scaled-link" src="_images/correction_evaluation_33_3.png" style="width: 648px; height: 435px;" />
+<img alt="_images/correction_evaluation_34_3.png" class="no-scaled-link" src="_images/correction_evaluation_34_3.png" style="width: 648px; height: 435px;" />
 </div>
 </div>
 <p>There exist several methods for unsupervised clustering, that can be applied to dimensionality-reduced data. Here, I show kMeans clustering, Leiden clustering and a variant of the latter (adapted from the SpaceM manuscript: curated leiden). Both kMeans and Leiden clustering appear to fail at distinguishing the two celltypes as they split the data along the short axis of the UMAP visualization. However, the celltypes are separated along the long axis. The curated Leiden algorithm from Rappez et
@@ -2203,7 +2526,7 @@ al. finds smaller Leiden clusters and assigns them to either celltype depending
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_35_1.png" class="no-scaled-link" src="_images/correction_evaluation_35_1.png" style="width: 2426px; height: 435px;" />
+<img alt="_images/correction_evaluation_36_1.png" class="no-scaled-link" src="_images/correction_evaluation_36_1.png" style="width: 2426px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -2236,7 +2559,7 @@ KMeans silhouette coefficient: 0.2681
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_35_4.png" class="no-scaled-link" src="_images/correction_evaluation_35_4.png" style="width: 2426px; height: 435px;" />
+<img alt="_images/correction_evaluation_36_4.png" class="no-scaled-link" src="_images/correction_evaluation_36_4.png" style="width: 2426px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -2295,7 +2618,7 @@ KMeans silhouette coefficient: 0.2661
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_37_1.png" class="no-scaled-link" src="_images/correction_evaluation_37_1.png" style="width: 1260px; height: 435px;" />
+<img alt="_images/correction_evaluation_38_1.png" class="no-scaled-link" src="_images/correction_evaluation_38_1.png" style="width: 1260px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -2321,7 +2644,7 @@ Classification accuracy after 10-fold cross-validation: 0.9174 (±0.0241)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_37_4.png" class="no-scaled-link" src="_images/correction_evaluation_37_4.png" style="width: 1260px; height: 435px;" />
+<img alt="_images/correction_evaluation_38_4.png" class="no-scaled-link" src="_images/correction_evaluation_38_4.png" style="width: 1260px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -2367,7 +2690,7 @@ Classification accuracy after 10-fold cross-validation: 0.9133 (±0.0236)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_38_1.png" class="no-scaled-link" src="_images/correction_evaluation_38_1.png" style="width: 1260px; height: 435px;" />
+<img alt="_images/correction_evaluation_39_1.png" class="no-scaled-link" src="_images/correction_evaluation_39_1.png" style="width: 1260px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -2393,7 +2716,7 @@ Classification accuracy after 10-fold cross-validation: 0.9062 (±0.0244)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_38_4.png" class="no-scaled-link" src="_images/correction_evaluation_38_4.png" style="width: 1260px; height: 435px;" />
+<img alt="_images/correction_evaluation_39_4.png" class="no-scaled-link" src="_images/correction_evaluation_39_4.png" style="width: 1260px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -2442,7 +2765,7 @@ Classification accuracy after 10-fold cross-validation: 0.9100 (±0.0223)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_39_1.png" class="no-scaled-link" src="_images/correction_evaluation_39_1.png" style="width: 1260px; height: 435px;" />
+<img alt="_images/correction_evaluation_40_1.png" class="no-scaled-link" src="_images/correction_evaluation_40_1.png" style="width: 1260px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -2468,7 +2791,7 @@ Classification accuracy after 10-fold cross-validation: 0.8965 (±0.0280)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/correction_evaluation_39_4.png" class="no-scaled-link" src="_images/correction_evaluation_39_4.png" style="width: 1260px; height: 435px;" />
+<img alt="_images/correction_evaluation_40_4.png" class="no-scaled-link" src="_images/correction_evaluation_40_4.png" style="width: 1260px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -2482,7 +2805,7 @@ Classification accuracy after 10-fold cross-validation: 0.9070 (±0.0256)
 <p>Finally, Martijn developed an intermixing metric for the separation of different conditions based on the local neighborhood (euclidian distance) of every data point in dimensionality-reduced space. I have extended this single-valued measure to a curve on neighborhood-scale and introduced a correction factor for unbalanced datasets. For the co-culture dataset, this metric shows a clear difference in the group intermixing of uncorrected and corrected ion intensities. Intermixing is almost 50%
 lower after correction across neighborhood sizes.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">intermixing</span><span class="p">,</span> <span class="n">intermixing_metric_sampled</span>
@@ -2490,17 +2813,365 @@ lower after correction across neighborhood sizes.</p>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 X
+X_pca
+X_umap
+                              mean        sd  rel_neighborhood
+X_uncorrected         10  0.204834  0.263783          0.091837
+X_ISM correction      10  0.195264  0.264107          0.091837
+X_pca_uncorrected     10  0.200389  0.266097          0.091837
+X_pca_ISM correction  10  0.191805  0.257433          0.091837
+X_umap_uncorrected    10  0.257461  0.286475          0.091837
+X_umap_ISM correction 10  0.179250  0.286816          0.091837
 </pre></div></div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+({&#39;X_uncorrected&#39;:             1         2         3         4         5         6         7   \
+  1054  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  63    0.171533  0.585766  0.447689  0.378650  0.337226  0.309611  0.289885
+  403   0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  115   0.171533  0.171533  0.447689  0.378650  0.502920  0.447689  0.526590
+  787   0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545  -0.261111 -0.261111  0.159259  0.369444  0.243333  0.159259  0.099206
+  52   -0.261111  0.369444  0.579630  0.684722  0.747778  0.579630  0.639683
+  121  -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.050926 -0.080952
+  1368 -0.261111 -0.261111 -0.261111 -0.261111 -0.008889 -0.050926  0.099206
+  331  -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111
+
+              8         9         10  ...        90        91        92  \
+  1054  0.171533  0.171533  0.171533  ...  0.217559  0.217053  0.216558
+  63    0.275091  0.263585  0.254380  ...  0.318816  0.317197  0.315614
+  403   0.171533  0.171533  0.171533  ...  0.263585  0.262573  0.261584
+  115   0.482208  0.539740  0.585766  ...  0.677818  0.681359  0.684822
+  787   0.275091  0.263585  0.254380  ...  0.309611  0.308093  0.315614
+  ...        ...       ...       ...  ...       ...       ...       ...
+  545   0.054167  0.019136 -0.008889  ...  0.131235  0.126923  0.122705
+  52    0.527083  0.439506  0.369444  ...  0.397469  0.390232  0.396860
+  121  -0.103472  0.019136  0.117222  ...  0.285370  0.293223  0.287198
+  1368  0.211806  0.159259  0.117222  ...  0.257346  0.251648  0.246075
+  331  -0.103472 -0.120988 -0.135000  ...  0.285370  0.279365  0.273490
+
+              93        94        95        96        97        98        99
+  1054  0.216074  0.215600  0.215136  0.214682  0.214237  0.222255  0.221743
+  63    0.314065  0.312549  0.311064  0.309611  0.308187  0.306793  0.305427
+  403   0.260615  0.259668  0.258740  0.257832  0.256942  0.264524  0.263585
+  115   0.688211  0.682715  0.677334  0.672065  0.675446  0.678758  0.673634
+  787   0.322973  0.321362  0.319785  0.318241  0.316728  0.323700  0.322163
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545   0.118578  0.114539  0.110585  0.119850  0.115922  0.112075  0.121044
+  52    0.403345  0.409693  0.402632  0.395718  0.388946  0.382313  0.388552
+  121   0.281302  0.275532  0.269883  0.277488  0.284937  0.279365  0.273906
+  1368  0.240621  0.248700  0.256608  0.264352  0.271936  0.266497  0.273906
+  331   0.267742  0.275532  0.269883  0.264352  0.258935  0.253628  0.261167
+
+  [227 rows x 99 columns],
+  &#39;X_ISM correction&#39;:             1         2         3         4         5         6         7   \
+  1054  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  63    0.171533  0.585766  0.447689  0.378650  0.337226  0.309611  0.289885
+  403   0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  115   0.171533  0.585766  0.447689  0.378650  0.337226  0.447689  0.526590
+  787   0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545  -0.261111 -0.261111  0.159259  0.054167 -0.008889 -0.050926 -0.080952
+  52   -0.261111 -0.261111 -0.261111  0.054167 -0.008889  0.159259  0.279365
+  121  -0.261111  0.369444  0.159259  0.054167  0.243333  0.159259  0.099206
+  1368 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111
+  331  -0.261111 -0.261111 -0.261111 -0.261111 -0.008889 -0.050926  0.099206
+
+              8         9         10  ...        90        91        92  \
+  1054  0.171533  0.171533  0.171533  ...  0.208354  0.207949  0.207553
+  63    0.275091  0.263585  0.337226  ...  0.300406  0.298989  0.297604
+  403   0.171533  0.171533  0.171533  ...  0.254380  0.253469  0.252579
+  115   0.585766  0.631792  0.585766  ...  0.640998  0.635839  0.639797
+  787   0.171533  0.171533  0.171533  ...  0.328021  0.335405  0.342629
+  ...        ...       ...       ...  ...       ...       ...       ...
+  545  -0.103472 -0.120988 -0.135000  ... -0.022901 -0.011661 -0.014372
+  52    0.369444  0.299383  0.369444  ...  0.341420  0.348657  0.342029
+  121   0.054167  0.019136  0.117222  ...  0.187284  0.196215  0.191244
+  1368 -0.103472  0.019136 -0.008889  ...  0.201296  0.210073  0.218659
+  331   0.054167  0.019136 -0.008889  ...  0.145247  0.154640  0.163829
+
+              93        94        95        96        97        98        99
+  1054  0.207166  0.206787  0.206416  0.206052  0.205696  0.205348  0.205006
+  63    0.296248  0.294922  0.293623  0.292351  0.291105  0.289885  0.288690
+  403   0.251707  0.250854  0.250019  0.249202  0.248401  0.247617  0.255216
+  115   0.643670  0.647461  0.651172  0.646175  0.649823  0.653396  0.656897
+  787   0.349698  0.347802  0.345947  0.344130  0.342351  0.340608  0.347268
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545  -0.017025 -0.019622 -0.008889 -0.011516 -0.014089 -0.016610 -0.019080
+  52    0.335544  0.329196  0.336257  0.330035  0.323940  0.317971  0.324860
+  121   0.186380  0.195035  0.203509  0.211806  0.219931  0.227891  0.222952
+  1368  0.213501  0.221868  0.216784  0.224942  0.232932  0.240760  0.235690
+  331   0.172820  0.168203  0.163684  0.159259  0.154926  0.150680  0.159259
+
+  [227 rows x 99 columns],
+  &#39;X_pca_uncorrected&#39;:             1         2         3         4         5         6         7   \
+  1054  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  63    0.171533  0.585766  0.447689  0.378650  0.337226  0.309611  0.289885
+  403   0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  115   0.171533  0.585766  0.447689  0.378650  0.337226  0.447689  0.526590
+  787   0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.289885
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545  -0.261111  0.369444  0.159259  0.369444  0.243333  0.159259  0.099206
+  52   -0.261111  0.369444  0.579630  0.684722  0.747778  0.579630  0.639683
+  121  -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.080952
+  1368 -0.261111 -0.261111 -0.261111 -0.261111 -0.008889 -0.050926  0.099206
+  331  -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111
+
+              8         9         10  ...        90        91        92  \
+  1054  0.171533  0.171533  0.171533  ...  0.217559  0.217053  0.216558
+  63    0.275091  0.263585  0.254380  ...  0.309611  0.308093  0.306609
+  403   0.171533  0.171533  0.171533  ...  0.263585  0.262573  0.261584
+  115   0.482208  0.539740  0.502920  ...  0.668613  0.672255  0.675817
+  787   0.275091  0.263585  0.337226  ...  0.309611  0.308093  0.306609
+  ...        ...       ...       ...  ...       ...       ...       ...
+  545   0.054167  0.019136 -0.008889  ...  0.117222  0.113065  0.122705
+  52    0.527083  0.439506  0.369444  ...  0.383457  0.390232  0.396860
+  121  -0.103472  0.019136 -0.008889  ...  0.299383  0.293223  0.287198
+  1368  0.211806  0.159259  0.117222  ...  0.229321  0.237790  0.246075
+  331  -0.103472 -0.120988 -0.135000  ...  0.257346  0.251648  0.246075
+
+              93        94        95        96        97        98        99
+  1054  0.216074  0.215600  0.215136  0.214682  0.214237  0.213802  0.213375
+  63    0.305157  0.303735  0.311064  0.309611  0.308187  0.306793  0.305427
+  403   0.260615  0.259668  0.258740  0.266461  0.274024  0.272978  0.271953
+  115   0.670395  0.665088  0.668613  0.663435  0.666905  0.670304  0.665266
+  787   0.314065  0.321362  0.319785  0.318241  0.316728  0.315247  0.313795
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545   0.118578  0.114539  0.110585  0.106713  0.102921  0.112075  0.121044
+  52    0.403345  0.396277  0.389357  0.382581  0.388946  0.382313  0.375814
+  121   0.281302  0.275532  0.269883  0.277488  0.284937  0.279365  0.273906
+  1368  0.254182  0.262116  0.256608  0.251215  0.258935  0.266497  0.261167
+  331   0.254182  0.248700  0.243333  0.251215  0.258935  0.253628  0.248429
+
+  [227 rows x 99 columns],
+  &#39;X_pca_ISM correction&#39;:             1         2         3         4         5         6         7   \
+  1054  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  63    0.171533  0.585766  0.447689  0.378650  0.337226  0.309611  0.289885
+  403   0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  115   0.171533  0.171533  0.447689  0.378650  0.337226  0.447689  0.526590
+  787   0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545  -0.261111 -0.261111  0.159259  0.054167 -0.008889 -0.050926 -0.080952
+  52   -0.261111 -0.261111 -0.261111  0.054167  0.243333  0.159259  0.279365
+  121  -0.261111 -0.261111  0.159259  0.054167 -0.008889 -0.050926  0.099206
+  1368 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.080952
+  331  -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.050926  0.099206
+
+              8         9         10  ...        90        91        92  \
+  1054  0.171533  0.171533  0.171533  ...  0.208354  0.207949  0.207553
+  63    0.275091  0.263585  0.254380  ...  0.291200  0.289885  0.288599
+  403   0.171533  0.171533  0.171533  ...  0.254380  0.253469  0.252579
+  115   0.482208  0.539740  0.585766  ...  0.640998  0.635839  0.639797
+  787   0.171533  0.263585  0.254380  ...  0.346431  0.344510  0.342629
+  ...        ...       ...       ...  ...       ...       ...       ...
+  545  -0.103472 -0.120988 -0.008889  ... -0.022901 -0.025519 -0.028080
+  52    0.369444  0.299383  0.369444  ...  0.341420  0.348657  0.355737
+  121   0.054167  0.019136 -0.008889  ...  0.201296  0.196215  0.204952
+  1368  0.054167  0.019136 -0.008889  ...  0.201296  0.210073  0.218659
+  331   0.054167  0.019136 -0.008889  ...  0.145247  0.140781  0.150121
+
+              93        94        95        96        97        98        99
+  1054  0.207166  0.206787  0.206416  0.206052  0.205696  0.205348  0.205006
+  63    0.296248  0.294922  0.293623  0.292351  0.291105  0.289885  0.288690
+  403   0.260615  0.259668  0.258740  0.257832  0.256942  0.256070  0.255216
+  115   0.643670  0.647461  0.651172  0.646175  0.641282  0.644943  0.648529
+  787   0.340790  0.338989  0.337226  0.344130  0.350892  0.349062  0.347268
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545  -0.030585 -0.019622 -0.008889 -0.011516 -0.001088 -0.003741  0.006397
+  52    0.349104  0.356028  0.362807  0.369444  0.375945  0.369444  0.363075
+  121   0.199940  0.208452  0.216784  0.211806  0.206930  0.202154  0.197475
+  1368  0.227061  0.221868  0.230058  0.238079  0.245934  0.253628  0.248429
+  331   0.145699  0.141371  0.137135  0.146123  0.154926  0.163549  0.171998
+
+  [227 rows x 99 columns],
+  &#39;X_umap_uncorrected&#39;:             1         2         3         4         5         6         7   \
+  1054  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  63    0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  403   0.171533  0.171533  0.447689  0.585766  0.502920  0.447689  0.408238
+  115   0.171533  0.171533  0.171533  0.171533  0.337226  0.447689  0.408238
+  787   0.171533  0.171533  0.447689  0.378650  0.337226  0.309611  0.289885
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545  -0.261111  0.369444  0.159259  0.369444  0.243333  0.159259  0.279365
+  52   -0.261111  0.369444  0.159259  0.369444  0.243333  0.159259  0.099206
+  121  -0.261111 -0.261111 -0.261111  0.054167  0.243333  0.159259  0.279365
+  1368 -0.261111  0.369444  0.579630  0.684722  0.747778  0.789815  0.819841
+  331  -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111
+
+              8         9         10  ...        90        91        92  \
+  1054  0.171533  0.171533  0.171533  ...  0.180738  0.180637  0.180538
+  63    0.171533  0.171533  0.171533  ...  0.337226  0.335405  0.333624
+  403   0.378650  0.355637  0.337226  ...  0.189943  0.198845  0.198548
+  115   0.378650  0.447689  0.502920  ...  0.567356  0.572110  0.576761
+  787   0.275091  0.263585  0.254380  ...  0.337226  0.335405  0.333624
+  ...        ...       ...       ...  ...       ...       ...       ...
+  545   0.211806  0.159259  0.117222  ...  0.299383  0.307082  0.300906
+  52    0.054167  0.159259  0.117222  ...  0.495556  0.487241  0.479106
+  121   0.369444  0.299383  0.243333  ...  0.467531  0.459524  0.451691
+  1368  0.842361  0.859877  0.873889  ...  0.565617  0.556532  0.547645
+  331  -0.261111 -0.261111 -0.261111  ... -0.205062 -0.205678 -0.206280
+
+              93        94        95        96        97        98        99
+  1054  0.180441  0.180346  0.180254  0.188793  0.188615  0.188440  0.188270
+  63    0.331881  0.330175  0.328506  0.335500  0.333810  0.332154  0.330532
+  403   0.198258  0.197973  0.197695  0.197422  0.197156  0.196894  0.196638
+  115   0.572404  0.568139  0.572685  0.577137  0.581496  0.585766  0.589951
+  787   0.331881  0.338989  0.345947  0.352760  0.359433  0.365969  0.372373
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545   0.294863  0.302364  0.309708  0.316898  0.323940  0.330839  0.337598
+  52    0.484707  0.476773  0.469006  0.474537  0.466953  0.459524  0.452245
+  121   0.444026  0.436525  0.442456  0.435127  0.440951  0.433787  0.426768
+  1368  0.552509  0.543853  0.548655  0.540220  0.544960  0.549603  0.541414
+  331  -0.206870 -0.207447 -0.208012 -0.208565 -0.209107 -0.209637 -0.210157
+
+  [227 rows x 99 columns],
+  &#39;X_umap_ISM correction&#39;:             1         2         3         4         5         6         7   \
+  1054  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  63    0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  403   0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  115   0.171533  0.585766  0.723844  0.585766  0.502920  0.585766  0.644943
+  787   0.171533  0.171533  0.171533  0.171533  0.171533  0.171533  0.171533
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545  -0.261111 -0.261111 -0.261111 -0.261111 -0.008889 -0.050926  0.099206
+  52   -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111
+  121  -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111
+  1368 -0.261111 -0.261111 -0.261111 -0.261111 -0.008889 -0.050926 -0.080952
+  331  -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111 -0.261111
+
+              8         9         10  ...        90        91        92  \
+  1054  0.171533  0.171533  0.171533  ...  0.189943  0.189741  0.189543
+  63    0.171533  0.171533  0.171533  ...  0.245174  0.253469  0.261584
+  403   0.171533  0.171533  0.171533  ...  0.189943  0.189741  0.189543
+  115   0.585766  0.631792  0.668613  ...  0.539740  0.535694  0.540741
+  787   0.171533  0.171533  0.171533  ...  0.281995  0.280781  0.288599
+  ...        ...       ...       ...  ...       ...       ...       ...
+  545   0.054167  0.019136 -0.008889  ... -0.078951 -0.067094 -0.069203
+  52   -0.261111 -0.261111 -0.261111  ... -0.149012 -0.150244 -0.151449
+  121  -0.261111 -0.261111 -0.135000  ...  0.033148  0.029915  0.026751
+  1368  0.054167  0.159259  0.243333  ...  0.355432  0.348657  0.355737
+  331  -0.261111 -0.261111 -0.261111  ... -0.233086 -0.233394 -0.233696
+
+              93        94        95        96        97        98        99
+  1054  0.189349  0.189160  0.188974  0.188793  0.188615  0.188440  0.188270
+  63    0.260615  0.259668  0.258740  0.266461  0.265483  0.272978  0.271953
+  403   0.189349  0.189160  0.197695  0.197422  0.197156  0.196894  0.196638
+  115   0.536771  0.532886  0.537803  0.542617  0.538791  0.535044  0.531372
+  787   0.287340  0.286108  0.284902  0.292351  0.291105  0.298339  0.297058
+  ...        ...       ...       ...       ...       ...       ...       ...
+  545  -0.071266 -0.059870 -0.061988 -0.050926 -0.040092 -0.042347 -0.044557
+  52   -0.152628 -0.153783 -0.141637 -0.142882 -0.144101 -0.145295 -0.146465
+  121   0.023656  0.020626  0.030936  0.027894  0.037915  0.047732  0.044613
+  1368  0.362664  0.356028  0.349532  0.343171  0.336942  0.343707  0.337598
+  331  -0.233990 -0.234279 -0.234561 -0.234838 -0.235109 -0.235374 -0.222896
+
+  [227 rows x 99 columns]},
+ {&#39;X_uncorrected&#39;:         mean        sd  rel_neighborhood
+  1   0.003650  0.221965          0.000000
+  2   0.087449  0.263480          0.010204
+  3   0.128873  0.278644          0.020408
+  4   0.145499  0.272832          0.030612
+  5   0.170933  0.273256          0.040816
+  ..       ...       ...               ...
+  95  0.297269  0.212456          0.959184
+  96  0.298510  0.211775          0.969388
+  97  0.298681  0.211057          0.979592
+  98  0.299372  0.210840          0.989796
+  99  0.300090  0.209939          1.000000
+
+  [99 rows x 3 columns],
+  &#39;X_ISM correction&#39;:         mean        sd  rel_neighborhood
+  1   0.012855  0.239862          0.000000
+  2   0.086577  0.259038          0.010204
+  3   0.120357  0.267915          0.020408
+  4   0.148317  0.271695          0.030612
+  5   0.164331  0.269415          0.040816
+  ..       ...       ...               ...
+  95  0.283623  0.218020          0.959184
+  96  0.284256  0.217609          0.969388
+  97  0.285049  0.216889          0.979592
+  98  0.285411  0.216527          0.989796
+  99  0.285912  0.216412          1.000000
+
+  [99 rows x 3 columns],
+  &#39;X_pca_uncorrected&#39;:         mean        sd  rel_neighborhood
+  1   0.003650  0.221965          0.000000
+  2   0.104988  0.265178          0.010204
+  3   0.133793  0.278203          0.020408
+  4   0.145975  0.277314          0.030612
+  5   0.166521  0.275623          0.040816
+  ..       ...       ...               ...
+  95  0.297178  0.211752          0.959184
+  96  0.297609  0.211297          0.969388
+  97  0.298031  0.210702          0.979592
+  98  0.298449  0.210368          0.989796
+  99  0.298788  0.209941          1.000000
+
+  [99 rows x 3 columns],
+  &#39;X_pca_ISM correction&#39;:         mean        sd  rel_neighborhood
+  1   0.014761  0.239394          0.000000
+  2   0.072770  0.256433          0.010204
+  3   0.115491  0.263115          0.020408
+  4   0.152443  0.274872          0.030612
+  5   0.163982  0.271263          0.040816
+  ..       ...       ...               ...
+  95  0.283157  0.218098          0.959184
+  96  0.284006  0.217613          0.969388
+  97  0.284748  0.217227          0.979592
+  98  0.285508  0.217347          0.989796
+  99  0.285899  0.217207          1.000000
+
+  [99 rows x 3 columns],
+  &#39;X_umap_uncorrected&#39;:             mean        sd  rel_neighborhood
+  1  -4.695216e-17  0.212102          0.000000
+  2   1.399838e-01  0.271740          0.010204
+  3   1.909300e-01  0.274801          0.020408
+  4   2.228710e-01  0.273331          0.030612
+  5   2.313382e-01  0.279026          0.040816
+  ..           ...       ...               ...
+  95  3.322726e-01  0.264491          0.959184
+  96  3.333743e-01  0.263443          0.969388
+  97  3.335206e-01  0.262790          0.979592
+  98  3.337806e-01  0.262797          0.989796
+  99  3.341460e-01  0.262266          1.000000
+
+  [99 rows x 3 columns],
+  &#39;X_umap_ISM correction&#39;:             mean        sd  rel_neighborhood
+  1  -4.695216e-17  0.212102          0.000000
+  2   8.927413e-02  0.265492          0.010204
+  3   1.222087e-01  0.267579          0.020408
+  4   1.349453e-01  0.273178          0.030612
+  5   1.466504e-01  0.279062          0.040816
+  ..           ...       ...               ...
+  95  2.458561e-01  0.271179          0.959184
+  96  2.463998e-01  0.270640          0.969388
+  97  2.475376e-01  0.270380          0.979592
+  98  2.485617e-01  0.270193          0.989796
+  99  2.489895e-01  0.269858          1.000000
+
+  [99 rows x 3 columns]})
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/correction_evaluation_42_2.png" class="no-scaled-link" src="_images/correction_evaluation_42_2.png" style="width: 1187px; height: 469px;" />
+</div>
+</div>
 <p>For a better comparison to Martijns results, I also calculate the intermixing metric for the fixed neighborhood of <span class="math notranslate nohighlight">\(n=10\)</span>, with and without normalization to group imbalance. Martijn reports intermixing values of <span class="math notranslate nohighlight">\(0.152\)</span> for ISM correction and <span class="math notranslate nohighlight">\(0.215\)</span> for uncorrected data.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">intermixing_metric_sampled</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">neighborhood_size</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">n_datapoints</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
@@ -2509,6 +3180,70 @@ X
 <span class="n">intermixing_metric_sampled</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">neighborhood_size</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">n_datapoints</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ISM&#39;</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">False</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;ISM&#39;</span><span class="p">,</span> <span class="s1">&#39;none_raw&#39;</span><span class="p">,</span> <span class="s1">&#39;ISM_raw&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In [22], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">pd</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">concat</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">intermixing_metric_sampled</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">adata</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">condition_name</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">neighborhood_size</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">10</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">n_datapoints</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">1</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">label</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">none</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">normalized</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">True</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> <span class="ansi-yellow-bg">intermixing_metric_sampled</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">adata_cor</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">condition_name</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">neighborhood_size</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">10</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">n_datapoints</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">1</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">label</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">ISM</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">normalized</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">True</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-yellow-bg">intermixing_metric_sampled</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">adata</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">condition_name</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">neighborhood_size</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">10</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">n_datapoints</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">1</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">label</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">none</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">normalized</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">False</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-yellow-bg">intermixing_metric_sampled</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">adata_cor</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">condition_name</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">neighborhood_size</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">10</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">n_datapoints</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">1</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">label</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">ISM</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">normalized</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">False</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">axis</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">keys</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">none</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">ISM</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">none_raw</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">ISM_raw</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/util/_decorators.py:331</span>, in <span class="ansi-cyan-fg">deprecate_nonkeyword_arguments.&lt;locals&gt;.decorate.&lt;locals&gt;.wrapper</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    325</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(args) <span style="color: rgb(98,98,98)">&gt;</span> num_allow_args:
+<span class="ansi-green-intense-fg ansi-bold">    326</span>     warnings<span style="color: rgb(98,98,98)">.</span>warn(
+<span class="ansi-green-intense-fg ansi-bold">    327</span>         msg<span style="color: rgb(98,98,98)">.</span>format(arguments<span style="color: rgb(98,98,98)">=</span>_format_argument_list(allow_args)),
+<span class="ansi-green-intense-fg ansi-bold">    328</span>         <span class="ansi-bold" style="color: rgb(215,95,95)">FutureWarning</span>,
+<span class="ansi-green-intense-fg ansi-bold">    329</span>         stacklevel<span style="color: rgb(98,98,98)">=</span>find_stack_level(),
+<span class="ansi-green-intense-fg ansi-bold">    330</span>     )
+<span class="ansi-green-fg">--&gt; 331</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">func</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/reshape/concat.py:368</span>, in <span class="ansi-cyan-fg">concat</span><span class="ansi-blue-fg">(objs, axis, join, ignore_index, keys, levels, names, verify_integrity, sort, copy)</span>
+<span class="ansi-green-intense-fg ansi-bold">    146</span> <span style="color: rgb(175,0,255)">@deprecate_nonkeyword_arguments</span>(version<span style="color: rgb(98,98,98)">=</span><span class="ansi-bold" style="color: rgb(0,135,0)">None</span>, allowed_args<span style="color: rgb(98,98,98)">=</span>[<span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">objs</span><span style="color: rgb(175,0,0)">&#34;</span>])
+<span class="ansi-green-intense-fg ansi-bold">    147</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span> <span style="color: rgb(0,0,255)">concat</span>(
+<span class="ansi-green-intense-fg ansi-bold">    148</span>     objs: Iterable[NDFrame] <span style="color: rgb(98,98,98)">|</span> Mapping[HashableT, NDFrame],
+<span class="ansi-green-fg">   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    157</span>     copy: <span style="color: rgb(0,135,0)">bool</span> <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>,
+<span class="ansi-green-intense-fg ansi-bold">    158</span> ) <span style="color: rgb(98,98,98)">-</span><span style="color: rgb(98,98,98)">&gt;</span> DataFrame <span style="color: rgb(98,98,98)">|</span> Series:
+<span class="ansi-green-intense-fg ansi-bold">    159</span>     <span style="color: rgb(175,0,0)">&#34;&#34;&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">    160</span> <span style="color: rgb(175,0,0)">    Concatenate pandas objects along a particular axis.</span>
+<span class="ansi-green-intense-fg ansi-bold">    161</span>
+<span class="ansi-green-fg">   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    366</span> <span style="color: rgb(175,0,0)">    1   3   4</span>
+<span class="ansi-green-intense-fg ansi-bold">    367</span> <span style="color: rgb(175,0,0)">    &#34;&#34;&#34;</span>
+<span class="ansi-green-fg">--&gt; 368</span>     op <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">_Concatenator</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-intense-fg ansi-bold">    369</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">objs</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    370</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">axis</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">axis</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    371</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">ignore_index</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">ignore_index</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    372</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">join</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">join</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    373</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">keys</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">keys</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    374</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">levels</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">levels</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    375</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">names</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">names</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    376</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">verify_integrity</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">verify_integrity</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    377</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">copy</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">copy</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    378</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">sort</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">sort</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    379</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    381</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> op<span style="color: rgb(98,98,98)">.</span>get_result()
+
+File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/reshape/concat.py:458</span>, in <span class="ansi-cyan-fg">_Concatenator.__init__</span><span class="ansi-blue-fg">(self, objs, axis, join, keys, levels, names, ignore_index, verify_integrity, copy, sort)</span>
+<span class="ansi-green-intense-fg ansi-bold">    453</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span style="color: rgb(0,135,0)">isinstance</span>(obj, (ABCSeries, ABCDataFrame)):
+<span class="ansi-green-intense-fg ansi-bold">    454</span>         msg <span style="color: rgb(98,98,98)">=</span> (
+<span class="ansi-green-intense-fg ansi-bold">    455</span>             <span style="color: rgb(175,0,0)">f</span><span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">cannot concatenate object of type </span><span style="color: rgb(175,0,0)">&#39;</span><span class="ansi-bold" style="color: rgb(175,95,135)">{</span><span style="color: rgb(0,135,0)">type</span>(obj)<span class="ansi-bold" style="color: rgb(175,95,135)">}</span><span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">; </span><span style="color: rgb(175,0,0)">&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">    456</span>             <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">only Series and DataFrame objs are valid</span><span style="color: rgb(175,0,0)">&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">    457</span>         )
+<span class="ansi-green-fg">--&gt; 458</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">TypeError</span>(msg)
+<span class="ansi-green-intense-fg ansi-bold">    460</span>     ndims<span style="color: rgb(98,98,98)">.</span>add(obj<span style="color: rgb(98,98,98)">.</span>ndim)
+<span class="ansi-green-intense-fg ansi-bold">    462</span> <span style="color: rgb(95,135,135)"># get the sample</span>
+<span class="ansi-green-intense-fg ansi-bold">    463</span> <span style="color: rgb(95,135,135)"># want the highest ndim that we have, and must be non-empty</span>
+<span class="ansi-green-intense-fg ansi-bold">    464</span> <span style="color: rgb(95,135,135)"># unless all objs are empty</span>
+
+<span class="ansi-red-fg">TypeError</span>: cannot concatenate object of type &#39;&lt;class &#39;tuple&#39;&gt;&#39;; only Series and DataFrame objs are valid
+</pre></div></div>
 </div>
 <p>As visible in UMAP space, the two celltypes are separated along the long axis of the cluster instead of the short axis. This may indicate that the metabolic profiles within two populations themselves are more heterogenic than between them. Thus an additional biological or technical factor seems to influence the metabolic profiles. To investigate this furter, I did a differential expression analysis between the two leiden clusters. On top of that, it would be useful to complement this with an
 enrichment analysis.</p>

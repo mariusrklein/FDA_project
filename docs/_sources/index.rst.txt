@@ -7,6 +7,15 @@ Overview
 ========
 
 .. toctree::
+   :caption: Coculture Dataset
+   :titlesonly:
+   
+   analysis/Mx_Coculture/dataset_prep
+   analysis/Mx_Coculture/pipeline_01_correction
+   analysis/Mx_Coculture/pipeline_02_processing
+   analysis/Mx_Coculture/pipeline_03_evaluation
+
+.. toctree::
    :caption: Glioblastoma Dataset
    :titlesonly:
    

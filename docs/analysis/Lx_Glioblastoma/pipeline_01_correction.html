@@ -341,7 +341,6 @@ div.rendered_html tbody tr:hover {
 <span class="p">)</span>
 
 <span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;retina&#39;]
 </pre></div>
 </div>
 </div>
@@ -391,7 +390,7 @@ div.rendered_html tbody tr:hover {
 <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">source_path</span><span class="p">):</span>
         <span class="k">if</span> <span class="s1">&#39;analysis&#39;</span> <span class="ow">in</span> <span class="n">dirnames</span><span class="p">:</span>
             <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">source_path</span><span class="o">+</span><span class="s1">&#39;/?&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">))</span>
-<span class="n">samples</span>
+<span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -401,41 +400,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;B1&#39;,
- &#39;B2&#39;,
- &#39;B3&#39;,
- &#39;B4&#39;,
- &#39;C1&#39;,
- &#39;C2&#39;,
- &#39;C3&#39;,
- &#39;C4&#39;,
- &#39;D1&#39;,
- &#39;D2&#39;,
- &#39;D3&#39;,
- &#39;D4&#39;,
- &#39;E1&#39;,
- &#39;E2&#39;,
- &#39;E3&#39;,
- &#39;E4&#39;,
- &#39;F1&#39;,
- &#39;F2&#39;,
- &#39;F3&#39;,
- &#39;F4&#39;,
- &#39;G1&#39;,
- &#39;G2&#39;,
- &#39;G3&#39;,
- &#39;G4&#39;,
- &#39;H2&#39;,
- &#39;H3&#39;,
- &#39;H4&#39;,
- &#39;I1&#39;,
- &#39;I2&#39;,
- &#39;I3&#39;,
- &#39;I4&#39;,
- &#39;J1&#39;,
- &#39;J2&#39;,
- &#39;J3&#39;,
- &#39;J4&#39;]
+&#39;B1, B2, B3, B4, C1, C2, C3, C4, D1, D2, D3, D4, E1, E2, E3, E4, F1, F2, F3, F4, G1, G2, G3, G4, H2, H3, H4, I1, I2, I3, I4, J1, J2, J3, J4&#39;
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -557,7 +522,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
- 40%|████      | 14/35 [00:58&lt;01:43,  4.91s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 40%|████      | 14/35 [02:02&lt;03:35, 10.27s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -567,23 +532,7 @@ div.rendered_html tbody tr:hover {
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
- 60%|██████    | 21/35 [01:49&lt;01:24,  6.01s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
- 80%|████████  | 28/35 [02:46&lt;00:48,  6.86s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 60%|██████    | 21/35 [04:13&lt;03:18, 14.14s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -599,11 +548,27 @@ div.rendered_html tbody tr:hover {
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+ 80%|████████  | 28/35 [08:01&lt;02:29, 21.43s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-100%|██████████| 35/35 [03:42&lt;00:00,  6.37s/it]
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+100%|██████████| 35/35 [09:42&lt;00:00, 16.64s/it]
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
@@ -1083,6 +1048,13 @@ div.rendered_html tbody tr:hover {
   <tbody>
     <tr>
       <th rowspan="5" valign="top">C37H71O8P+Na</th>
+      <th>B1</th>
+      <td>0.454586</td>
+      <td>-1.126644</td>
+      <td>0.454586</td>
+      <td>0.352268</td>
+    </tr>
+    <tr>
       <th>C1</th>
       <td>0.538366</td>
       <td>-1.116593</td>
@@ -1090,35 +1062,35 @@ div.rendered_html tbody tr:hover {
       <td>0.346860</td>
     </tr>
     <tr>
-      <th>E3</th>
-      <td>0.722212</td>
-      <td>-0.857998</td>
-      <td>0.722212</td>
-      <td>0.213980</td>
+      <th>C3</th>
+      <td>0.587866</td>
+      <td>-0.993954</td>
+      <td>0.587866</td>
+      <td>0.252421</td>
     </tr>
     <tr>
-      <th>F2</th>
-      <td>0.594974</td>
-      <td>-1.073323</td>
-      <td>0.594974</td>
-      <td>0.331937</td>
+      <th>D2</th>
+      <td>0.492123</td>
+      <td>-1.140287</td>
+      <td>0.492123</td>
+      <td>0.350520</td>
     </tr>
     <tr>
-      <th>I1</th>
-      <td>0.611796</td>
-      <td>-1.033294</td>
-      <td>0.611796</td>
-      <td>0.356141</td>
-    </tr>
-    <tr>
-      <th>J2</th>
-      <td>0.665359</td>
-      <td>-0.948735</td>
-      <td>0.665359</td>
-      <td>0.250083</td>
+      <th>G1</th>
+      <td>0.508619</td>
+      <td>-1.128798</td>
+      <td>0.508619</td>
+      <td>0.393680</td>
     </tr>
     <tr>
       <th rowspan="5" valign="top">C39H69O8P+H</th>
+      <th>B1</th>
+      <td>0.520313</td>
+      <td>-1.115499</td>
+      <td>0.520313</td>
+      <td>0.325884</td>
+    </tr>
+    <tr>
       <th>C1</th>
       <td>0.632177</td>
       <td>-1.085789</td>
@@ -1126,35 +1098,35 @@ div.rendered_html tbody tr:hover {
       <td>0.008920</td>
     </tr>
     <tr>
-      <th>E3</th>
-      <td>0.765795</td>
-      <td>-0.862291</td>
-      <td>0.765795</td>
-      <td>0.213681</td>
+      <th>C3</th>
+      <td>0.649776</td>
+      <td>-0.971264</td>
+      <td>0.649776</td>
+      <td>-0.025074</td>
     </tr>
     <tr>
-      <th>F2</th>
-      <td>0.647288</td>
-      <td>-1.067524</td>
-      <td>0.647288</td>
-      <td>0.301975</td>
+      <th>D2</th>
+      <td>0.566638</td>
+      <td>-1.120967</td>
+      <td>0.566638</td>
+      <td>-0.015699</td>
     </tr>
     <tr>
-      <th>I1</th>
-      <td>0.664136</td>
-      <td>-1.027754</td>
-      <td>0.664136</td>
-      <td>0.328792</td>
-    </tr>
-    <tr>
-      <th>J2</th>
-      <td>0.720741</td>
-      <td>-0.949632</td>
-      <td>0.720741</td>
-      <td>0.236286</td>
+      <th>G1</th>
+      <td>0.571997</td>
+      <td>-1.113618</td>
+      <td>0.571997</td>
+      <td>0.394735</td>
     </tr>
     <tr>
       <th rowspan="5" valign="top">C39H79N2O6P+Na</th>
+      <th>B1</th>
+      <td>0.301031</td>
+      <td>-1.116922</td>
+      <td>0.301031</td>
+      <td>0.250005</td>
+    </tr>
+    <tr>
       <th>C1</th>
       <td>0.488088</td>
       <td>-1.049450</td>
@@ -1162,35 +1134,35 @@ div.rendered_html tbody tr:hover {
       <td>0.239124</td>
     </tr>
     <tr>
-      <th>E3</th>
-      <td>0.608744</td>
-      <td>-0.908041</td>
-      <td>0.608744</td>
-      <td>0.141400</td>
+      <th>C3</th>
+      <td>0.613167</td>
+      <td>-0.960675</td>
+      <td>0.613167</td>
+      <td>0.091994</td>
     </tr>
     <tr>
-      <th>F2</th>
-      <td>0.675291</td>
-      <td>-1.050282</td>
-      <td>0.675291</td>
-      <td>0.223933</td>
+      <th>D2</th>
+      <td>0.443624</td>
+      <td>-1.114349</td>
+      <td>0.443624</td>
+      <td>0.260859</td>
     </tr>
     <tr>
-      <th>I1</th>
-      <td>0.634946</td>
-      <td>-1.076714</td>
-      <td>0.634946</td>
-      <td>0.273182</td>
-    </tr>
-    <tr>
-      <th>J2</th>
-      <td>0.688929</td>
-      <td>-0.992466</td>
-      <td>0.688929</td>
-      <td>0.186395</td>
+      <th>G1</th>
+      <td>0.574430</td>
+      <td>-1.097679</td>
+      <td>0.574430</td>
+      <td>0.290644</td>
     </tr>
     <tr>
       <th rowspan="5" valign="top">C40H79O10P+Na</th>
+      <th>B1</th>
+      <td>0.460614</td>
+      <td>-1.081855</td>
+      <td>0.460614</td>
+      <td>0.252610</td>
+    </tr>
+    <tr>
       <th>C1</th>
       <td>0.434184</td>
       <td>-1.025472</td>
@@ -1198,35 +1170,35 @@ div.rendered_html tbody tr:hover {
       <td>0.173710</td>
     </tr>
     <tr>
-      <th>E3</th>
-      <td>0.401511</td>
-      <td>-0.942550</td>
-      <td>0.401511</td>
-      <td>0.030494</td>
+      <th>C3</th>
+      <td>0.479305</td>
+      <td>-0.981476</td>
+      <td>0.479305</td>
+      <td>0.057566</td>
     </tr>
     <tr>
-      <th>F2</th>
-      <td>0.616398</td>
-      <td>-1.034800</td>
-      <td>0.616398</td>
-      <td>0.218888</td>
+      <th>D2</th>
+      <td>0.535514</td>
+      <td>-1.090769</td>
+      <td>0.535514</td>
+      <td>0.197489</td>
     </tr>
     <tr>
-      <th>I1</th>
-      <td>0.536105</td>
-      <td>-1.023692</td>
-      <td>0.536105</td>
-      <td>0.134008</td>
-    </tr>
-    <tr>
-      <th>J2</th>
-      <td>0.618784</td>
-      <td>-0.955324</td>
-      <td>0.618784</td>
-      <td>0.108529</td>
+      <th>G1</th>
+      <td>0.561823</td>
+      <td>-1.074761</td>
+      <td>0.561823</td>
+      <td>0.211994</td>
     </tr>
     <tr>
       <th rowspan="5" valign="top">C45H74NO7P+H</th>
+      <th>B1</th>
+      <td>0.514196</td>
+      <td>-1.114016</td>
+      <td>0.514196</td>
+      <td>0.264027</td>
+    </tr>
+    <tr>
       <th>C1</th>
       <td>0.530155</td>
       <td>-1.043130</td>
@@ -1234,32 +1206,25 @@ div.rendered_html tbody tr:hover {
       <td>0.221473</td>
     </tr>
     <tr>
-      <th>E3</th>
-      <td>0.485833</td>
-      <td>-0.866078</td>
-      <td>0.485833</td>
-      <td>-0.000312</td>
+      <th>C3</th>
+      <td>0.599573</td>
+      <td>-0.938715</td>
+      <td>0.599574</td>
+      <td>0.081699</td>
     </tr>
     <tr>
-      <th>F2</th>
-      <td>0.737168</td>
-      <td>-1.032628</td>
-      <td>0.737168</td>
-      <td>0.218766</td>
+      <th>D2</th>
+      <td>0.643117</td>
+      <td>-1.096925</td>
+      <td>0.643117</td>
+      <td>0.239927</td>
     </tr>
     <tr>
-      <th>I1</th>
-      <td>0.652107</td>
-      <td>-1.008986</td>
-      <td>0.652107</td>
-      <td>0.205918</td>
-    </tr>
-    <tr>
-      <th>J2</th>
-      <td>0.738304</td>
-      <td>-0.901100</td>
-      <td>0.738304</td>
-      <td>0.119276</td>
+      <th>G1</th>
+      <td>0.648587</td>
+      <td>-1.097134</td>
+      <td>0.648587</td>
+      <td>0.264709</td>
     </tr>
   </tbody>
 </table>
@@ -1269,14 +1234,14 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" style="width: 1508px; height: 1490px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" style="width: 1508px; height: 1490px;" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" />
 </div>
 </div>
 </section>

@@ -333,7 +333,6 @@ div.rendered_html tbody tr:hover {
 <span class="p">)</span>
 
 <span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;retina&#39;]
 </pre></div>
 </div>
 </div>
@@ -432,7 +431,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">correct_sample_spacem</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
@@ -512,7 +511,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>This is the actual correction pipeline.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># adata_list = Parallel(n_jobs=7)(delayed(correct_sample_spacem)(sample) for sample in tqdm(samples))</span>
@@ -525,7 +524,6 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-
   0%|          | 0/1 [00:00&lt;?, ?it/s]
 </pre></div></div>
 </div>
@@ -545,12 +543,11 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 <div class="highlight"><pre>
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-
-100%|██████████| 1/1 [00:14&lt;00:00, 14.38s/it]
+100%|██████████| 1/1 [00:15&lt;00:00, 15.10s/it]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reshape data for immediate analysis</span>
@@ -573,7 +570,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -610,7 +607,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gen_adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
@@ -618,7 +615,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -934,7 +931,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
@@ -942,7 +939,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1259,7 +1256,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 <p>Every analysed pixel is characterized by its total overlap with cellular regions. The raw data shows no clear association between this overlap and acquired ion intensities. However, after the ion suppression correction, pixels with smaller overlap clearly have lower corresponding intensities (only shown for one metabolite).</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
@@ -1320,7 +1317,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">am_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">const</span><span class="o">.</span><span class="n">TPO</span><span class="p">]</span> <span class="o">=</span> <span class="n">am_adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">const</span><span class="o">.</span><span class="n">TPO</span><span class="p">]</span>
@@ -1328,7 +1325,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">)</span>
@@ -1336,7 +1333,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1422,14 +1419,14 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_01_correction_17_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_01_correction_17_1.png" style="width: 1484px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_01_correction_17_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_01_correction_17_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_01_correction_17_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_01_correction_17_2.png" style="width: 1508px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_01_correction_17_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_01_correction_17_2.png" />
 </div>
 </div>
 </section>
