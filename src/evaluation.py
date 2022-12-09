@@ -60,6 +60,72 @@ def plot_all_ion_slopes(
         ax.axline((0,0), slope=-1)
         ax.set(ylabel='log intensity / sampling prop. ratio', xlabel = 'log sampling proportion')
 
+        
+    
+def compare_pre_post_correction(adata, adata_cor, proportion_threshold, row='well', ions=None, wells=None, ratio=True):
+    
+    if ions is None:
+        ions = list(adata_cor.var.sort_values('correction_quantreg_slope').head(2).index) + list(adata_cor.var.sort_values('correction_quantreg_slope').tail(2).index)
+    if wells is None:
+        wells = list(set(adata.obs[row]))[:3]
+        
+    def plot_all_wells(adata, ions, wells, row='well', x=const.TPO, ratio=True, proportion_threshold = 0.1):
+
+        adata = adata[adata.obs[row].isin(wells)]
+        yscale = 'intensity'
+        
+        if ratio:
+            adata = normalize_proportion_ratios(intensities_ad=adata)
+            yscale = 'intensity_proportion_ratio'
+
+        plot_df = sc.get.obs_df(adata, keys=[row, x] + ions).melt(id_vars=[row, x], var_name='ion', value_name=yscale)
+        # getting rid of NaNs and -Inf values
+        plot_df= plot_df[plot_df[yscale] > 0]
+
+        # mark points that were used for quantreg correction 
+        plot_df['include_quantreg'] = plot_df[x] > proportion_threshold
+        if ratio:
+            plot_df[yscale] = np.log10(plot_df[yscale])
+            plot_df[x] = np.log10(plot_df[x])
+
+        graph = sns.FacetGrid(plot_df, row=row, col='ion', hue='include_quantreg', sharey=False, margin_titles=True)
+        graph.map(sns.histplot, x, yscale, bins=30, stat='proportion').add_legend() 
+        params = []
+
+        for well_i, well in enumerate(wells):
+            for ion_i, i in enumerate(ions):
+                q_df = plot_df[(plot_df['ion'] == i) & (plot_df[row] == well)]
+                if len(q_df) == 0:
+                    params[i] = {'Intercept': np.nan, x: np.nan}
+                    continue
+                model = smf.quantreg(yscale+' ~ '+x, q_df)
+                qrmodel = model.fit(q=0.5)
+                param_dict = {'ion': i, row: well, 'intercept_glob': qrmodel.params[0], 'slope_glob': qrmodel.params[1]}
+                graph.axes[well_i][ion_i].axline((0, param_dict['intercept_glob']), slope=param_dict['slope_glob'], color='black')
+
+                if 'correction_quantreg_slope' not in adata.var.columns:
+                    q_df = plot_df[(plot_df['ion'] == i) & (plot_df[row] == well) & (plot_df['include_quantreg'] == True)]
+                    model = smf.quantreg(yscale+' ~ '+x, q_df)
+                    qrmodel = model.fit(q=0.5)
+                    graph.axes[well_i][ion_i].axline((0, qrmodel.params[0]), slope=qrmodel.params[1], color='red')
+                    param_dict['slope_correction'] = qrmodel.params[1]
+                    param_dict['intercept_correction'] = qrmodel.params[0]
+                    #orig_params = adata_cor.var.loc[i, ['correction_quantreg_slope', 'correction_quantreg_intersect']]
+                    #graph.axes[well_i][ion_i].axline((0, orig_params['correction_quantreg_intersect']), slope=orig_params['correction_quantreg_slope'], color='red')
+                    #param_dict['slope_correction'] = orig_params['correction_quantreg_slope']
+                    #param_dict['intercept_correction'] = orig_params['correction_quantreg_intersect']
+                params.append(param_dict)
+
+
+        return pd.DataFrame(params).sort_values(['ion', row]).set_index(['ion', row])
+        
+        
+    df1 = plot_all_wells(adata, ions=ions, wells=wells, ratio=ratio, proportion_threshold=proportion_threshold)
+    df2 = plot_all_wells(adata_cor, ions=ions, wells=wells, ratio=ratio, proportion_threshold=proportion_threshold)
+    out_df = pd.merge(df1, df2, right_index=True, left_index=True, suffixes=('_uncorrected', '_ISM_correction')).loc[ions]
+    return out_df[sorted(out_df.columns)]
+
+
 class MetaboliteAnalysis:
     
     def __init__(self, 
