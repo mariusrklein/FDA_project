@@ -352,6 +352,7 @@ div.rendered_html tbody tr:hover {
 <span class="c1"># TODO: implement topX reference ion pool.</span>
 <span class="n">reference_pool</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
 <span class="n">deconv_default_min_overlap</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">correction_proportion_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
 </pre></div>
 </div>
 </div>
@@ -520,7 +521,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_list</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">7</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">correct_sample_spacem</span><span class="p">)(</span><span class="n">sample</span><span class="p">)</span> <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span>
-<span class="c1"># adata_list = [correct_sample_spacem(sample) for sample in tqdm([&#39;I4&#39;])]</span>
+<span class="c1"># adata_list = [correct_sample_spacem(sample) for sample in tqdm(samples[0])]</span>
 </pre></div>
 </div>
 </div>
@@ -614,65 +615,16 @@ Using 156 pixels to calculate full-pixel avereage intensities.
 </table>
 </div></div>
 </div>
-<p>Every analysed pixel is characterized by its total overlap with cellular regions. The raw data shows no clear association between this overlap and acquired ion intensities. However, after the ion suppression correction, pixels with smaller overlap clearly have lower corresponding intensities (only shown for one metabolite).</p>
+<p>The ion suppression correction takes a parameter proportion_threshold to filter the pixels used to compute quantile regression. In particular, pixels with a sampling proportion lower than the threshold are excluded for this step. In contrast, the actual correction is then performed on all pixels in the dataset. As a consequence, for the majority of the dataset, the dependence of the data on the factor “sampling_proportion” is not completely removed by the correction. Instead, depending on the
+difference in slope between the complete and thresholded set of pixels, the corrected set of pixels has a positive or negative dependence on the factor “sampling_proportion”. The larger the proportion_threshold, the stronger this deviation can get.</p>
+<p>In the following figure, these differences are visualized for a subset of ions (with very low/high correction slope) and wells. The top panel shows the logarithmic ion intensity/proportion ratio plotted against the log proportion ratio of the respective pixels. As this is the relationship used to compute the quantile regression, the resulting regression lines can also be shown. The black lines show the quantile regression of the total set of pixels in a well, the red lines for the thresholded
+set (shown as orange squares). In turn, the blue squares are disregarded in calculating the correction slope. The bottom panel shows the corresponding corrected sets of pixels with black lines again representing the quantile regression on the complete set of pixels.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">src.correction</span> <span class="kn">import</span> <span class="n">normalize_proportion_ratios</span>
-
-
-<span class="k">def</span> <span class="nf">plot_all_wells</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">const</span><span class="o">.</span><span class="n">TPO</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-
-    <span class="n">top_wells</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">row</span><span class="p">]))[:</span><span class="mi">5</span><span class="p">]</span>
-    <span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">top_wells</span><span class="p">)]</span>
-
-    <span class="k">if</span> <span class="n">ions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">ions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="n">ions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">ions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">normalize_proportion_ratios</span><span class="p">(</span><span class="n">intensities_ad</span><span class="o">=</span><span class="n">adata</span><span class="p">)</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-
-    <span class="n">yscale</span> <span class="o">=</span> <span class="s1">&#39;intensity&#39;</span>
-    <span class="k">if</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">adata</span> <span class="o">=</span> <span class="n">normalize_proportion_ratios</span><span class="p">(</span><span class="n">intensities_ad</span><span class="o">=</span><span class="n">adata</span><span class="p">)</span>
-        <span class="n">yscale</span> <span class="o">=</span> <span class="s1">&#39;intensity_proportion_ratio&#39;</span>
-
-    <span class="n">plot_df</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">obs_df</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">+</span> <span class="n">ions</span><span class="p">)</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;ion&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="n">yscale</span><span class="p">)</span>
-    <span class="n">plot_df</span><span class="o">=</span> <span class="n">plot_df</span><span class="p">[</span><span class="n">plot_df</span><span class="p">[</span><span class="n">yscale</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">if</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">plot_df</span><span class="p">[</span><span class="n">yscale</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="n">yscale</span><span class="p">])</span>
-        <span class="n">plot_df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
-
-    <span class="n">graph</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">plot_df</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;ion&#39;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">margin_titles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">graph</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yscale</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;proportion&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">add_legend</span><span class="p">()</span>
-
-    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">well</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="n">row</span><span class="p">])):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ions</span><span class="p">:</span>
-            <span class="n">q_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="p">[(</span><span class="n">plot_df</span><span class="p">[</span><span class="s1">&#39;ion&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">==</span> <span class="n">well</span><span class="p">)]</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">q_df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Intercept&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">}</span>
-                <span class="k">continue</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">quantreg</span><span class="p">(</span><span class="n">yscale</span><span class="o">+</span><span class="s1">&#39; ~ &#39;</span><span class="o">+</span><span class="n">x</span><span class="p">,</span> <span class="n">q_df</span><span class="p">)</span>
-            <span class="n">qrmodel</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;ion&#39;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">well</span><span class="p">,</span> <span class="s1">&#39;Intercept&#39;</span><span class="p">:</span> <span class="n">qrmodel</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="n">qrmodel</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]})</span>
-
-
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;ion&#39;</span><span class="p">,</span> <span class="n">row</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;ion&#39;</span><span class="p">,</span> <span class="n">row</span><span class="p">])</span>
-
-<span class="k">def</span> <span class="nf">compare_pre_post_correction</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">ions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">ions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="n">ions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">ions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">normalize_proportion_ratios</span><span class="p">(</span><span class="n">intensities_ad</span><span class="o">=</span><span class="n">adata</span><span class="p">)</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-
-    <span class="n">df1</span> <span class="o">=</span> <span class="n">plot_all_wells</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="n">ions</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
-    <span class="n">df2</span> <span class="o">=</span> <span class="n">plot_all_wells</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="n">ions</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;_uncorrected&#39;</span><span class="p">,</span> <span class="s1">&#39;_ISM_correction&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -688,7 +640,8 @@ Using 156 pixels to calculate full-pixel avereage intensities.
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">compare_pre_post_correction</span>
+<span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">,</span> <span class="n">proportion_threshold</span><span class="o">=</span><span class="n">correction_proportion_threshold</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

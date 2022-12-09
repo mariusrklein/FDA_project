@@ -76,7 +76,8 @@
     "    \n",
     "# TODO: implement topX reference ion pool.\n",
     "reference_pool = {'top': 10}\n",
-    "deconv_default_min_overlap = 0.0"
+    "deconv_default_min_overlap = 0.0\n",
+    "correction_proportion_threshold = 0.1"
    ]
   },
   {
@@ -291,7 +292,7 @@
    ],
    "source": [
     "adata_list = Parallel(n_jobs=7)(delayed(correct_sample_spacem)(sample) for sample in tqdm(samples))\n",
-    "# adata_list = [correct_sample_spacem(sample) for sample in tqdm(['I4'])]"
+    "# adata_list = [correct_sample_spacem(sample) for sample in tqdm(samples[0])]"
    ]
   },
   {
@@ -375,11 +376,11 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "tags": []
-   },
+   "metadata": {},
    "source": [
-    "Every analysed pixel is characterized by its total overlap with cellular regions. The raw data shows no clear association between this overlap and acquired ion intensities. However, after the ion suppression correction, pixels with smaller overlap clearly have lower corresponding intensities (only shown for one metabolite). "
+    "The ion suppression correction takes a parameter proportion_threshold to filter the pixels used to compute quantile regression. In particular, pixels with a sampling proportion lower than the threshold are excluded for this step. In contrast, the actual correction is then performed on all pixels in the dataset. As a consequence, for the majority of the dataset, the dependence of the data on the factor \"sampling_proportion\" is not completely removed by the correction. Instead, depending on the difference in slope between the complete and thresholded set of pixels, the corrected set of pixels has a positive or negative dependence on the factor \"sampling_proportion\". The larger the proportion_threshold, the stronger this deviation can get.\n",
+    "\n",
+    "In the following figure, these differences are visualized for a subset of ions (with very low/high correction slope) and wells. The top panel shows the logarithmic ion intensity/proportion ratio plotted against the log proportion ratio of the respective pixels. As this is the relationship used to compute the quantile regression, the resulting regression lines can also be shown. The black lines show the quantile regression of the total set of pixels in a well, the red lines for the thresholded set (shown as orange squares). In turn, the blue squares are disregarded in calculating the correction slope. The bottom panel shows the corresponding corrected sets of pixels with black lines again representing the quantile regression on the complete set of pixels."
    ]
   },
   {
@@ -389,59 +390,7 @@
    "outputs": [],
    "source": [
     "import warnings\n",
-    "warnings.filterwarnings('ignore')\n",
-    "from src.correction import normalize_proportion_ratios\n",
-    "       \n",
-    "\n",
-    "def plot_all_wells(adata, ions=None, row='well', x=const.TPO, ratio=True):\n",
-    "    \n",
-    "    top_wells = list(set(adata.obs[row]))[:5]\n",
-    "    adata = adata[adata.obs[row].isin(top_wells)]\n",
-    "    \n",
-    "    if ions is None and not ratio:\n",
-    "        ions = list(adata.var_names[:5])\n",
-    "    elif ions is None and ratio:\n",
-    "        ions = list(normalize_proportion_ratios(intensities_ad=adata).to_df().sum().sort_values().tail().index)\n",
-    "        \n",
-    "    yscale = 'intensity'\n",
-    "    if ratio:\n",
-    "        adata = normalize_proportion_ratios(intensities_ad=adata)\n",
-    "        yscale = 'intensity_proportion_ratio'\n",
-    "\n",
-    "    plot_df = sc.get.obs_df(adata, keys=[row, x] + ions).melt(id_vars=[row, x], var_name='ion', value_name=yscale)\n",
-    "    plot_df= plot_df[plot_df[yscale] > 0]\n",
-    "    \n",
-    "    if ratio:\n",
-    "        plot_df[yscale] = np.log10(plot_df[yscale])\n",
-    "        plot_df[x] = np.log10(plot_df[x])\n",
-    "       \n",
-    "    graph = sns.FacetGrid(plot_df, row=row, col='ion', sharey=False, margin_titles=True)\n",
-    "    graph.map(sns.histplot, x, yscale, bins=50, stat='proportion').add_legend()\n",
-    "        \n",
-    "    params = []\n",
-    "\n",
-    "    for well in list(set(plot_df[row])):\n",
-    "        for i in ions:\n",
-    "            q_df = plot_df[(plot_df['ion'] == i) & (plot_df[row] == well)]\n",
-    "            if len(q_df) == 0:\n",
-    "                params[i] = {'Intercept': np.nan, x: np.nan}\n",
-    "                continue\n",
-    "            model = smf.quantreg(yscale+' ~ '+x, q_df)\n",
-    "            qrmodel = model.fit(q=0.5)\n",
-    "            params.append({'ion': i, row: well, 'Intercept': qrmodel.params[0], x: qrmodel.params[1]})\n",
-    "    \n",
-    "        \n",
-    "    return pd.DataFrame(params).sort_values(['ion', row]).set_index(['ion', row])\n",
-    "    \n",
-    "def compare_pre_post_correction(adata, adata_cor, ions=None, ratio=True):\n",
-    "    if ions is None and not ratio:\n",
-    "        ions = list(adata.var_names[:5])\n",
-    "    elif ions is None and ratio:\n",
-    "        ions = list(normalize_proportion_ratios(intensities_ad=adata).to_df().sum().sort_values().tail().index)\n",
-    "        \n",
-    "    df1 = plot_all_wells(adata, ions=ions, ratio=ratio)\n",
-    "    df2 = plot_all_wells(adata_cor, ions=ions, ratio=ratio)\n",
-    "    return pd.merge(df1, df2, right_index=True, left_index=True, suffixes=('_uncorrected', '_ISM_correction'))"
+    "warnings.filterwarnings('ignore')"
    ]
   },
   {
@@ -609,7 +558,8 @@
     }
    ],
    "source": [
-    "compare_pre_post_correction(am_adata, am_adata_cor)"
+    "from src.evaluation import compare_pre_post_correction\n",
+    "compare_pre_post_correction(am_adata, am_adata_cor, proportion_threshold=correction_proportion_threshold)"
    ]
   }
  ],

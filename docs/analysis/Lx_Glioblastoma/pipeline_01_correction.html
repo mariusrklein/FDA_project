@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Lx_Glioblastoma: Processing" href="pipeline_02_processing.html" />
-    <link rel="prev" title="Overview" href="../../index.html" /> 
+    <link rel="prev" title="Mx_Coculture: Evaluation" href="../Mx_Coculture/pipeline_03_evaluation.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -33,7 +33,7 @@
           <a href="pipeline_02_processing.html" title="Lx_Glioblastoma: Processing"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../../index.html" title="Overview"
+          <a href="../Mx_Coculture/pipeline_03_evaluation.html" title="Mx_Coculture: Evaluation"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Lx_Glioblastoma: Correction</a></li> 
@@ -362,8 +362,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
@@ -379,8 +379,21 @@ div.rendered_html tbody tr:hover {
     <span class="s2">&quot;pipeline_03_evaluation.ipynb&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">project</span> <span class="o">=</span> <span class="s2">&quot;Lx_Glioblastoma&quot;</span>
-<br/></pre></div>
+<span class="n">correction_proportion_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
+</pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Using 62 pixels to calculate full-pixel avereage intensities.
+Using 56 pixels to calculate full-pixel avereage intensities.
+Using 35 pixels to calculate full-pixel avereage intensities.
+Using 2 pixels to calculate full-pixel avereage intensities.
+Using 156 pixels to calculate full-pixel avereage intensities.
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -478,6 +491,7 @@ div.rendered_html tbody tr:hover {
     <span class="n">corr_sm_matrix</span> <span class="o">=</span> <span class="n">correct_quantile_inplace</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">sm_matrix</span><span class="p">,</span>
         <span class="n">reference_ions</span><span class="o">=</span><span class="n">sm_matrix</span><span class="o">.</span><span class="n">var_names</span><span class="p">,</span>
         <span class="n">correct_intersect</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">proportion_threshold</span><span class="o">=</span><span class="n">correction_proportion_threshold</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
     <span class="c1"># perform pixel-cell-deconvolution</span>
@@ -522,7 +536,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
- 40%|████      | 14/35 [02:02&lt;03:35, 10.27s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 40%|████      | 14/35 [00:56&lt;01:38,  4.71s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -532,23 +546,7 @@ div.rendered_html tbody tr:hover {
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
- 60%|██████    | 21/35 [04:13&lt;03:18, 14.14s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
- 80%|████████  | 28/35 [08:01&lt;02:29, 21.43s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 60%|██████    | 21/35 [01:45&lt;01:20,  5.77s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -564,11 +562,27 @@ div.rendered_html tbody tr:hover {
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+ 80%|████████  | 28/35 [02:43&lt;00:47,  6.77s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-100%|██████████| 35/35 [09:42&lt;00:00, 16.64s/it]
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+100%|██████████| 35/35 [03:39&lt;00:00,  6.27s/it]
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
@@ -929,65 +943,16 @@ div.rendered_html tbody tr:hover {
 </table>
 </div></div>
 </div>
-<p>Every analysed pixel is characterized by its total overlap with cellular regions. The raw data shows no clear association between this overlap and acquired ion intensities. However, after the ion suppression correction, pixels with smaller overlap clearly have lower corresponding intensities (only shown for one metabolite).</p>
+<p>The ion suppression correction takes a parameter proportion_threshold to filter the pixels used to compute quantile regression. In particular, pixels with a sampling proportion lower than the threshold are excluded for this step. In contrast, the actual correction is then performed on all pixels in the dataset. As a consequence, for the majority of the dataset, the dependence of the data on the factor “sampling_proportion” is not completely removed by the correction. Instead, depending on the
+difference in slope between the complete and thresholded set of pixels, the corrected set of pixels has a positive or negative dependence on the factor “sampling_proportion”. The larger the proportion_threshold, the stronger this deviation can get.</p>
+<p>In the following figure, these differences are visualized for a subset of ions (with very low/high correction slope) and wells. The top panel shows the logarithmic ion intensity/proportion ratio plotted against the log proportion ratio of the respective pixels. As this is the relationship used to compute the quantile regression, the resulting regression lines can also be shown. The black lines show the quantile regression of the total set of pixels in a well, the red lines for the thresholded
+set (shown as orange squares). In turn, the blue squares are disregarded in calculating the correction slope. The bottom panel shows the corresponding corrected sets of pixels with black lines again representing the quantile regression on the complete set of pixels.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">src.correction</span> <span class="kn">import</span> <span class="n">normalize_proportion_ratios</span>
-
-
-<span class="k">def</span> <span class="nf">plot_all_wells</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">const</span><span class="o">.</span><span class="n">TPO</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-
-    <span class="n">top_wells</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">row</span><span class="p">]))[:</span><span class="mi">5</span><span class="p">]</span>
-    <span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">top_wells</span><span class="p">)]</span>
-
-    <span class="k">if</span> <span class="n">ions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">ions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="n">ions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">ions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">normalize_proportion_ratios</span><span class="p">(</span><span class="n">intensities_ad</span><span class="o">=</span><span class="n">adata</span><span class="p">)</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-
-    <span class="n">yscale</span> <span class="o">=</span> <span class="s1">&#39;intensity&#39;</span>
-    <span class="k">if</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">adata</span> <span class="o">=</span> <span class="n">normalize_proportion_ratios</span><span class="p">(</span><span class="n">intensities_ad</span><span class="o">=</span><span class="n">adata</span><span class="p">)</span>
-        <span class="n">yscale</span> <span class="o">=</span> <span class="s1">&#39;intensity_proportion_ratio&#39;</span>
-
-    <span class="n">plot_df</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">get</span><span class="o">.</span><span class="n">obs_df</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">+</span> <span class="n">ions</span><span class="p">)</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;ion&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="n">yscale</span><span class="p">)</span>
-    <span class="n">plot_df</span><span class="o">=</span> <span class="n">plot_df</span><span class="p">[</span><span class="n">plot_df</span><span class="p">[</span><span class="n">yscale</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">if</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">plot_df</span><span class="p">[</span><span class="n">yscale</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="n">yscale</span><span class="p">])</span>
-        <span class="n">plot_df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
-
-    <span class="n">graph</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">plot_df</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;ion&#39;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">margin_titles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">graph</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yscale</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;proportion&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">add_legend</span><span class="p">()</span>
-
-    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">well</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="n">row</span><span class="p">])):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ions</span><span class="p">:</span>
-            <span class="n">q_df</span> <span class="o">=</span> <span class="n">plot_df</span><span class="p">[(</span><span class="n">plot_df</span><span class="p">[</span><span class="s1">&#39;ion&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">plot_df</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">==</span> <span class="n">well</span><span class="p">)]</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">q_df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Intercept&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">}</span>
-                <span class="k">continue</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">quantreg</span><span class="p">(</span><span class="n">yscale</span><span class="o">+</span><span class="s1">&#39; ~ &#39;</span><span class="o">+</span><span class="n">x</span><span class="p">,</span> <span class="n">q_df</span><span class="p">)</span>
-            <span class="n">qrmodel</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;ion&#39;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">well</span><span class="p">,</span> <span class="s1">&#39;Intercept&#39;</span><span class="p">:</span> <span class="n">qrmodel</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="n">qrmodel</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]})</span>
-
-
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;ion&#39;</span><span class="p">,</span> <span class="n">row</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;ion&#39;</span><span class="p">,</span> <span class="n">row</span><span class="p">])</span>
-
-<span class="k">def</span> <span class="nf">compare_pre_post_correction</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">ions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">ions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="n">ions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ratio</span><span class="p">:</span>
-        <span class="n">ions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">normalize_proportion_ratios</span><span class="p">(</span><span class="n">intensities_ad</span><span class="o">=</span><span class="n">adata</span><span class="p">)</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-
-    <span class="n">df1</span> <span class="o">=</span> <span class="n">plot_all_wells</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="n">ions</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
-    <span class="n">df2</span> <span class="o">=</span> <span class="n">plot_all_wells</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="n">ions</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;_uncorrected&#39;</span><span class="p">,</span> <span class="s1">&#39;_ISM_correction&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1000,15 +965,38 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">compare_pre_post_correction</span>
+<span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">,</span> <span class="n">proportion_threshold</span><span class="o">=</span><span class="n">correction_proportion_threshold</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Using 41 pixels to calculate full-pixel avereage intensities.
+Using 67 pixels to calculate full-pixel avereage intensities.
+Using 33 pixels to calculate full-pixel avereage intensities.
+Using 12 pixels to calculate full-pixel avereage intensities.
+Using 9 pixels to calculate full-pixel avereage intensities.
+Using 33 pixels to calculate full-pixel avereage intensities.
+Using 44 pixels to calculate full-pixel avereage intensities.
+Using 15 pixels to calculate full-pixel avereage intensities.
+Using 46 pixels to calculate full-pixel avereage intensities.
+Using 210 pixels to calculate full-pixel avereage intensities.
+Using 46 pixels to calculate full-pixel avereage intensities.
+Using 75 pixels to calculate full-pixel avereage intensities.
+Using 7 pixels to calculate full-pixel avereage intensities.
+Using 3 pixels to calculate full-pixel avereage intensities.
+Using 10 pixels to calculate full-pixel avereage intensities.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1031,10 +1019,12 @@ div.rendered_html tbody tr:hover {
     <tr style="text-align: right;">
       <th></th>
       <th></th>
-      <th>Intercept_uncorrected</th>
-      <th>correction_total_pixel_overlap_uncorrected</th>
-      <th>Intercept_ISM_correction</th>
-      <th>correction_total_pixel_overlap_ISM_correction</th>
+      <th>intercept_correction</th>
+      <th>intercept_glob_ISM_correction</th>
+      <th>intercept_glob_uncorrected</th>
+      <th>slope_correction</th>
+      <th>slope_glob_ISM_correction</th>
+      <th>slope_glob_uncorrected</th>
     </tr>
     <tr>
       <th>ion</th>
@@ -1043,188 +1033,122 @@ div.rendered_html tbody tr:hover {
       <th></th>
       <th></th>
       <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th rowspan="5" valign="top">C37H71O8P+Na</th>
-      <th>B1</th>
-      <td>0.454586</td>
-      <td>-1.126644</td>
-      <td>0.454586</td>
-      <td>0.352268</td>
+      <th rowspan="3" valign="top">C37H71O8P+Na</th>
+      <th>E2</th>
+      <td>0.436669</td>
+      <td>0.605490</td>
+      <td>0.605490</td>
+      <td>-1.454037</td>
+      <td>0.400550</td>
+      <td>-1.053487</td>
     </tr>
     <tr>
-      <th>C1</th>
-      <td>0.538366</td>
-      <td>-1.116593</td>
-      <td>0.538366</td>
-      <td>0.346860</td>
+      <th>I2</th>
+      <td>0.458666</td>
+      <td>0.606335</td>
+      <td>0.606335</td>
+      <td>-1.448836</td>
+      <td>0.384817</td>
+      <td>-1.064019</td>
     </tr>
     <tr>
-      <th>C3</th>
-      <td>0.587866</td>
-      <td>-0.993954</td>
-      <td>0.587866</td>
-      <td>0.252421</td>
+      <th>J4</th>
+      <td>0.733393</td>
+      <td>0.800591</td>
+      <td>0.800591</td>
+      <td>-1.183589</td>
+      <td>0.198568</td>
+      <td>-0.985021</td>
     </tr>
     <tr>
-      <th>D2</th>
-      <td>0.492123</td>
-      <td>-1.140287</td>
-      <td>0.492123</td>
-      <td>0.350520</td>
+      <th rowspan="3" valign="top">C39H69O8P+H</th>
+      <th>E2</th>
+      <td>0.527100</td>
+      <td>0.678490</td>
+      <td>0.678490</td>
+      <td>-1.382436</td>
+      <td>0.060428</td>
+      <td>-1.036088</td>
     </tr>
     <tr>
-      <th>G1</th>
-      <td>0.508619</td>
-      <td>-1.128798</td>
-      <td>0.508619</td>
-      <td>0.393680</td>
+      <th>I2</th>
+      <td>0.513108</td>
+      <td>0.660373</td>
+      <td>0.660373</td>
+      <td>-1.441015</td>
+      <td>0.377460</td>
+      <td>-1.063554</td>
     </tr>
     <tr>
-      <th rowspan="5" valign="top">C39H69O8P+H</th>
-      <th>B1</th>
-      <td>0.520313</td>
-      <td>-1.115499</td>
-      <td>0.520313</td>
-      <td>0.325884</td>
+      <th>J4</th>
+      <td>0.781770</td>
+      <td>0.850422</td>
+      <td>0.850422</td>
+      <td>-1.175101</td>
+      <td>0.192225</td>
+      <td>-0.982876</td>
     </tr>
     <tr>
-      <th>C1</th>
-      <td>0.632177</td>
-      <td>-1.085789</td>
-      <td>0.632177</td>
-      <td>0.008920</td>
+      <th rowspan="3" valign="top">C40H78NO8P+H</th>
+      <th>E2</th>
+      <td>0.357664</td>
+      <td>0.253557</td>
+      <td>0.253557</td>
+      <td>-0.381931</td>
+      <td>-0.302432</td>
+      <td>-0.684363</td>
     </tr>
     <tr>
-      <th>C3</th>
-      <td>0.649776</td>
-      <td>-0.971264</td>
-      <td>0.649776</td>
-      <td>-0.025074</td>
+      <th>I2</th>
+      <td>0.314369</td>
+      <td>0.211536</td>
+      <td>0.211536</td>
+      <td>-0.350315</td>
+      <td>-0.297353</td>
+      <td>-0.647669</td>
     </tr>
     <tr>
-      <th>D2</th>
-      <td>0.566638</td>
-      <td>-1.120967</td>
-      <td>0.566638</td>
-      <td>-0.015699</td>
+      <th>J4</th>
+      <td>0.523481</td>
+      <td>0.422375</td>
+      <td>0.422375</td>
+      <td>-0.348754</td>
+      <td>-0.347930</td>
+      <td>-0.696684</td>
     </tr>
     <tr>
-      <th>G1</th>
-      <td>0.571997</td>
-      <td>-1.113618</td>
-      <td>0.571997</td>
-      <td>0.394735</td>
+      <th rowspan="3" valign="top">C42H82NO8P+H</th>
+      <th>E2</th>
+      <td>0.353756</td>
+      <td>0.244431</td>
+      <td>0.244431</td>
+      <td>-0.294391</td>
+      <td>-0.316857</td>
+      <td>-0.611248</td>
     </tr>
     <tr>
-      <th rowspan="5" valign="top">C39H79N2O6P+Na</th>
-      <th>B1</th>
-      <td>0.301031</td>
-      <td>-1.116922</td>
-      <td>0.301031</td>
-      <td>0.250005</td>
+      <th>I2</th>
+      <td>0.144098</td>
+      <td>0.032620</td>
+      <td>0.032620</td>
+      <td>-0.290978</td>
+      <td>-0.272523</td>
+      <td>-0.563502</td>
     </tr>
     <tr>
-      <th>C1</th>
-      <td>0.488088</td>
-      <td>-1.049450</td>
-      <td>0.488088</td>
-      <td>0.239124</td>
-    </tr>
-    <tr>
-      <th>C3</th>
-      <td>0.613167</td>
-      <td>-0.960675</td>
-      <td>0.613167</td>
-      <td>0.091994</td>
-    </tr>
-    <tr>
-      <th>D2</th>
-      <td>0.443624</td>
-      <td>-1.114349</td>
-      <td>0.443624</td>
-      <td>0.260859</td>
-    </tr>
-    <tr>
-      <th>G1</th>
-      <td>0.574430</td>
-      <td>-1.097679</td>
-      <td>0.574430</td>
-      <td>0.290644</td>
-    </tr>
-    <tr>
-      <th rowspan="5" valign="top">C40H79O10P+Na</th>
-      <th>B1</th>
-      <td>0.460614</td>
-      <td>-1.081855</td>
-      <td>0.460614</td>
-      <td>0.252610</td>
-    </tr>
-    <tr>
-      <th>C1</th>
-      <td>0.434184</td>
-      <td>-1.025472</td>
-      <td>0.434184</td>
-      <td>0.173710</td>
-    </tr>
-    <tr>
-      <th>C3</th>
-      <td>0.479305</td>
-      <td>-0.981476</td>
-      <td>0.479305</td>
-      <td>0.057566</td>
-    </tr>
-    <tr>
-      <th>D2</th>
-      <td>0.535514</td>
-      <td>-1.090769</td>
-      <td>0.535514</td>
-      <td>0.197489</td>
-    </tr>
-    <tr>
-      <th>G1</th>
-      <td>0.561823</td>
-      <td>-1.074761</td>
-      <td>0.561823</td>
-      <td>0.211994</td>
-    </tr>
-    <tr>
-      <th rowspan="5" valign="top">C45H74NO7P+H</th>
-      <th>B1</th>
-      <td>0.514196</td>
-      <td>-1.114016</td>
-      <td>0.514196</td>
-      <td>0.264027</td>
-    </tr>
-    <tr>
-      <th>C1</th>
-      <td>0.530155</td>
-      <td>-1.043130</td>
-      <td>0.530155</td>
-      <td>0.221473</td>
-    </tr>
-    <tr>
-      <th>C3</th>
-      <td>0.599573</td>
-      <td>-0.938715</td>
-      <td>0.599574</td>
-      <td>0.081699</td>
-    </tr>
-    <tr>
-      <th>D2</th>
-      <td>0.643117</td>
-      <td>-1.096925</td>
-      <td>0.643117</td>
-      <td>0.239927</td>
-    </tr>
-    <tr>
-      <th>G1</th>
-      <td>0.648587</td>
-      <td>-1.097134</td>
-      <td>0.648587</td>
-      <td>0.264709</td>
+      <th>J4</th>
+      <td>0.278758</td>
+      <td>0.191052</td>
+      <td>0.191052</td>
+      <td>-0.254807</td>
+      <td>-0.334250</td>
+      <td>-0.589058</td>
     </tr>
   </tbody>
 </table>
@@ -1234,15 +1158,32 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_3.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_3.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" />
-</div>
+<div class="highlight"><pre>
+Using 98 pixels to calculate full-pixel avereage intensities.
+Using 47 pixels to calculate full-pixel avereage intensities.
+Using 35 pixels to calculate full-pixel avereage intensities.
+Using 229 pixels to calculate full-pixel avereage intensities.
+Using 52 pixels to calculate full-pixel avereage intensities.
+Using 68 pixels to calculate full-pixel avereage intensities.
+Using 35 pixels to calculate full-pixel avereage intensities.
+Using 8 pixels to calculate full-pixel avereage intensities.
+Using 237 pixels to calculate full-pixel avereage intensities.
+Using 199 pixels to calculate full-pixel avereage intensities.
+</pre></div></div>
 </div>
 </section>
 
@@ -1255,8 +1196,8 @@ div.rendered_html tbody tr:hover {
         <div class="sphinxsidebarwrapper">
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="../../index.html"
-                          title="previous chapter">Overview</a></p>
+    <p class="topless"><a href="../Mx_Coculture/pipeline_03_evaluation.html"
+                          title="previous chapter">Mx_Coculture: Evaluation</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -1294,7 +1235,7 @@ div.rendered_html tbody tr:hover {
           <a href="pipeline_02_processing.html" title="Lx_Glioblastoma: Processing"
              >next</a> |</li>
         <li class="right" >
-          <a href="../../index.html" title="Overview"
+          <a href="../Mx_Coculture/pipeline_03_evaluation.html" title="Mx_Coculture: Evaluation"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Lx_Glioblastoma: Correction</a></li> 
