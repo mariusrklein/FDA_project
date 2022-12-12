@@ -7,7 +7,7 @@ Overview
 ========
 
 .. toctree::
-   :caption: Coculture Dataset
+   :caption: Coculture Dataset (Mx)
    :titlesonly:
    
    analysis/Mx_Coculture/dataset_prep
@@ -16,7 +16,7 @@ Overview
    analysis/Mx_Coculture/pipeline_03_evaluation
 
 .. toctree::
-   :caption: Glioblastoma Dataset
+   :caption: Glioblastoma Dataset (Lx)
    :titlesonly:
    
    analysis/Lx_Glioblastoma/pipeline_01_correction
@@ -25,12 +25,21 @@ Overview
 
 
 .. toctree::
-   :caption: Seahorse Dataset
+   :caption: Seahorse Dataset (Mx)
    :titlesonly:
 
    analysis/Mx_Seahorse/pipeline_01_correction
    analysis/Mx_Seahorse/pipeline_02_processing
    analysis/Mx_Seahorse/pipeline_03_evaluation
+   
+
+.. toctree::
+   :caption: Pancreatic Cancer Dataset (Lx)
+   :titlesonly:
+
+   analysis/Lx_Pancreatic_Cancer/pipeline_01_correction
+   analysis/Lx_Pancreatic_Cancer/pipeline_02_processing
+   analysis/Lx_Pancreatic_Cancer/pipeline_03_evaluation
 
 Indices and tables
 ==================

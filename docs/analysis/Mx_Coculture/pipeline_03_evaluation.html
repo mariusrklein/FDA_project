@@ -19,7 +19,9 @@
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Lx_Glioblastoma: Correction" href="../Lx_Glioblastoma/pipeline_01_correction.html" />
+    <link rel="prev" title="Mx_Coculture: Processing" href="pipeline_02_processing.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,6 +29,12 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Lx_Glioblastoma/pipeline_01_correction.html" title="Lx_Glioblastoma: Correction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pipeline_02_processing.html" title="Mx_Coculture: Processing"
+             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Mx_Coculture: Evaluation</a></li> 
       </ul>
@@ -1088,51 +1096,7 @@ X_umap_ISM correction 10  0.157251  0.296702          0.091837
 <img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_3.png" style="width: 787px; height: 470px;" />
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">)</span>
-<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.200389  0.266097          0.091837
-X_pca_ISM correction  10  0.191440  0.257284          0.091837
-X_umap_uncorrected    10  0.257461  0.286475          0.091837
-X_umap_ISM correction 10  0.159124  0.284558          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_1.png" style="width: 1052px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_2.png" style="width: 1055px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_3.png" style="width: 787px; height: 469px;" />
-</div>
-</div>
+<p>p### dimred_umap(adata, layer=‘scaled_counts’) dimred_umap(adata_cor, layer=‘scaled_counts’) intermixing_layer(adata, adata_cor, condition_name, measures = [‘X_pca’, ‘X_umap’], layer=‘scaled_counts’)</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
@@ -2054,6 +2018,16 @@ log_norm_counts
 </ul>
 
   </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="pipeline_02_processing.html"
+                          title="previous chapter">Mx_Coculture: Processing</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../Lx_Glioblastoma/pipeline_01_correction.html"
+                          title="next chapter">Lx_Glioblastoma: Correction</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -2081,6 +2055,12 @@ log_norm_counts
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="../Lx_Glioblastoma/pipeline_01_correction.html" title="Lx_Glioblastoma: Correction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pipeline_02_processing.html" title="Mx_Coculture: Processing"
+             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Mx_Coculture: Evaluation</a></li> 
       </ul>

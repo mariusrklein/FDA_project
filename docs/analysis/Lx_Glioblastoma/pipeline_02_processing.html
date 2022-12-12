@@ -410,7 +410,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 35/35 [00:26&lt;00:00,  1.30it/s]
+100%|██████████| 35/35 [00:23&lt;00:00,  1.51it/s]
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -548,33 +548,21 @@ dataset. These dataset should exhibit differences on a comparable level across s
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_deviations</span><span class="p">(</span><span class="n">adata1</span><span class="p">,</span> <span class="n">adata2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">adata1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span> <span class="o">-</span> <span class="n">adata2</span><span class="o">.</span><span class="n">to_df</span><span class="p">())</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span> <span class="o">/</span> <span class="p">(</span><span class="n">adata1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">adata1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cell_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;[0-9]+_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cell_id&#39;</span><span class="p">,</span> <span class="s1">&#39;summed deviation&#39;</span><span class="p">,</span> <span class="s1">&#39;well&#39;</span><span class="p">]</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;summed deviation&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Summed absolute deviations across wells&#39;</span><span class="p">)</span>
+    <span class="c1"># df = df / (adata1.to_df().shape[0] * adata1.to_df().shape[1])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span> <span class="o">/</span> <span class="p">(</span><span class="n">adata1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">({</span><span class="s1">&#39;summed deviation&#39;</span><span class="p">:</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;well&#39;</span><span class="p">:</span> <span class="n">adata1</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">]},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;summed deviation&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Summed absolute deviations across wells&#39;</span><span class="p">)</span>
 
 <span class="n">plot_deviations</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">gen_adata</span><span class="p">,</span> <span class="s1">&#39;gen. data vs. spacem&#39;</span><span class="p">)</span>
 <span class="n">plot_deviations</span><span class="p">(</span><span class="n">gen_adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="s1">&#39;corr. data vs. gen. data&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/tmp/ipykernel_9783/4077953098.py:5: FutureWarning: The default value of regex will change from True to False in a future version.
-  df[&#39;well&#39;] = df[&#39;cell_id&#39;].str.replace(&#39;[0-9]+_&#39;, &#39;&#39;)
-/tmp/ipykernel_9783/4077953098.py:5: FutureWarning: The default value of regex will change from True to False in a future version.
-  df[&#39;well&#39;] = df[&#39;cell_id&#39;].str.replace(&#39;[0-9]+_&#39;, &#39;&#39;)
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_02_processing_16_1.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_02_processing_16_1.png" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_02_processing_16_0.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_02_processing_16_0.png" />
 </div>
 </div>
 </section>

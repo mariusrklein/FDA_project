@@ -170,7 +170,7 @@
     "    merged_df = pd.merge(overlap[['am_id', 'cell_id']], am_adata.obs[const.TPO], left_on='am_id', right_index=True)\n",
     "    merged_df = merged_df[merged_df[const.TPO] >= min_overlap]\n",
     "    \n",
-    "    mean_df = merged_df[['cell_id', 'correction_total_pixel_overlap']].groupby('cell_id', group_keys=False).agg(method)\n",
+    "    mean_df = merged_df[['cell_id', const.TPO]].groupby('cell_id', group_keys=False).agg(method)\n",
     "#     mean_df = merged_df[['cell_id', 'correction_total_pixel_overlap']].groupby('cell_id', group_keys=False).agg(lambda x: method(x))\n",
     "    return mean_df[const.TPO]"
    ]

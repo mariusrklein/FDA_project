@@ -344,66 +344,14 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <p>Loading the uncorrected and ISM-corrected dataset from file. Additionally, loading the metadata CSV file to filter out excluded wells.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="s2">&quot;gen_batch_sm_matrix.h5ad&quot;</span><span class="p">))</span>
 <span class="n">adata_cor</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="s2">&quot;corrected_batch_sm_matrix.h5ad&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">FileNotFoundError</span>                         Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In [3], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> adata <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">ad</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">read</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">os</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">path</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">join</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">target_path</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#34;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">gen_batch_sm_matrix.h5ad</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#34;</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span> adata_cor <span style="color: rgb(98,98,98)">=</span> ad<span style="color: rgb(98,98,98)">.</span>read(os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>join(target_path, <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">corrected_batch_sm_matrix.h5ad</span><span style="color: rgb(175,0,0)">&#34;</span>))
-
-File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/anndata/_io/h5ad.py:224</span>, in <span class="ansi-cyan-fg">read_h5ad</span><span class="ansi-blue-fg">(filename, backed, as_sparse, as_sparse_fmt, chunk_size)</span>
-<span class="ansi-green-intense-fg ansi-bold">    216</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">NotImplementedError</span>(
-<span class="ansi-green-intense-fg ansi-bold">    217</span>             <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">Currently only `X` and `raw/X` can be read as sparse.</span><span style="color: rgb(175,0,0)">&#34;</span>
-<span class="ansi-green-intense-fg ansi-bold">    218</span>         )
-<span class="ansi-green-intense-fg ansi-bold">    220</span> rdasp <span style="color: rgb(98,98,98)">=</span> partial(
-<span class="ansi-green-intense-fg ansi-bold">    221</span>     read_dense_as_sparse, sparse_format<span style="color: rgb(98,98,98)">=</span>as_sparse_fmt, axis_chunk<span style="color: rgb(98,98,98)">=</span>chunk_size
-<span class="ansi-green-intense-fg ansi-bold">    222</span> )
-<span class="ansi-green-fg">--&gt; 224</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> <span class="ansi-yellow-bg">h5py</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">File</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">filename</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#34;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">r</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#34;</span><span class="ansi-yellow-bg">)</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> f:
-<span class="ansi-green-intense-fg ansi-bold">    225</span>     d <span style="color: rgb(98,98,98)">=</span> {}
-<span class="ansi-green-intense-fg ansi-bold">    226</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> f<span style="color: rgb(98,98,98)">.</span>keys():
-<span class="ansi-green-intense-fg ansi-bold">    227</span>         <span style="color: rgb(95,135,135)"># Backwards compat for old raw</span>
-
-File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/h5py/_hl/files.py:533</span>, in <span class="ansi-cyan-fg">File.__init__</span><span class="ansi-blue-fg">(self, name, mode, driver, libver, userblock_size, swmr, rdcc_nslots, rdcc_nbytes, rdcc_w0, track_order, fs_strategy, fs_persist, fs_threshold, fs_page_size, page_buf_size, min_meta_keep, min_raw_keep, locking, alignment_threshold, alignment_interval, **kwds)</span>
-<span class="ansi-green-intense-fg ansi-bold">    525</span>     fapl <span style="color: rgb(98,98,98)">=</span> make_fapl(driver, libver, rdcc_nslots, rdcc_nbytes, rdcc_w0,
-<span class="ansi-green-intense-fg ansi-bold">    526</span>                      locking, page_buf_size, min_meta_keep, min_raw_keep,
-<span class="ansi-green-intense-fg ansi-bold">    527</span>                      alignment_threshold<span style="color: rgb(98,98,98)">=</span>alignment_threshold,
-<span class="ansi-green-intense-fg ansi-bold">    528</span>                      alignment_interval<span style="color: rgb(98,98,98)">=</span>alignment_interval,
-<span class="ansi-green-intense-fg ansi-bold">    529</span>                      <span style="color: rgb(98,98,98)">*</span><span style="color: rgb(98,98,98)">*</span>kwds)
-<span class="ansi-green-intense-fg ansi-bold">    530</span>     fcpl <span style="color: rgb(98,98,98)">=</span> make_fcpl(track_order<span style="color: rgb(98,98,98)">=</span>track_order, fs_strategy<span style="color: rgb(98,98,98)">=</span>fs_strategy,
-<span class="ansi-green-intense-fg ansi-bold">    531</span>                      fs_persist<span style="color: rgb(98,98,98)">=</span>fs_persist, fs_threshold<span style="color: rgb(98,98,98)">=</span>fs_threshold,
-<span class="ansi-green-intense-fg ansi-bold">    532</span>                      fs_page_size<span style="color: rgb(98,98,98)">=</span>fs_page_size)
-<span class="ansi-green-fg">--&gt; 533</span>     fid <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">make_fid</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">mode</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">userblock_size</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fapl</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fcpl</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">swmr</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">swmr</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    535</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">isinstance</span>(libver, <span style="color: rgb(0,135,0)">tuple</span>):
-<span class="ansi-green-intense-fg ansi-bold">    536</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_libver <span style="color: rgb(98,98,98)">=</span> libver
-
-File <span class="ansi-green-fg">~/.conda/envs/ion_suppression/lib/python3.10/site-packages/h5py/_hl/files.py:226</span>, in <span class="ansi-cyan-fg">make_fid</span><span class="ansi-blue-fg">(name, mode, userblock_size, fapl, fcpl, swmr)</span>
-<span class="ansi-green-intense-fg ansi-bold">    224</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> swmr <span class="ansi-bold" style="color: rgb(175,0,255)">and</span> swmr_support:
-<span class="ansi-green-intense-fg ansi-bold">    225</span>         flags <span style="color: rgb(98,98,98)">|</span><span style="color: rgb(98,98,98)">=</span> h5f<span style="color: rgb(98,98,98)">.</span>ACC_SWMR_READ
-<span class="ansi-green-fg">--&gt; 226</span>     fid <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">h5f</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">open</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">flags</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fapl</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">fapl</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    227</span> <span class="ansi-bold" style="color: rgb(0,135,0)">elif</span> mode <span style="color: rgb(98,98,98)">==</span> <span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">r+</span><span style="color: rgb(175,0,0)">&#39;</span>:
-<span class="ansi-green-intense-fg ansi-bold">    228</span>     fid <span style="color: rgb(98,98,98)">=</span> h5f<span style="color: rgb(98,98,98)">.</span>open(name, h5f<span style="color: rgb(98,98,98)">.</span>ACC_RDWR, fapl<span style="color: rgb(98,98,98)">=</span>fapl)
-
-File <span class="ansi-green-fg">h5py/_objects.pyx:54</span>, in <span class="ansi-cyan-fg">h5py._objects.with_phil.wrapper</span><span class="ansi-blue-fg">()</span>
-
-File <span class="ansi-green-fg">h5py/_objects.pyx:55</span>, in <span class="ansi-cyan-fg">h5py._objects.with_phil.wrapper</span><span class="ansi-blue-fg">()</span>
-
-File <span class="ansi-green-fg">h5py/h5f.pyx:106</span>, in <span class="ansi-cyan-fg">h5py.h5f.open</span><span class="ansi-blue-fg">()</span>
-
-<span class="ansi-red-fg">FileNotFoundError</span>: [Errno 2] Unable to open file (unable to open file: name = &#39;/home/mklein/FDA_project/data/Lx_Glioblastoma/gen_batch_sm_matrix.h5ad&#39;, errno = 2, error message = &#39;No such file or directory&#39;, flags = 0, o_flags = 0)
-</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -415,7 +363,12 @@ File <span class="ansi-green-fg">h5py/h5f.pyx:106</span>, in <span class="ansi-c
 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">):</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">well_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">metadata</span><span class="p">[</span><span class="n">well_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;row&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;col&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;row&quot;</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;col&quot;</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="n">well_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;row&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;col&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;slide&quot;</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;well&quot;</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="n">well_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;S&quot;</span> <span class="o">+</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;slide&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_W&quot;</span> <span class="o">+</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Could not find condition column in metadata file and no default composition worked.&quot;</span><span class="p">)</span>
     <span class="n">samples</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="n">well_name</span><span class="p">])</span>
 
 <span class="k">def</span> <span class="nf">assign_conditions</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Processing corrected samples &#8212; Ion suppression correction  documentation</title>
+    <title>Processing &#8212; Ion suppression correction  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -19,7 +19,9 @@
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Evaluation" href="pipeline_03_evaluation.html" />
+    <link rel="prev" title="High-throughput ion suppression correction" href="pipeline_01_correction.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,8 +29,14 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="pipeline_03_evaluation.html" title="Evaluation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pipeline_01_correction.html" title="High-throughput ion suppression correction"
+             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Processing corrected samples</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Processing</a></li> 
       </ul>
     </div>  
 
@@ -294,8 +302,8 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<section id="Processing-corrected-samples">
-<h1>Processing corrected samples<a class="headerlink" href="#Processing-corrected-samples" title="Permalink to this heading">¶</a></h1>
+<section id="Processing">
+<h1>Processing<a class="headerlink" href="#Processing" title="Permalink to this heading">¶</a></h1>
 <p>Datasets typically consist of several wells on a microscopy slide. In this notebook, the wells are integrated to one annotated data matrix.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -336,9 +344,6 @@ div.rendered_html tbody tr:hover {
     <span class="n">target_path</span> <span class="o">=</span> <span class="s1">&#39;/Volumes/mklein/FDA_project/data/Lx_Glioblastoma&#39;</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">target_path</span> <span class="o">=</span> <span class="s1">&#39;/home/mklein/FDA_project/data/Lx_Glioblastoma&#39;</span>
-
-<span class="c1"># this is the column of the annotated data matrix, that discriminates between conditions</span>
-<span class="n">condition_name</span> <span class="o">=</span> <span class="s1">&#39;dataset_3&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -350,7 +355,7 @@ div.rendered_html tbody tr:hover {
 <span class="n">source_path</span> <span class="o">=</span> <span class="s2">&quot;/home/mklein/Raw Data/2022-01-31_PancreaticCancer&quot;</span>
 <span class="n">target_path</span> <span class="o">=</span> <span class="s2">&quot;/home/mklein/FDA_project/data/Lx_Pancreatic_Cancer&quot;</span>
 <span class="n">condition_name</span> <span class="o">=</span> <span class="s2">&quot;condition&quot;</span>
-<span class="n">well_name</span> <span class="o">=</span> <span class="s2">&quot;rowcol&quot;</span>
+<span class="n">well_name</span> <span class="o">=</span> <span class="s2">&quot;slide_well&quot;</span>
 <span class="n">analysis_path</span> <span class="o">=</span> <span class="s2">&quot;/home/mklein/FDA_project/analysis/Lx_Pancreatic_Cancer&quot;</span>
 <span class="n">notebooks</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;pipeline_01_correction.ipynb&quot;</span><span class="p">,</span>
@@ -406,7 +411,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 12/12 [00:09&lt;00:00,  1.27it/s]
+100%|██████████| 12/12 [00:07&lt;00:00,  1.58it/s]
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -539,38 +544,26 @@ div.rendered_html tbody tr:hover {
 <p>In order to ensure that especially the pixel-cell deconvolution was successful across samples, the summed absolute deviations between different annotated datasets are visualized in the following plot. On one hand, the uncorected but manually deconvoluted (generated) dataset is compared to the dataset directly output by SpaceM. If the same parameters were used for deconvolution, these dataset should not exhibit any differences. On the other hand, the corrected dataset is compared to the generated
 dataset. These dataset should exhibit differences on a comparable level across samples. If one of the samples shows much greater differences than the others, there might be a sample-specific problem with the parameters used for deconvolution.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_deviations</span><span class="p">(</span><span class="n">adata1</span><span class="p">,</span> <span class="n">adata2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">adata1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span> <span class="o">-</span> <span class="n">adata2</span><span class="o">.</span><span class="n">to_df</span><span class="p">())</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span> <span class="o">/</span> <span class="p">(</span><span class="n">adata1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">adata1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cell_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;[0-9]+_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cell_id&#39;</span><span class="p">,</span> <span class="s1">&#39;summed deviation&#39;</span><span class="p">,</span> <span class="s1">&#39;well&#39;</span><span class="p">]</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;summed deviation&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Summed absolute deviations across wells&#39;</span><span class="p">)</span>
+    <span class="c1"># df = df / (adata1.to_df().shape[0] * adata1.to_df().shape[1])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span> <span class="o">/</span> <span class="p">(</span><span class="n">adata1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">({</span><span class="s1">&#39;summed deviation&#39;</span><span class="p">:</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;well&#39;</span><span class="p">:</span> <span class="n">adata1</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">]},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;summed deviation&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Summed absolute deviations across wells&#39;</span><span class="p">)</span>
 
 <span class="n">plot_deviations</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">gen_adata</span><span class="p">,</span> <span class="s1">&#39;gen. data vs. spacem&#39;</span><span class="p">)</span>
 <span class="n">plot_deviations</span><span class="p">(</span><span class="n">gen_adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="s1">&#39;corr. data vs. gen. data&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/tmp/ipykernel_4339/4077953098.py:5: FutureWarning: The default value of regex will change from True to False in a future version.
-  df[&#39;well&#39;] = df[&#39;cell_id&#39;].str.replace(&#39;[0-9]+_&#39;, &#39;&#39;)
-/tmp/ipykernel_4339/4077953098.py:5: FutureWarning: The default value of regex will change from True to False in a future version.
-  df[&#39;well&#39;] = df[&#39;cell_id&#39;].str.replace(&#39;[0-9]+_&#39;, &#39;&#39;)
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_02_processing_16_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_02_processing_16_1.png" style="width: 602px; height: 454px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_02_processing_16_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_02_processing_16_0.png" style="width: 577px; height: 454px;" />
 </div>
 </div>
 </section>
@@ -582,6 +575,16 @@ dataset. These dataset should exhibit differences on a comparable level across s
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="pipeline_01_correction.html"
+                          title="previous chapter">High-throughput ion suppression correction</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pipeline_03_evaluation.html"
+                          title="next chapter">Evaluation</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -609,8 +612,14 @@ dataset. These dataset should exhibit differences on a comparable level across s
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="pipeline_03_evaluation.html" title="Evaluation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pipeline_01_correction.html" title="High-throughput ion suppression correction"
+             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Processing corrected samples</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Processing</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
