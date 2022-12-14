@@ -157,7 +157,7 @@ class MetaboliteAnalysis:
         self.included_molecules = list(self.impact_ions.index)
         
         self.impact_ions = self.impact_ions.sort_values(by='scores')
-        self.impact_ions['logfoldchanges'] = self.impact_ions['logfoldchanges'].replace([-np.Inf, np.nan], min(self.impact_ions['logfoldchanges'])*1.1)
+        self.impact_ions['logfoldchanges'] = self.impact_ions['logfoldchanges'].replace(-np.Inf, min(self.impact_ions['logfoldchanges'].replace(-np.Inf, 0))*1.1)
 
         self.impact_ions['significant'] = (self.impact_ions['pvals'] < p_val_threshold) & (self.impact_ions['scores'] < de_score_threshold)
         self.sign_impact_ions = self.impact_ions[self.impact_ions['significant'] == True]
