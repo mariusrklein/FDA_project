@@ -149,7 +149,7 @@ class MetaboliteAnalysis:
         self.conc_adata = ad.concat({'uncorrected': adata, 'ISM correction': adata_cor}, 
                                     label='correction', index_unique='_', merge='same')
         
-        sc.tl.rank_genes_groups(adata=self.conc_adata, groupby='correction', use_raw=use_raw, method='wilcoxon')
+        sc.tl.rank_genes_groups(adata=self.conc_adata, groupby='correction', use_raw=use_raw, reference='uncorrected', method='wilcoxon')
         self.all_ions_dea = sc.get.rank_genes_groups_df(self.conc_adata, group='ISM correction').set_index('names')
 
         self.impact_ions = pd.merge(self.all_ions_dea, self.adata_cor.var[var_columns], 
@@ -158,7 +158,8 @@ class MetaboliteAnalysis:
         
         self.impact_ions = self.impact_ions.sort_values(by='scores')
         self.impact_ions['logfoldchanges'] = self.impact_ions['logfoldchanges'].replace(-np.Inf, min(self.impact_ions['logfoldchanges'].replace(-np.Inf, 0))*1.1)
-
+        self.impact_ions['logfoldchanges'] = self.impact_ions['logfoldchanges'].replace(np.nan, min(self.impact_ions['logfoldchanges'].replace(-np.nan, 0))*1.1)
+        
         self.impact_ions['significant'] = (self.impact_ions['pvals'] < p_val_threshold) & (self.impact_ions['scores'] < de_score_threshold)
         self.sign_impact_ions = self.impact_ions[self.impact_ions['significant'] == True]
         
