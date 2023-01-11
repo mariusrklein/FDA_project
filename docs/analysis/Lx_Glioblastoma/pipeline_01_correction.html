@@ -332,7 +332,8 @@ div.rendered_html tbody tr:hover {
                             <span class="n">correct_quantile_inplace</span><span class="p">,</span>
                             <span class="n">deconvolution_spacem</span><span class="p">,</span>
                             <span class="n">get_overlap_data</span><span class="p">,</span>
-                            <span class="n">add_overlap_matrix_spacem</span>
+                            <span class="n">add_overlap_matrix_spacem</span><span class="p">,</span>
+                            <span class="n">get_reference_pool</span>
                            <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">const</span>
 <span class="kn">from</span> <span class="nn">SpaceM.lib.modules</span> <span class="kn">import</span> <span class="p">(</span>
@@ -356,14 +357,12 @@ div.rendered_html tbody tr:hover {
     <span class="n">source_path</span> <span class="o">=</span> <span class="s1">&#39;/g/alexandr/smenon/2022-07-13_Glioblastoma/processed_files&#39;</span>
     <span class="n">target_path</span> <span class="o">=</span> <span class="s1">&#39;/home/mklein/FDA_project/data/Lx_Glioblastoma&#39;</span>
 
-<span class="c1"># TODO: implement topX reference ion pool.</span>
-<span class="n">reference_pool</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
 <span class="n">deconv_default_min_overlap</span> <span class="o">=</span> <span class="mf">0.0</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
@@ -382,18 +381,6 @@ div.rendered_html tbody tr:hover {
 <span class="n">correction_proportion_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Using 62 pixels to calculate full-pixel avereage intensities.
-Using 56 pixels to calculate full-pixel avereage intensities.
-Using 35 pixels to calculate full-pixel avereage intensities.
-Using 2 pixels to calculate full-pixel avereage intensities.
-Using 156 pixels to calculate full-pixel avereage intensities.
-</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -489,7 +476,7 @@ Using 156 pixels to calculate full-pixel avereage intensities.
 
     <span class="c1"># perform the actual quantile regression</span>
     <span class="n">corr_sm_matrix</span> <span class="o">=</span> <span class="n">correct_quantile_inplace</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">sm_matrix</span><span class="p">,</span>
-        <span class="n">reference_ions</span><span class="o">=</span><span class="n">sm_matrix</span><span class="o">.</span><span class="n">var_names</span><span class="p">,</span>
+        <span class="n">reference_ions</span><span class="o">=</span> <span class="n">get_reference_pool</span><span class="p">(</span><span class="n">sm_matrix</span><span class="p">),</span>
         <span class="n">correct_intersect</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">proportion_threshold</span><span class="o">=</span><span class="n">correction_proportion_threshold</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -536,7 +523,7 @@ Using 156 pixels to calculate full-pixel avereage intensities.
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
- 40%|████      | 14/35 [00:56&lt;01:38,  4.71s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 40%|███████████████████████████████████████████████████████████████████████████████▌                                                                                                                       | 14/35 [03:07&lt;04:41, 13.38s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -546,23 +533,7 @@ Using 156 pixels to calculate full-pixel avereage intensities.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
- 60%|██████    | 21/35 [01:45&lt;01:20,  5.77s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
- 80%|████████  | 28/35 [02:43&lt;00:47,  6.77s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 60%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▍                                                                               | 21/35 [06:04&lt;04:17, 18.37s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -578,11 +549,27 @@ Using 156 pixels to calculate full-pixel avereage intensities.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+ 80%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▏                                       | 28/35 [09:09&lt;02:29, 21.38s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-100%|██████████| 35/35 [03:39&lt;00:00,  6.27s/it]
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 35/35 [12:02&lt;00:00, 20.65s/it]
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
@@ -965,7 +952,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">compare_pre_post_correction</span>
@@ -974,29 +961,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Using 41 pixels to calculate full-pixel avereage intensities.
-Using 67 pixels to calculate full-pixel avereage intensities.
-Using 33 pixels to calculate full-pixel avereage intensities.
-Using 12 pixels to calculate full-pixel avereage intensities.
-Using 9 pixels to calculate full-pixel avereage intensities.
-Using 33 pixels to calculate full-pixel avereage intensities.
-Using 44 pixels to calculate full-pixel avereage intensities.
-Using 15 pixels to calculate full-pixel avereage intensities.
-Using 46 pixels to calculate full-pixel avereage intensities.
-Using 210 pixels to calculate full-pixel avereage intensities.
-Using 46 pixels to calculate full-pixel avereage intensities.
-Using 75 pixels to calculate full-pixel avereage intensities.
-Using 7 pixels to calculate full-pixel avereage intensities.
-Using 3 pixels to calculate full-pixel avereage intensities.
-Using 10 pixels to calculate full-pixel avereage intensities.
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1040,115 +1005,115 @@ Using 10 pixels to calculate full-pixel avereage intensities.
   <tbody>
     <tr>
       <th rowspan="3" valign="top">C37H71O8P+Na</th>
-      <th>E2</th>
-      <td>0.436669</td>
-      <td>0.605490</td>
-      <td>0.605490</td>
-      <td>-1.454037</td>
-      <td>0.400550</td>
-      <td>-1.053487</td>
+      <th>D2</th>
+      <td>0.361274</td>
+      <td>0.492123</td>
+      <td>0.492123</td>
+      <td>-1.490807</td>
+      <td>0.350520</td>
+      <td>-1.140287</td>
     </tr>
     <tr>
-      <th>I2</th>
-      <td>0.458666</td>
-      <td>0.606335</td>
-      <td>0.606335</td>
-      <td>-1.448836</td>
-      <td>0.384817</td>
-      <td>-1.064019</td>
+      <th>F2</th>
+      <td>0.463825</td>
+      <td>0.594974</td>
+      <td>0.594974</td>
+      <td>-1.405260</td>
+      <td>0.331937</td>
+      <td>-1.073323</td>
     </tr>
     <tr>
-      <th>J4</th>
-      <td>0.733393</td>
-      <td>0.800591</td>
-      <td>0.800591</td>
-      <td>-1.183589</td>
-      <td>0.198568</td>
-      <td>-0.985021</td>
+      <th>I3</th>
+      <td>0.546593</td>
+      <td>0.611452</td>
+      <td>0.611452</td>
+      <td>-1.328766</td>
+      <td>0.234222</td>
+      <td>-1.094543</td>
     </tr>
     <tr>
       <th rowspan="3" valign="top">C39H69O8P+H</th>
-      <th>E2</th>
-      <td>0.527100</td>
-      <td>0.678490</td>
-      <td>0.678490</td>
-      <td>-1.382436</td>
-      <td>0.060428</td>
-      <td>-1.036088</td>
+      <th>D2</th>
+      <td>0.439513</td>
+      <td>0.566638</td>
+      <td>0.566638</td>
+      <td>-1.437169</td>
+      <td>-0.004433</td>
+      <td>-1.120967</td>
     </tr>
     <tr>
-      <th>I2</th>
-      <td>0.513108</td>
-      <td>0.660373</td>
-      <td>0.660373</td>
-      <td>-1.441015</td>
-      <td>0.377460</td>
-      <td>-1.063554</td>
+      <th>F2</th>
+      <td>0.526602</td>
+      <td>0.647288</td>
+      <td>0.647288</td>
+      <td>-1.369499</td>
+      <td>0.301975</td>
+      <td>-1.067524</td>
     </tr>
     <tr>
-      <th>J4</th>
-      <td>0.781770</td>
-      <td>0.850422</td>
-      <td>0.850422</td>
-      <td>-1.175101</td>
-      <td>0.192225</td>
-      <td>-0.982876</td>
+      <th>I3</th>
+      <td>0.596098</td>
+      <td>0.668904</td>
+      <td>0.668904</td>
+      <td>-1.319143</td>
+      <td>0.220665</td>
+      <td>-1.098478</td>
     </tr>
     <tr>
       <th rowspan="3" valign="top">C40H78NO8P+H</th>
-      <th>E2</th>
-      <td>0.357664</td>
-      <td>0.253557</td>
-      <td>0.253557</td>
-      <td>-0.381931</td>
-      <td>-0.302432</td>
-      <td>-0.684363</td>
+      <th>D2</th>
+      <td>0.136428</td>
+      <td>0.022359</td>
+      <td>0.022359</td>
+      <td>-0.440111</td>
+      <td>-0.313955</td>
+      <td>-0.754066</td>
     </tr>
     <tr>
-      <th>I2</th>
-      <td>0.314369</td>
-      <td>0.211536</td>
-      <td>0.211536</td>
-      <td>-0.350315</td>
-      <td>-0.297353</td>
-      <td>-0.647669</td>
+      <th>F2</th>
+      <td>0.403098</td>
+      <td>0.258303</td>
+      <td>0.258303</td>
+      <td>-0.314958</td>
+      <td>-0.386933</td>
+      <td>-0.701890</td>
     </tr>
     <tr>
-      <th>J4</th>
-      <td>0.523481</td>
-      <td>0.422375</td>
-      <td>0.422375</td>
-      <td>-0.348754</td>
-      <td>-0.347930</td>
-      <td>-0.696684</td>
+      <th>I3</th>
+      <td>0.358216</td>
+      <td>0.280633</td>
+      <td>0.280634</td>
+      <td>-0.355915</td>
+      <td>-0.312219</td>
+      <td>-0.668134</td>
     </tr>
     <tr>
       <th rowspan="3" valign="top">C42H82NO8P+H</th>
-      <th>E2</th>
-      <td>0.353756</td>
-      <td>0.244431</td>
-      <td>0.244431</td>
-      <td>-0.294391</td>
-      <td>-0.316857</td>
-      <td>-0.611248</td>
+      <th>D2</th>
+      <td>0.155644</td>
+      <td>0.007227</td>
+      <td>0.007227</td>
+      <td>-0.202376</td>
+      <td>-0.436013</td>
+      <td>-0.638389</td>
     </tr>
     <tr>
-      <th>I2</th>
-      <td>0.144098</td>
-      <td>0.032620</td>
-      <td>0.032620</td>
-      <td>-0.290978</td>
-      <td>-0.272523</td>
-      <td>-0.563502</td>
+      <th>F2</th>
+      <td>0.383983</td>
+      <td>0.247144</td>
+      <td>0.247144</td>
+      <td>-0.258688</td>
+      <td>-0.362571</td>
+      <td>-0.621260</td>
     </tr>
     <tr>
-      <th>J4</th>
-      <td>0.278758</td>
-      <td>0.191052</td>
-      <td>0.191052</td>
-      <td>-0.254807</td>
-      <td>-0.334250</td>
-      <td>-0.589058</td>
+      <th>I3</th>
+      <td>0.092970</td>
+      <td>0.000824</td>
+      <td>0.000824</td>
+      <td>-0.256098</td>
+      <td>-0.344956</td>
+      <td>-0.601054</td>
     </tr>
   </tbody>
 </table>
@@ -1158,32 +1123,15 @@ Using 10 pixels to calculate full-pixel avereage intensities.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_3.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_3.png" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-Using 98 pixels to calculate full-pixel avereage intensities.
-Using 47 pixels to calculate full-pixel avereage intensities.
-Using 35 pixels to calculate full-pixel avereage intensities.
-Using 229 pixels to calculate full-pixel avereage intensities.
-Using 52 pixels to calculate full-pixel avereage intensities.
-Using 68 pixels to calculate full-pixel avereage intensities.
-Using 35 pixels to calculate full-pixel avereage intensities.
-Using 8 pixels to calculate full-pixel avereage intensities.
-Using 237 pixels to calculate full-pixel avereage intensities.
-Using 199 pixels to calculate full-pixel avereage intensities.
-</pre></div></div>
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" />
+</div>
 </div>
 </section>
 

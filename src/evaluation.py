@@ -88,8 +88,14 @@ def compare_pre_post_correction(adata, adata_cor, proportion_threshold, row='wel
             plot_df[yscale] = np.log10(plot_df[yscale])
             plot_df[x] = np.log10(plot_df[x])
 
-        graph = sns.FacetGrid(plot_df, row=row, col='ion', hue='include_quantreg', sharey=False, margin_titles=True)
-        graph.map(sns.histplot, x, yscale, bins=30, stat='proportion').add_legend() 
+        graph = sns.FacetGrid(plot_df, row=row, col='ion', hue='include_quantreg', sharey=False, margin_titles=True, palette={True: 'tab:green', False: 'tab:red'})
+        graph.map(sns.histplot, x, yscale, binwidth=0.1, stat='proportion').add_legend(title='Used for correction')
+        # graph.map(sns.scatterplot, x, yscale, size=1).add_legend(title='Used for correction')
+        
+        graph.set_axis_labels(const.LABEL['SProp'], const.LABEL['IRatio'])
+        graph.set(ylim=(-1.2, 3.2))
+        graph.set(xlim=(-3.2, 0.2))
+        
         params = []
 
         for well_i, well in enumerate(wells):
@@ -138,7 +144,9 @@ class MetaboliteAnalysis:
                  use_raw = False,
                  exclude_pool_corrected = False,
                  p_val_threshold = 0.001,
+                 q_val_threshold = 0.05,
                  de_score_threshold = -2,
+                 
                 ):
         self.adata = adata
         self.adata_cor = adata_cor
@@ -157,10 +165,11 @@ class MetaboliteAnalysis:
         self.included_molecules = list(self.impact_ions.index)
         
         self.impact_ions = self.impact_ions.sort_values(by='scores')
+        
         self.impact_ions['logfoldchanges'] = self.impact_ions['logfoldchanges'].replace(-np.Inf, min(self.impact_ions['logfoldchanges'].replace(-np.Inf, 0))*1.1)
         self.impact_ions['logfoldchanges'] = self.impact_ions['logfoldchanges'].replace(np.nan, min(self.impact_ions['logfoldchanges'].replace(-np.nan, 0))*1.1)
         
-        self.impact_ions['significant'] = (self.impact_ions['pvals'] < p_val_threshold) & (self.impact_ions['scores'] < de_score_threshold)
+        self.impact_ions['significant'] = (self.impact_ions['pvals'] < p_val_threshold) & (self.impact_ions['pvals_adj'] < q_val_threshold)
         self.sign_impact_ions = self.impact_ions[self.impact_ions['significant'] == True]
         
         if has_correction:

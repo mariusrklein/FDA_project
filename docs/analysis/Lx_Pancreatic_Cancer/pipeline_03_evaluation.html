@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Evaluation &#8212; Ion suppression correction  documentation</title>
+    <title>Lx_Pancreatic_Cancer: Evaluation &#8212; Ion suppression correction  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -20,7 +20,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="Processing" href="pipeline_02_processing.html" /> 
+    <link rel="prev" title="Lx_Pancreatic_Cancer: Processing" href="pipeline_02_processing.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,10 +29,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="pipeline_02_processing.html" title="Processing"
+          <a href="pipeline_02_processing.html" title="Lx_Pancreatic_Cancer: Processing"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Evaluation</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Lx_Pancreatic_Cancer: Evaluation</a></li> 
       </ul>
     </div>  
 
@@ -298,10 +298,10 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<section id="Evaluation">
-<h1>Evaluation<a class="headerlink" href="#Evaluation" title="Permalink to this heading">¶</a></h1>
+<section id="Lx_Pancreatic_Cancer:-Evaluation">
+<h1>Lx_Pancreatic_Cancer: Evaluation<a class="headerlink" href="#Lx_Pancreatic_Cancer:-Evaluation" title="Permalink to this heading">¶</a></h1>
 <p>In this notebook, different measures are investigated to quantify the effect of correcting SpaceM ion intensity data for partial pixel-cell overlap. Moreover, The effects of the correction on different metabolites is visualized.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -327,6 +327,20 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;retina&#39;]
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -729,16 +743,16 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.038461  0.236313          0.091837
-X_pca_ISM correction  10  0.047873  0.237121          0.091837
-X_umap_uncorrected    10  0.081081  0.275402          0.091837
-X_umap_ISM correction 10  0.126748  0.304232          0.091837
+X_pca_ISM correction  10  0.048130  0.237258          0.091837
+X_umap_uncorrected    10  0.084246  0.276813          0.091837
+X_umap_ISM correction 10  0.137816  0.298764          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_1.png" style="width: 2085px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_1.png" style="width: 2087px; height: 471px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -752,7 +766,7 @@ X_umap_ISM correction 10  0.126748  0.304232          0.091837
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_3.png" style="width: 788px; height: 469px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_3.png" style="width: 788px; height: 470px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -774,9 +788,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.009543  0.220377          0.091837
-X_pca_ISM correction  10  0.010122  0.220401          0.091837
-X_umap_uncorrected    10  0.008742  0.226837          0.091837
-X_umap_ISM correction 10  0.011412  0.229276          0.091837
+X_pca_ISM correction  10  0.010168  0.220533          0.091837
+X_umap_uncorrected    10  0.008984  0.226399          0.091837
+X_umap_ISM correction 10  0.010490  0.228098          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -819,16 +833,16 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.028401  0.230441          0.091837
-X_pca_ISM correction  10  0.025329  0.228431          0.091837
-X_umap_uncorrected    10  0.036087  0.244844          0.091837
-X_umap_ISM correction 10  0.037934  0.245517          0.091837
+X_pca_ISM correction  10  0.025339  0.228185          0.091837
+X_umap_uncorrected    10  0.044456  0.253831          0.091837
+X_umap_ISM correction 10  0.036736  0.247035          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_16_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_16_1.png" style="width: 2071px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_16_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_16_1.png" style="width: 2085px; height: 471px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -864,9 +878,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.008542  0.220384          0.091837
-X_pca_ISM correction  10  0.008165  0.219874          0.091837
-X_umap_uncorrected    10  0.007537  0.224355          0.091837
-X_umap_ISM correction 10  0.008043  0.225697          0.091837
+X_pca_ISM correction  10  0.008254  0.219908          0.091837
+X_umap_uncorrected    10  0.008303  0.225947          0.091837
+X_umap_ISM correction 10  0.008058  0.225539          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -909,9 +923,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.028401  0.230441          0.091837
-X_pca_ISM correction  10  0.025329  0.228431          0.091837
-X_umap_uncorrected    10  0.041488  0.251913          0.091837
-X_umap_ISM correction 10  0.035092  0.245774          0.091837
+X_pca_ISM correction  10  0.025339  0.228185          0.091837
+X_umap_uncorrected    10  0.042732  0.252342          0.091837
+X_umap_ISM correction 10  0.037765  0.247285          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -954,9 +968,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.007171  0.219083          0.091837
-X_pca_ISM correction  10  0.007118  0.219109          0.091837
-X_umap_uncorrected    10  0.007254  0.224541          0.091837
-X_umap_ISM correction 10  0.007798  0.224249          0.091837
+X_pca_ISM correction  10  0.007086  0.219141          0.091837
+X_umap_uncorrected    10  0.007793  0.225000          0.091837
+X_umap_ISM correction 10  0.007525  0.224584          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1027,7 +1041,7 @@ Name: corrected_only_using_pool, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_24_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_24_1.png" style="width: 592px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_24_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_24_1.png" style="width: 590px; height: 290px;" />
 </div>
 </div>
 <p>Based on the slopes of the correction but also the logfoldchanges between corrected and uncorrected cells, one can infer the extent of alteration of different metabolites in the correction. These measures not necessarily correlate, thus the degree of correction of ions has to be evaluated on individual datasets.</p>
@@ -1059,19 +1073,13 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
   self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
-  self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
   self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
 </pre></div></div>
 </div>
@@ -1103,7 +1111,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
   result = getattr(ufunc, method)(*inputs, **kwargs)
 </pre></div></div>
 </div>
@@ -1127,7 +1135,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
   obs_tidy.index.value_counts(sort=False).iteritems()
 </pre></div></div>
 </div>
@@ -1135,7 +1143,7 @@ Name: corrected_only_using_pool, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_30_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_30_1.png" style="width: 1071px; height: 539px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_30_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_30_1.png" style="width: 1071px; height: 346px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1154,12 +1162,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;2747_S1_W6&#39;,
- &#39;2507_S1_W7&#39;,
- &#39;1017_S2_W8&#39;,
- &#39;447_S3_W7&#39;,
- &#39;672_S2_W7&#39;,
- &#39;944_S3_W6&#39;]
+[&#39;493_S3_W6&#39;, &#39;1362_S2_W5&#39;, &#39;169_S1_W5&#39;, &#39;447_S3_W7&#39;, &#39;208_S3_W7&#39;, &#39;944_S3_W6&#39;]
 </pre></div></div>
 </div>
 <p>The following plot shows the metabolic profiles of sampled cell generated from 1 and increasing numbers of ablation marks. The first row has the uncorrected raw ion intensities, the second row the corrected raw ion intensities and the third row the correction ratio/quotient between the two ( <span class="math notranslate nohighlight">\(correction\_ratio = \frac{I_{corrected}}{I_{uncorrected}}\)</span> ). Most ions have the same correction ratio in a given cells, some have a higher ratio (smaller slope, less ISM correction) and some have a
@@ -1184,7 +1187,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_1.png" style="width: 1986px; height: 590px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_1.png" style="width: 1985px; height: 590px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1200,13 +1203,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:248: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:248: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:248: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:248: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1221,7 +1224,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_2.png" style="width: 1496px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_2.png" style="width: 1498px; height: 290px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -1272,7 +1275,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
   obs_tidy.index.value_counts(sort=False).iteritems()
 </pre></div></div>
 </div>
@@ -1280,7 +1283,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_38_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_38_1.png" style="width: 1071px; height: 539px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_38_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_38_1.png" style="width: 1071px; height: 346px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1318,13 +1321,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:248: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:248: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:248: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:248: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1378,9 +1381,9 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
 </pre></div></div>
 </div>
@@ -1410,9 +1413,9 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
 </pre></div></div>
 </div>
@@ -1511,9 +1514,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.008542  0.220384          0.091837
-X_pca_ISM correction  10  0.008165  0.219874          0.091837
-X_umap_uncorrected    10  0.007537  0.224355          0.091837
-X_umap_ISM correction 10  0.008043  0.225697          0.091837
+X_pca_ISM correction  10  0.008254  0.219908          0.091837
+X_umap_uncorrected    10  0.008303  0.225947          0.091837
+X_umap_ISM correction 10  0.008058  0.225539          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1581,10 +1584,10 @@ Index: []
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Area under the curve for X_umap_uncorrected: 0.4687
-Area under the curve for X_umap_ISM correction: 0.4750
+Area under the curve for X_umap_uncorrected: 0.4875
+Area under the curve for X_umap_ISM correction: 0.4755
 Area under the curve for X_pca_uncorrected: 0.5193
-Area under the curve for X_pca_ISM correction: 0.5171
+Area under the curve for X_pca_ISM correction: 0.5170
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -1687,7 +1690,7 @@ log_norm_counts
   <div>
     <h3><a href="../../index.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Evaluation</a><ul>
+<li><a class="reference internal" href="#">Lx_Pancreatic_Cancer: Evaluation</a><ul>
 <li><a class="reference internal" href="#Effects-of-the-correction-on-different-molecules">Effects of the correction on different molecules</a></li>
 <li><a class="reference internal" href="#Comparison-of-the-datasets">Comparison of the datasets</a></li>
 </ul>
@@ -1698,7 +1701,7 @@ log_norm_counts
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="pipeline_02_processing.html"
-                          title="previous chapter">Processing</a></p>
+                          title="previous chapter">Lx_Pancreatic_Cancer: Processing</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -1728,10 +1731,10 @@ log_norm_counts
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="pipeline_02_processing.html" title="Processing"
+          <a href="pipeline_02_processing.html" title="Lx_Pancreatic_Cancer: Processing"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Evaluation</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Lx_Pancreatic_Cancer: Evaluation</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
