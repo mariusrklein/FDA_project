@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>High-throughput ion suppression correction &#8212; Ion suppression correction  documentation</title>
+    <title>Lx_Pancreatic_Cancer: Correction &#8212; Ion suppression correction  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -20,7 +20,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Processing" href="pipeline_02_processing.html" />
+    <link rel="next" title="Lx_Pancreatic_Cancer: Processing" href="pipeline_02_processing.html" />
     <link rel="prev" title="Mx_Seahorse: Evaluation" href="../Mx_Seahorse/pipeline_03_evaluation.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -30,13 +30,13 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="pipeline_02_processing.html" title="Processing"
+          <a href="pipeline_02_processing.html" title="Lx_Pancreatic_Cancer: Processing"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../Mx_Seahorse/pipeline_03_evaluation.html" title="Mx_Seahorse: Evaluation"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">High-throughput ion suppression correction</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Lx_Pancreatic_Cancer: Correction</a></li> 
       </ul>
     </div>  
 
@@ -302,8 +302,8 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<section id="High-throughput-ion-suppression-correction">
-<h1>High-throughput ion suppression correction<a class="headerlink" href="#High-throughput-ion-suppression-correction" title="Permalink to this heading">¶</a></h1>
+<section id="Lx_Pancreatic_Cancer:-Correction">
+<h1>Lx_Pancreatic_Cancer: Correction<a class="headerlink" href="#Lx_Pancreatic_Cancer:-Correction" title="Permalink to this heading">¶</a></h1>
 <p>SpaceM datasets are usually stored as annotated data-matrices, separately for individual wells. With this notebooks, these individual files are corrected for ion suppression on the pixel-level and then deconvoluted to cell-level. All resulting files are saved separately by well to the target_path and the impact of the correction briefly shown for visual inspection.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -332,7 +332,8 @@ div.rendered_html tbody tr:hover {
                             <span class="n">correct_quantile_inplace</span><span class="p">,</span>
                             <span class="n">deconvolution_spacem</span><span class="p">,</span>
                             <span class="n">get_overlap_data</span><span class="p">,</span>
-                            <span class="n">add_overlap_matrix_spacem</span>
+                            <span class="n">add_overlap_matrix_spacem</span><span class="p">,</span>
+                            <span class="n">get_reference_pool</span>
                            <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">const</span>
 <span class="kn">from</span> <span class="nn">SpaceM.lib.modules</span> <span class="kn">import</span> <span class="p">(</span>
@@ -357,8 +358,7 @@ div.rendered_html tbody tr:hover {
     <span class="n">source_path</span> <span class="o">=</span> <span class="s1">&#39;/g/alexandr/smenon/2022-07-13_Glioblastoma/processed_files&#39;</span>
     <span class="n">target_path</span> <span class="o">=</span> <span class="s1">&#39;/home/mklein/FDA_project/data/Lx_Glioblastoma&#39;</span>
 
-<span class="c1"># TODO: implement topX reference ion pool.</span>
-<span class="n">reference_pool</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+
 <span class="n">deconv_default_min_overlap</span> <span class="o">=</span> <span class="mf">0.0</span>
 <span class="n">correction_proportion_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
 </pre></div>
@@ -488,9 +488,9 @@ div.rendered_html tbody tr:hover {
 
     <span class="c1"># perform the actual quantile regression</span>
     <span class="n">corr_sm_matrix</span> <span class="o">=</span> <span class="n">correct_quantile_inplace</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">sm_matrix</span><span class="p">,</span>
-        <span class="n">reference_ions</span><span class="o">=</span><span class="n">sm_matrix</span><span class="o">.</span><span class="n">var_names</span><span class="p">,</span>
+        <span class="n">reference_ions</span> <span class="o">=</span> <span class="n">get_reference_pool</span><span class="p">(</span><span class="n">sm_matrix</span><span class="p">),</span>
         <span class="n">correct_intersect</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 
     <span class="c1"># perform pixel-cell-deconvolution</span>
     <span class="n">overlap_data</span> <span class="o">=</span> <span class="n">get_overlap_data</span><span class="p">(</span><span class="n">cell_regions</span><span class="p">,</span> <span class="n">mark_regions</span><span class="p">,</span> <span class="n">overlap_regions</span><span class="p">)</span>
@@ -534,7 +534,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 12/12 [00:00&lt;00:00, 84.83it/s]
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 12/12 [00:00&lt;00:00, 140.64it/s]
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
@@ -784,13 +784,22 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
   <tbody>
     <tr>
       <th rowspan="3" valign="top">C26H30O13+K</th>
-      <th>S1_W6</th>
-      <td>0.005121</td>
-      <td>0.077756</td>
-      <td>0.077756</td>
-      <td>-1.412214</td>
-      <td>0.185131</td>
-      <td>-1.227083</td>
+      <th>S1_W7</th>
+      <td>-0.139264</td>
+      <td>-0.128003</td>
+      <td>-0.128003</td>
+      <td>-1.281871</td>
+      <td>0.027795</td>
+      <td>-1.254077</td>
+    </tr>
+    <tr>
+      <th>S2_W5</th>
+      <td>0.055385</td>
+      <td>0.145963</td>
+      <td>0.145963</td>
+      <td>-1.495575</td>
+      <td>0.245526</td>
+      <td>-1.250049</td>
     </tr>
     <tr>
       <th>S2_W8</th>
@@ -798,27 +807,27 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
       <td>0.253574</td>
       <td>0.253574</td>
       <td>-1.446331</td>
-      <td>-0.254027</td>
+      <td>-0.226905</td>
       <td>-1.230470</td>
     </tr>
     <tr>
-      <th>S3_W8</th>
-      <td>0.248869</td>
-      <td>0.389397</td>
-      <td>0.389397</td>
-      <td>-1.523853</td>
-      <td>-0.258863</td>
-      <td>-1.195745</td>
+      <th rowspan="3" valign="top">C22H29N3O13S+H</th>
+      <th>S1_W7</th>
+      <td>-0.161626</td>
+      <td>-0.141531</td>
+      <td>-0.141531</td>
+      <td>-1.184626</td>
+      <td>0.055938</td>
+      <td>-1.128689</td>
     </tr>
     <tr>
-      <th rowspan="3" valign="top">C22H29N3O13S+H</th>
-      <th>S1_W6</th>
-      <td>-0.157790</td>
-      <td>-0.101601</td>
-      <td>-0.101601</td>
-      <td>-1.297177</td>
-      <td>0.148735</td>
-      <td>-1.148441</td>
+      <th>S2_W5</th>
+      <td>-0.121835</td>
+      <td>-0.063734</td>
+      <td>-0.063734</td>
+      <td>-1.302796</td>
+      <td>0.155210</td>
+      <td>-1.147586</td>
     </tr>
     <tr>
       <th>S2_W8</th>
@@ -830,23 +839,23 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
       <td>-1.139213</td>
     </tr>
     <tr>
-      <th>S3_W8</th>
-      <td>-0.430868</td>
-      <td>-0.297651</td>
-      <td>-0.297651</td>
-      <td>-1.119759</td>
-      <td>0.037095</td>
-      <td>-0.899787</td>
+      <th rowspan="3" valign="top">C42H82NO8P+H</th>
+      <th>S1_W7</th>
+      <td>-0.003217</td>
+      <td>-0.007711</td>
+      <td>-0.007710</td>
+      <td>-0.829451</td>
+      <td>-0.023197</td>
+      <td>-0.852646</td>
     </tr>
     <tr>
-      <th rowspan="3" valign="top">C42H82NO8P+H</th>
-      <th>S1_W6</th>
-      <td>-0.086569</td>
-      <td>-0.157411</td>
-      <td>-0.157411</td>
-      <td>-0.477041</td>
-      <td>-0.212177</td>
-      <td>-0.689218</td>
+      <th>S2_W5</th>
+      <td>0.223823</td>
+      <td>0.164881</td>
+      <td>0.164881</td>
+      <td>-0.513620</td>
+      <td>-0.175835</td>
+      <td>-0.689455</td>
     </tr>
     <tr>
       <th>S2_W8</th>
@@ -858,23 +867,23 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
       <td>-0.702724</td>
     </tr>
     <tr>
-      <th>S3_W8</th>
-      <td>0.219007</td>
-      <td>0.209934</td>
-      <td>0.209934</td>
-      <td>-0.590105</td>
-      <td>-0.037180</td>
-      <td>-0.627285</td>
+      <th rowspan="3" valign="top">C43H84NO8P+H</th>
+      <th>S1_W7</th>
+      <td>-0.141634</td>
+      <td>-0.147731</td>
+      <td>-0.147731</td>
+      <td>-0.854998</td>
+      <td>-0.024737</td>
+      <td>-0.879735</td>
     </tr>
     <tr>
-      <th rowspan="3" valign="top">C43H84NO8P+H</th>
-      <th>S1_W6</th>
-      <td>-0.164596</td>
-      <td>-0.245748</td>
-      <td>-0.245748</td>
-      <td>-0.522248</td>
-      <td>-0.242769</td>
-      <td>-0.765017</td>
+      <th>S2_W5</th>
+      <td>-0.050933</td>
+      <td>-0.107162</td>
+      <td>-0.107162</td>
+      <td>-0.491241</td>
+      <td>-0.212085</td>
+      <td>-0.703327</td>
     </tr>
     <tr>
       <th>S2_W8</th>
@@ -884,15 +893,6 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
       <td>-0.752398</td>
       <td>-0.109704</td>
       <td>-0.862101</td>
-    </tr>
-    <tr>
-      <th>S3_W8</th>
-      <td>-0.000212</td>
-      <td>-0.011308</td>
-      <td>-0.011308</td>
-      <td>-0.801463</td>
-      <td>-0.043979</td>
-      <td>-0.845442</td>
     </tr>
   </tbody>
 </table>
@@ -929,7 +929,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="pipeline_02_processing.html"
-                          title="next chapter">Processing</a></p>
+                          title="next chapter">Lx_Pancreatic_Cancer: Processing</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -959,13 +959,13 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="pipeline_02_processing.html" title="Processing"
+          <a href="pipeline_02_processing.html" title="Lx_Pancreatic_Cancer: Processing"
              >next</a> |</li>
         <li class="right" >
           <a href="../Mx_Seahorse/pipeline_03_evaluation.html" title="Mx_Seahorse: Evaluation"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">High-throughput ion suppression correction</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Lx_Pancreatic_Cancer: Correction</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

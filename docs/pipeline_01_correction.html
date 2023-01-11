@@ -324,7 +324,8 @@ div.rendered_html tbody tr:hover {
                             <span class="n">correct_quantile_inplace</span><span class="p">,</span>
                             <span class="n">deconvolution_spacem</span><span class="p">,</span>
                             <span class="n">get_overlap_data</span><span class="p">,</span>
-                            <span class="n">add_overlap_matrix_spacem</span>
+                            <span class="n">add_overlap_matrix_spacem</span><span class="p">,</span>
+                            <span class="n">get_reference_pool</span>
                            <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">const</span>
 <span class="kn">from</span> <span class="nn">SpaceM.lib.modules</span> <span class="kn">import</span> <span class="p">(</span>
@@ -350,7 +351,8 @@ div.rendered_html tbody tr:hover {
     <span class="n">target_path</span> <span class="o">=</span> <span class="s1">&#39;/home/mklein/FDA_project/data/Lx_Glioblastoma&#39;</span>
 
 <span class="c1"># TODO: implement topX reference ion pool.</span>
-<span class="n">reference_pool</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+<span class="n">reference_pool_config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;measure&#39;</span><span class="p">:</span> <span class="s1">&#39;max_datapoints&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;number&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
 <span class="n">deconv_default_min_overlap</span> <span class="o">=</span> <span class="mf">0.0</span>
 <span class="n">correction_proportion_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
 </pre></div>
@@ -364,7 +366,7 @@ div.rendered_html tbody tr:hover {
 <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">source_path</span><span class="p">):</span>
         <span class="k">if</span> <span class="s1">&#39;analysis&#39;</span> <span class="ow">in</span> <span class="n">dirnames</span><span class="p">:</span>
             <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">source_path</span><span class="o">+</span><span class="s1">&#39;/?&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">))</span>
-<span class="n">samples</span>
+<span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -374,41 +376,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;B1&#39;,
- &#39;B2&#39;,
- &#39;B3&#39;,
- &#39;B4&#39;,
- &#39;C1&#39;,
- &#39;C2&#39;,
- &#39;C3&#39;,
- &#39;C4&#39;,
- &#39;D1&#39;,
- &#39;D2&#39;,
- &#39;D3&#39;,
- &#39;D4&#39;,
- &#39;E1&#39;,
- &#39;E2&#39;,
- &#39;E3&#39;,
- &#39;E4&#39;,
- &#39;F1&#39;,
- &#39;F2&#39;,
- &#39;F3&#39;,
- &#39;F4&#39;,
- &#39;G1&#39;,
- &#39;G2&#39;,
- &#39;G3&#39;,
- &#39;G4&#39;,
- &#39;H2&#39;,
- &#39;H3&#39;,
- &#39;H4&#39;,
- &#39;I1&#39;,
- &#39;I2&#39;,
- &#39;I3&#39;,
- &#39;I4&#39;,
- &#39;J1&#39;,
- &#39;J2&#39;,
- &#39;J3&#39;,
- &#39;J4&#39;]
+&#39;B1, B2, B3, B4, C1, C2, C3, C4, D1, D2, D3, D4, E1, E2, E3, E4, F1, F2, F3, F4, G1, G2, G3, G4, H2, H3, H4, I1, I2, I3, I4, J1, J2, J3, J4&#39;
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -484,7 +452,7 @@ div.rendered_html tbody tr:hover {
 
     <span class="c1"># perform the actual quantile regression</span>
     <span class="n">corr_sm_matrix</span> <span class="o">=</span> <span class="n">correct_quantile_inplace</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">sm_matrix</span><span class="p">,</span>
-        <span class="n">reference_ions</span><span class="o">=</span><span class="n">sm_matrix</span><span class="o">.</span><span class="n">var_names</span><span class="p">,</span>
+        <span class="n">reference_ions</span><span class="o">=</span> <span class="n">get_reference_pool</span><span class="p">(</span><span class="n">sm_matrix</span><span class="p">),</span>
         <span class="n">correct_intersect</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
