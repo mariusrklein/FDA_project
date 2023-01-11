@@ -1,20 +1,38 @@
 name: ion_suppression
 channels:
-  - conda-forge
   - bioconda
-  - defaults
+  - conda-forge
 dependencies:
-  - ipykernel
-  - scanpy
-  - pytest
   - python=3.10
+  - bioinfokit
+  - matplotlib-venn
+  - nbconvert
+  - pytest
+  - ipykernel
+  - scanpy=1.9.1
+  - bbknn
+  - sphinx=5.3
+  - pylint
+  - rpy2
+  - patsy
+  - pytest-pylint
+  - pip=22.3
+  - nb_conda_kernels
+  - papermill
+  - pandoc
+  - cirpy
   - ipywidgets
   - leidenalg
+  - nbsphinx
   - plotly
-  - pylint
-  - pytest-pylint
-  - patsy
-  - matplotlib-venn
-  - bbknn
-  - papermill
+  - imageio
+  - scikit-image
+  - pyimzml
+  - pyqt5-sip
+  - chardet
+  - pip:
+      - metaspace2020==2.0.2
+      - outer-spacem==0.1.0
+      - pyqt5==5.15.7
+      - pyqt5-qt5==5.15.2
 prefix: /Users/mariusklein/opt/anaconda3/envs/ion_suppression
