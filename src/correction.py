@@ -284,7 +284,11 @@ def normalize_proportion_ratios(
     Returns:
         ad.AnnData: [description]
     """
-
+    
+    # first checking if required functions have been called before
+    if const.TPO not in intensities_ad.obs.columns:
+        raise Exception("get_reference_pool has to be called after add_normalization_factors")
+    
     # calculate intensity / sampling proportion ratios
     total_pixel_overlap = np.array(
         intensities_ad.obs[const.TPO]).reshape((len(intensities_ad), 1))
@@ -308,6 +312,35 @@ def normalize_proportion_ratios(
         out_ad.X = intensity_prop_ratios
     
     return out_ad
+
+
+def get_reference_pool(am_adata: ad.AnnData, 
+    reference_pool_config = None
+    ) -> list:
+    """determines reference ion pool for ions with too few data points
+
+    Args:
+        am_adata (ad.AnnData): annadata on ablation mark level
+        reference_pool_config (optional): Dictionary with measure and number keys to specify the 
+        way reference ions are selected. Defaults to None. If an unrecognized measure is given,
+        all ions are returned as reference pool.
+
+    Returns:
+        list of reference ions. 
+    """
+    reference_pool = am_adata.var_names
+    
+    if reference_pool_config is None:
+        reference_pool_config = {'measure': 'max_datapoints',
+                                 'number': 10}
+
+    ratio_df = normalize_proportion_ratios(am_adata).to_df().replace(np.nan, 0)
+    
+    if reference_pool_config['measure'] == "max_datapoints":
+        reference_pool = ratio_df.astype(bool).sum(axis=0).sort_values().tail(reference_pool_config['number']).index
+        
+    return list(reference_pool)
+
 
 # def correct_intensities_quantile_regression(
 #     intensities_df: pd.DataFrame,
