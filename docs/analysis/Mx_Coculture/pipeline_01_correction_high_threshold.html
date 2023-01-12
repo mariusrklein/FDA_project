@@ -297,7 +297,7 @@ div.rendered_html tbody tr:hover {
 <section id="Mx_Coculture:-Correction">
 <h1>Mx_Coculture: Correction<a class="headerlink" href="#Mx_Coculture:-Correction" title="Permalink to this heading">¶</a></h1>
 <p>SpaceM datasets are usually stored as annotated data-matrices, separately for individual wells. With this notebooks, these individual files are corrected for ion suppression on the pixel-level and then deconvoluted to cell-level. All resulting files are saved separately by well to the target_path and the impact of the correction briefly shown for visual inspection.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -336,6 +336,20 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+</pre></div></div>
 </div>
 <p>The original data lies on the groups shared data storage. Corrected files will be saved in a separate location, preserving the well-specific folder structure.</p>
 <div class="nbinput nblast docutils container">
@@ -431,7 +445,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">correct_sample_spacem</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
@@ -513,7 +527,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>This is the actual correction pipeline.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># adata_list = Parallel(n_jobs=7)(delayed(correct_sample_spacem)(sample) for sample in tqdm(samples))</span>
@@ -543,13 +557,13 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-100%|██████████| 1/1 [00:14&lt;00:00, 14.20s/it]
+100%|██████████| 1/1 [00:14&lt;00:00, 14.40s/it]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reshape data for immediate analysis</span>
@@ -572,7 +586,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -685,17 +699,17 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
       <th>C35H69O8P</th>
       <th>dataset_threshold_0.1</th>
       <td>0.005922</td>
-      <td>0.023198</td>
+      <td>0.017276</td>
       <td>0.023198</td>
       <td>-1.077399</td>
-      <td>0.073245</td>
+      <td>0.073244</td>
       <td>-1.004155</td>
     </tr>
     <tr>
       <th>C34H68NO6P</th>
       <th>dataset_threshold_0.1</th>
       <td>0.023201</td>
-      <td>0.034094</td>
+      <td>0.010893</td>
       <td>0.034094</td>
       <td>-1.031471</td>
       <td>0.052090</td>
@@ -705,17 +719,17 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
       <th>C43H78NO8P</th>
       <th>dataset_threshold_0.1</th>
       <td>-0.066371</td>
-      <td>-0.092249</td>
+      <td>-0.025878</td>
       <td>-0.092249</td>
       <td>0.029649</td>
-      <td>-0.215767</td>
+      <td>-0.215766</td>
       <td>-0.186117</td>
     </tr>
     <tr>
       <th>C20H32O2</th>
       <th>dataset_threshold_0.1</th>
       <td>-0.080099</td>
-      <td>-0.151280</td>
+      <td>-0.071181</td>
       <td>-0.151279</td>
       <td>0.060849</td>
       <td>-0.472976</td>
@@ -740,7 +754,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">src.evaluation</span>
@@ -749,12 +763,12 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 <span class="n">reload</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">const</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">compare_pre_post_correction</span>
 
-<span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">,</span> <span class="n">proportion_threshold</span><span class="o">=</span><span class="n">correction_proportion_threshold</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C20H32O2&#39;</span><span class="p">,</span> <span class="s1">&#39;C35H69O8P&#39;</span><span class="p">,</span> <span class="s1">&#39;C6H13O9P&#39;</span><span class="p">])</span>
+<span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">,</span> <span class="n">proportion_threshold</span><span class="o">=</span><span class="n">correction_proportion_threshold</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C35H69O8P&#39;</span><span class="p">,</span> <span class="s1">&#39;C20H32O2&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -797,34 +811,24 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
   </thead>
   <tbody>
     <tr>
+      <th>C35H69O8P</th>
+      <th>dataset_threshold_0.1</th>
+      <td>0.005922</td>
+      <td>0.017276</td>
+      <td>0.023198</td>
+      <td>-1.077399</td>
+      <td>0.073244</td>
+      <td>-1.004155</td>
+    </tr>
+    <tr>
       <th>C20H32O2</th>
       <th>dataset_threshold_0.1</th>
       <td>-0.080099</td>
-      <td>-0.151280</td>
+      <td>-0.071181</td>
       <td>-0.151279</td>
       <td>0.060849</td>
       <td>-0.472976</td>
       <td>-0.412127</td>
-    </tr>
-    <tr>
-      <th>C35H69O8P</th>
-      <th>dataset_threshold_0.1</th>
-      <td>0.005922</td>
-      <td>0.023198</td>
-      <td>0.023198</td>
-      <td>-1.077399</td>
-      <td>0.073245</td>
-      <td>-1.004155</td>
-    </tr>
-    <tr>
-      <th>C6H13O9P</th>
-      <th>dataset_threshold_0.1</th>
-      <td>-0.088589</td>
-      <td>-0.133430</td>
-      <td>-0.133430</td>
-      <td>-0.677839</td>
-      <td>-0.170471</td>
-      <td>-0.848310</td>
     </tr>
   </tbody>
 </table>
