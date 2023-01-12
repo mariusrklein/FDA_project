@@ -9,5 +9,5 @@ FPAI = 'correction_full_pixel_avg_intensities'
 LABEL = {
     'SProp': r'sampling proportion $p_s$',
     'IRatio': r'intensity proportion ratio $\mu$',
-    
+    'RDens': r'relative deviation $\frac{J_{Python} - J_R}{J_{Python}}$'
 }
