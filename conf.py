@@ -18,7 +18,7 @@ extensions = [
 ]
 
 templates_path = ['_templates']
-exclude_patterns = ['docs', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['docs', 'Thumbs.db', '.DS_Store', '**/legacy_*']
 
 
 
