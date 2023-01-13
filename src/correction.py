@@ -315,7 +315,8 @@ def normalize_proportion_ratios(
 
 
 def get_reference_pool(am_adata: ad.AnnData, 
-    reference_pool_config = None
+    reference_pool_config = None,
+    normalized = True
     ) -> list:
     """determines reference ion pool for ions with too few data points
 
@@ -324,6 +325,8 @@ def get_reference_pool(am_adata: ad.AnnData,
         reference_pool_config (optional): Dictionary with measure and number keys to specify the 
         way reference ions are selected. Defaults to None. If an unrecognized measure is given,
         all ions are returned as reference pool.
+        normalized (optional bool): determines whether intensity proportion ratios should be 
+        normalized to 1 at full overlap
 
     Returns:
         list of reference ions. 
@@ -334,7 +337,7 @@ def get_reference_pool(am_adata: ad.AnnData,
         reference_pool_config = {'measure': 'max_datapoints',
                                  'number': 10}
 
-    ratio_df = normalize_proportion_ratios(am_adata).to_df().replace(np.nan, 0)
+    ratio_df = normalize_proportion_ratios(am_adata, normalized=normalized).to_df().replace(np.nan, 0)
     
     if reference_pool_config['measure'] == "max_datapoints":
         reference_pool = ratio_df.astype(bool).sum(axis=0).sort_values().tail(reference_pool_config['number']).index
@@ -438,6 +441,7 @@ def correct_intensities_quantile_regression_parallel(
     proportion_threshold = 0.1,
     min_datapoints = 10,
     correct_intersect = False,
+    normalized = True,
     n_jobs = 1
     ) -> ad.AnnData:
     """Corrects ion intensities based on cell sampling proportion of respective pixels
@@ -453,6 +457,8 @@ def correct_intensities_quantile_regression_parallel(
         correct_intersect (bool, optional): whether to correct for an intersect not equal to
         zero. This constant scales the whole set of intensities independant from the 
         sampling ratio.
+        normalized (optional bool): determines whether intensity proportion ratios should be 
+        normalized to 1 at full overlap
         n_jobs (int, optional): number of cores to use for parallel processing.
 
     Returns:
@@ -467,7 +473,7 @@ def correct_intensities_quantile_regression_parallel(
         print('Quantreg: Inconsistent sizes of arguments')
 
     # calculate intensity / sampling proportion ratios
-    prop_ratio_ad = normalize_proportion_ratios(intensities_ad=intensities_ad)
+    prop_ratio_ad = normalize_proportion_ratios(intensities_ad=intensities_ad, normalized=normalized)
 
     # take log of both variables: intensity / sampling proportion ratios and sampling proportions
     log_prop_series = np.log10(pixels_total_overlap.replace(0, np.nan))
@@ -551,6 +557,7 @@ def correct_quantile_inplace(adata: ad.AnnData,
     proportion_threshold = 0.1,
     min_datapoints = 10,
     correct_intersect = False,
+    normalized = True,
     n_jobs = 1
 ) -> ad.AnnData:
     """Corrects ion intensities based on cell sampling proportion of respective pixels and 
@@ -570,6 +577,8 @@ def correct_quantile_inplace(adata: ad.AnnData,
         correct_intersect (bool, optional): whether to correct for an intersect not equal to
         zero. This constant scales the whole set of intensities independant from the 
         sampling ratio.
+        normalized (optional bool): determines whether intensity proportion ratios should be 
+        normalized to 1 at full overlap
         n_jobs (int, optional): number of cores to use for parallel processing.
 
     Returns:
@@ -584,6 +593,7 @@ def correct_quantile_inplace(adata: ad.AnnData,
         proportion_threshold = proportion_threshold,
         min_datapoints = min_datapoints,
         correct_intersect = correct_intersect,
+        normalized = normalized,
         n_jobs = n_jobs
         )
 

@@ -1073,13 +1073,13 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
   self.expm1_func(mean_rest) + 1e-9
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
   self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
 </pre></div></div>
 </div>
@@ -1111,7 +1111,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
   result = getattr(ufunc, method)(*inputs, **kwargs)
 </pre></div></div>
 </div>
@@ -1135,7 +1135,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
   obs_tidy.index.value_counts(sort=False).iteritems()
 </pre></div></div>
 </div>
@@ -1162,7 +1162,12 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;493_S3_W6&#39;, &#39;1362_S2_W5&#39;, &#39;169_S1_W5&#39;, &#39;447_S3_W7&#39;, &#39;208_S3_W7&#39;, &#39;944_S3_W6&#39;]
+[&#39;2297_S1_W8&#39;,
+ &#39;1458_S2_W5&#39;,
+ &#39;3112_S2_W5&#39;,
+ &#39;2091_S3_W5&#39;,
+ &#39;2526_S1_W7&#39;,
+ &#39;944_S3_W6&#39;]
 </pre></div></div>
 </div>
 <p>The following plot shows the metabolic profiles of sampled cell generated from 1 and increasing numbers of ablation marks. The first row has the uncorrected raw ion intensities, the second row the corrected raw ion intensities and the third row the correction ratio/quotient between the two ( <span class="math notranslate nohighlight">\(correction\_ratio = \frac{I_{corrected}}{I_{uncorrected}}\)</span> ). Most ions have the same correction ratio in a given cells, some have a higher ratio (smaller slope, less ISM correction) and some have a
@@ -1179,15 +1184,24 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/seaborn/axisgrid.py:848: UserWarning: Dataset has 0 variance; skipping density estimate. Pass `warn_singular=False` to disable this warning.
+  func(*plot_args, **plot_kwargs)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_0.png" style="width: 1983px; height: 871px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_1.png" style="width: 1983px; height: 871px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_1.png" style="width: 1985px; height: 590px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_2.png" style="width: 1985px; height: 590px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1203,13 +1217,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1275,7 +1289,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
   obs_tidy.index.value_counts(sort=False).iteritems()
 </pre></div></div>
 </div>
@@ -1321,13 +1335,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:255: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1381,9 +1395,9 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
 </pre></div></div>
 </div>
@@ -1413,9 +1427,9 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
-/home/mklein/miniconda3/envs/ion_suppression_full/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
 </pre></div></div>
 </div>
