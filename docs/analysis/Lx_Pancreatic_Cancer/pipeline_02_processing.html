@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Processing &#8212; Ion suppression correction  documentation</title>
+    <title>Lx_Pancreatic_Cancer: Processing &#8212; Ion suppression correction  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -20,8 +20,8 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Evaluation" href="pipeline_03_evaluation.html" />
-    <link rel="prev" title="High-throughput ion suppression correction" href="pipeline_01_correction.html" /> 
+    <link rel="next" title="Lx_Pancreatic_Cancer: Evaluation" href="pipeline_03_evaluation.html" />
+    <link rel="prev" title="Lx_Pancreatic_Cancer: Correction" href="pipeline_01_correction.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,13 +30,13 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="pipeline_03_evaluation.html" title="Evaluation"
+          <a href="pipeline_03_evaluation.html" title="Lx_Pancreatic_Cancer: Evaluation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="pipeline_01_correction.html" title="High-throughput ion suppression correction"
+          <a href="pipeline_01_correction.html" title="Lx_Pancreatic_Cancer: Correction"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Processing</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Lx_Pancreatic_Cancer: Processing</a></li> 
       </ul>
     </div>  
 
@@ -302,10 +302,10 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<section id="Processing">
-<h1>Processing<a class="headerlink" href="#Processing" title="Permalink to this heading">¶</a></h1>
+<section id="Lx_Pancreatic_Cancer:-Processing">
+<h1>Lx_Pancreatic_Cancer: Processing<a class="headerlink" href="#Lx_Pancreatic_Cancer:-Processing" title="Permalink to this heading">¶</a></h1>
 <p>Datasets typically consist of several wells on a microscopy slide. In this notebook, the wells are integrated to one annotated data matrix.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -335,6 +335,20 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;retina&#39;]
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -411,7 +425,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 12/12 [00:07&lt;00:00,  1.58it/s]
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 12/12 [00:11&lt;00:00,  1.06it/s]
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -544,7 +558,7 @@ div.rendered_html tbody tr:hover {
 <p>In order to ensure that especially the pixel-cell deconvolution was successful across samples, the summed absolute deviations between different annotated datasets are visualized in the following plot. On one hand, the uncorected but manually deconvoluted (generated) dataset is compared to the dataset directly output by SpaceM. If the same parameters were used for deconvolution, these dataset should not exhibit any differences. On the other hand, the corrected dataset is compared to the generated
 dataset. These dataset should exhibit differences on a comparable level across samples. If one of the samples shows much greater differences than the others, there might be a sample-specific problem with the parameters used for deconvolution.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_deviations</span><span class="p">(</span><span class="n">adata1</span><span class="p">,</span> <span class="n">adata2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
@@ -578,12 +592,12 @@ dataset. These dataset should exhibit differences on a comparable level across s
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="pipeline_01_correction.html"
-                          title="previous chapter">High-throughput ion suppression correction</a></p>
+                          title="previous chapter">Lx_Pancreatic_Cancer: Correction</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="pipeline_03_evaluation.html"
-                          title="next chapter">Evaluation</a></p>
+                          title="next chapter">Lx_Pancreatic_Cancer: Evaluation</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -613,13 +627,13 @@ dataset. These dataset should exhibit differences on a comparable level across s
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="pipeline_03_evaluation.html" title="Evaluation"
+          <a href="pipeline_03_evaluation.html" title="Lx_Pancreatic_Cancer: Evaluation"
              >next</a> |</li>
         <li class="right" >
-          <a href="pipeline_01_correction.html" title="High-throughput ion suppression correction"
+          <a href="pipeline_01_correction.html" title="Lx_Pancreatic_Cancer: Correction"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">Ion suppression correction  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Processing</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Lx_Pancreatic_Cancer: Processing</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

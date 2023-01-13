@@ -305,7 +305,7 @@ div.rendered_html tbody tr:hover {
 <section id="Lx_Glioblastoma:-Processing">
 <h1>Lx_Glioblastoma: Processing<a class="headerlink" href="#Lx_Glioblastoma:-Processing" title="Permalink to this heading">¶</a></h1>
 <p>Datasets typically consist of several wells on a microscopy slide. In this notebook, the wells are integrated to one annotated data matrix.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -334,6 +334,20 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -410,7 +424,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 35/35 [00:23&lt;00:00,  1.51it/s]
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 35/35 [00:21&lt;00:00,  1.61it/s]
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">

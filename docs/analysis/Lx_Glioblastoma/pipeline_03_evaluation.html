@@ -305,7 +305,7 @@ div.rendered_html tbody tr:hover {
 <section id="Lx_Glioblastoma:-Evaluation">
 <h1>Lx_Glioblastoma: Evaluation<a class="headerlink" href="#Lx_Glioblastoma:-Evaluation" title="Permalink to this heading">¶</a></h1>
 <p>In this notebook, different measures are investigated to quantify the effect of correcting SpaceM ion intensity data for partial pixel-cell overlap. Moreover, The effects of the correction on different metabolites is visualized.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -331,6 +331,20 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -867,184 +881,44 @@ div.rendered_html tbody tr:hover {
 </ol>
 <p>The normalization to a fixed count has a slightly different effect than TIC normalization. The former normalizes all counts per cell to the given target sum so that all cells from the uncorrected and the corrected set are scaled to this count. In contrast, the latter retains the differences between the datasets by normalizing to the median count across cells in a dataset. Across modes of normalization, the corrected dataset shows a better separation visually and using the intermixing metric.
 However, this effect is very subtle after the data was log-transformed.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
-<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dimred_umap(adata, layer=&#39;raw_counts&#39;)</span>
+<span class="c1"># dimred_umap(adata_cor, layer=&#39;raw_counts&#39;)</span>
+<span class="c1"># intermixing_layer(adata, adata_cor, condition_name, measures = [&#39;X_pca&#39;, &#39;X_umap&#39;], layer=&#39;raw_counts&#39;)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.290734  0.272778          0.091837
-X_pca_ISM correction  10  0.265228  0.289773          0.091837
-X_umap_uncorrected    10  0.419023  0.251847          0.091837
-X_umap_ISM correction 10  0.424936  0.265487          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_13_1.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_13_1.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_13_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_13_2.png" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_13_3.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_13_3.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
-<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dimred_umap(adata, layer=&#39;log_raw_counts&#39;)</span>
+<span class="c1"># dimred_umap(adata_cor, layer=&#39;log_raw_counts&#39;)</span>
+<span class="c1"># intermixing_layer(adata, adata_cor, condition_name, measures = [&#39;X_pca&#39;, &#39;X_umap&#39;], layer=&#39;log_raw_counts&#39;)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.254777  0.267311          0.091837
-X_pca_ISM correction  10  0.250086  0.276414          0.091837
-X_umap_uncorrected    10  0.347361  0.262376          0.091837
-X_umap_ISM correction 10  0.346258  0.250731          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_14_1.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_14_1.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_14_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_14_2.png" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_14_3.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_14_3.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
-<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dimred_umap(adata, layer=&#39;norm_counts&#39;)</span>
+<span class="c1"># dimred_umap(adata_cor, layer=&#39;norm_counts&#39;)</span>
+<span class="c1"># intermixing_layer(adata, adata_cor, condition_name, measures = [&#39;X_pca&#39;, &#39;X_umap&#39;], layer=&#39;norm_counts&#39;)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.265907  0.269558          0.091837
-X_pca_ISM correction  10  0.255112  0.275521          0.091837
-X_umap_uncorrected    10  0.344932  0.262054          0.091837
-X_umap_ISM correction 10  0.337670  0.265741          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_15_1.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_15_1.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_15_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_15_2.png" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_15_3.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_15_3.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
-<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dimred_umap(adata, layer=&#39;log_norm_counts&#39;)</span>
+<span class="c1"># dimred_umap(adata_cor, layer=&#39;log_norm_counts&#39;)</span>
+<span class="c1"># intermixing_layer(adata, adata_cor, condition_name, measures = [&#39;X_pca&#39;, &#39;X_umap&#39;], layer=&#39;log_norm_counts&#39;)</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.247967  0.272224          0.091837
-X_pca_ISM correction  10  0.247273  0.274605          0.091837
-X_umap_uncorrected    10  0.348974  0.254529          0.091837
-X_umap_ISM correction 10  0.342024  0.254298          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_16_1.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_16_1.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_16_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_16_2.png" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_16_3.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_03_evaluation_16_3.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1066,9 +940,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.265907  0.269558          0.091837
-X_pca_ISM correction  10  0.255112  0.275521          0.091837
-X_umap_uncorrected    10  0.354556  0.262996          0.091837
-X_umap_ISM correction 10  0.334884  0.263961          0.091837
+X_pca_ISM correction  10  0.253545  0.275063          0.091837
+X_umap_uncorrected    10  0.352654  0.261894          0.091837
+X_umap_ISM correction 10  0.339741  0.264093          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1111,9 +985,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.230366  0.273937          0.091837
-X_pca_ISM correction  10  0.225958  0.274036          0.091837
-X_umap_uncorrected    10  0.306771  0.253314          0.091837
-X_umap_ISM correction 10  0.299940  0.253693          0.091837
+X_pca_ISM correction  10  0.226272  0.275649          0.091837
+X_umap_uncorrected    10  0.310885  0.252885          0.091837
+X_umap_ISM correction 10  0.313512  0.252413          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1176,8 +1050,8 @@ X_umap_ISM correction 10  0.299940  0.253693          0.091837
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-False    563
-True     402
+False    565
+True     400
 Name: corrected_only_using_pool, dtype: int64
 </pre></div></div>
 </div>
@@ -1217,19 +1091,13 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
   self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
-  self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
   self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
 </pre></div></div>
 </div>
@@ -1261,7 +1129,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
   result = getattr(ufunc, method)(*inputs, **kwargs)
 </pre></div></div>
 </div>
@@ -1285,7 +1153,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
   obs_tidy.index.value_counts(sort=False).iteritems()
 </pre></div></div>
 </div>
@@ -1312,7 +1180,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;564_D3&#39;, &#39;479_C3&#39;, &#39;56_I4&#39;, &#39;367_B3&#39;, &#39;288_E2&#39;, &#39;147_I4&#39;]
+[&#39;523_H3&#39;, &#39;385_D2&#39;, &#39;92_J3&#39;, &#39;262_H2&#39;, &#39;693_H3&#39;, &#39;645_I3&#39;]
 </pre></div></div>
 </div>
 <p>The following plot shows the metabolic profiles of sampled cell generated from 1 and increasing numbers of ablation marks. The first row has the uncorrected raw ion intensities, the second row the corrected raw ion intensities and the third row the correction ratio/quotient between the two ( <span class="math notranslate nohighlight">\(correction\_ratio = \frac{I_{corrected}}{I_{uncorrected}}\)</span> ). Most ions have the same correction ratio in a given cells, some have a higher ratio (smaller slope, less ISM correction) and some have a
@@ -1353,13 +1221,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1408,8 +1276,8 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <li><p>Minimum number of annotations: 3</p></li>
 <li><p>adjusted p-value cutoff: 0.05</p></li>
 </ul>
-<p>A positive enrichment corresponds to metabolites that have been changed downwards in the correction and a negative enrichment to metabolites that have been changed upwards by ion suppression correction.</p>
-<p align="center"><p><img alt="ce06879b3b9e40d8a58599132e96f3cd" class="no-scaled-link" src="../../_images/metenrichr_LION_neg_wilcox_B100_A3_q0.05.png" style="width: 800px;" /></p>
+<p>As the corrected dataset is compared to the uncorrected on, a positive enrichment corresponds to metabolites that have been increased/not changed in the correction and a negative enrichment to metabolites that have been decreased by ion suppression correction.</p>
+<p align="center"><p><img alt="7c748422693b4ebda900b1cc52780835" class="no-scaled-link" src="../../_images/metenrichr_LION_neg_wilcox_B100_A3_q0.05.png" style="width: 800px;" /></p>
 </p><p>The same analysis is then carried out for the TIC-corrected and log-transformed data: Here, the differences between uncorrected and ISM-corrected data are much more subtle. This corresponds better with the UMAPs further down, as they also show very little noticebly differences between uncorrected and ISM-corrected datasets.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
@@ -1445,7 +1313,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
   obs_tidy.index.value_counts(sort=False).iteritems()
 </pre></div></div>
 </div>
@@ -1492,13 +1360,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1532,7 +1400,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <p>The different degree of correction of metabolites could be reflected in the spatial distribution on the corresponding ion images. To this end, the ion images of each two metabolites with the highest (center column) and lowest (right column) correction slopes are shown in the following figure (from well H3, condition Naive_WT)). The corresponding dataset is available on
 <a class="reference external" href="https://metaspace2020.eu/annotations?db_id=658&amp;grp=5727e852-e1dd-11e8-9d75-5fefa7059e48&amp;ds=2022-07-16_08h56m51s&amp;fdr=0.5&amp;q=C24H48NO6P%20%7C%20C37H71O8P%20%7C%20C42H82NO8P%20%7C%20C41H80NO8P&amp;row=4">metaspace</a>.</p>
-<p align="center"><p><img alt="022b5cfcc9b24fd5b07dce3533b64015" class="no-scaled-link" src="../../_images/ion_images_glioblastoma.png" style="width: 800px;" /></p>
+<p align="center"><p><img alt="f59f67e22bfa4e90abb885ba5528ace2" class="no-scaled-link" src="../../_images/ion_images_glioblastoma.png" style="width: 800px;" /></p>
 </p></section>
 <section id="Comparison-of-the-datasets">
 <h2>Comparison of the datasets<a class="headerlink" href="#Comparison-of-the-datasets" title="Permalink to this heading">¶</a></h2>
@@ -1555,9 +1423,9 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
 </pre></div></div>
 </div>
@@ -1587,9 +1455,9 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
 </pre></div></div>
 </div>
@@ -1672,7 +1540,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summaries</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">({</span><span class="s1">&#39;uncorrected&#39;</span><span class="p">:</span> <span class="n">adata</span><span class="p">,</span> <span class="s1">&#39;ISM correction&#39;</span><span class="p">:</span> <span class="n">adata_cor</span><span class="p">},</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">])</span>
@@ -1688,9 +1556,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.247967  0.272224          0.091837
-X_pca_ISM correction  10  0.247273  0.274605          0.091837
-X_umap_uncorrected    10  0.348974  0.254529          0.091837
-X_umap_ISM correction 10  0.342024  0.254298          0.091837
+X_pca_ISM correction  10  0.247464  0.273940          0.091837
+X_umap_uncorrected    10  0.347902  0.255822          0.091837
+X_umap_ISM correction 10  0.334560  0.257972          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1701,7 +1569,7 @@ X_umap_ISM correction 10  0.342024  0.254298          0.091837
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">(</span>
@@ -1739,7 +1607,7 @@ Index: []
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">trapz</span><span class="p">,</span> <span class="n">simps</span>
@@ -1758,14 +1626,14 @@ Index: []
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Area under the curve for X_umap_uncorrected: 0.6223
-Area under the curve for X_umap_ISM correction: 0.6191
+Area under the curve for X_umap_uncorrected: 0.6208
+Area under the curve for X_umap_ISM correction: 0.6187
 Area under the curve for X_pca_uncorrected: 0.6482
-Area under the curve for X_pca_ISM correction: 0.6465
+Area under the curve for X_pca_ISM correction: 0.6468
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
@@ -1806,7 +1674,7 @@ Area under the curve for X_pca_ISM correction: 0.6465
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
@@ -1826,9 +1694,9 @@ norm_counts
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/sklearn/svm/_base.py:1225: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/sklearn/svm/_base.py:1244: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/sklearn/svm/_base.py:1225: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/sklearn/svm/_base.py:1244: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(
 </pre></div></div>
 </div>
@@ -1840,7 +1708,7 @@ norm_counts
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
@@ -1863,7 +1731,7 @@ log_norm_counts
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>

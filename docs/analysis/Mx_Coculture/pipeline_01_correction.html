@@ -305,7 +305,7 @@ div.rendered_html tbody tr:hover {
 <section id="Mx_Coculture:-Correction">
 <h1>Mx_Coculture: Correction<a class="headerlink" href="#Mx_Coculture:-Correction" title="Permalink to this heading">¶</a></h1>
 <p>SpaceM datasets are usually stored as annotated data-matrices, separately for individual wells. With this notebooks, these individual files are corrected for ion suppression on the pixel-level and then deconvoluted to cell-level. All resulting files are saved separately by well to the target_path and the impact of the correction briefly shown for visual inspection.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -332,7 +332,8 @@ div.rendered_html tbody tr:hover {
                             <span class="n">correct_quantile_inplace</span><span class="p">,</span>
                             <span class="n">deconvolution_spacem</span><span class="p">,</span>
                             <span class="n">get_overlap_data</span><span class="p">,</span>
-                            <span class="n">add_overlap_matrix_spacem</span>
+                            <span class="n">add_overlap_matrix_spacem</span><span class="p">,</span>
+                            <span class="n">get_reference_pool</span>
                            <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">const</span>
 <span class="kn">from</span> <span class="nn">SpaceM.lib.modules</span> <span class="kn">import</span> <span class="p">(</span>
@@ -343,6 +344,20 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+</pre></div></div>
 </div>
 <p>The original data lies on the groups shared data storage. Corrected files will be saved in a separate location, preserving the well-specific folder structure.</p>
 <div class="nbinput nblast docutils container">
@@ -356,8 +371,6 @@ div.rendered_html tbody tr:hover {
     <span class="n">source_path</span> <span class="o">=</span> <span class="s1">&#39;/g/alexandr/smenon/2022-07-13_Glioblastoma/processed_files&#39;</span>
     <span class="n">target_path</span> <span class="o">=</span> <span class="s1">&#39;/home/mklein/FDA_project/data/Lx_Glioblastoma&#39;</span>
 
-<span class="c1"># TODO: implement topX reference ion pool.</span>
-<span class="n">reference_pool</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
 <span class="n">deconv_default_min_overlap</span> <span class="o">=</span> <span class="mf">0.0</span>
 </pre></div>
 </div>
@@ -379,7 +392,7 @@ div.rendered_html tbody tr:hover {
     <span class="s2">&quot;pipeline_03_evaluation.ipynb&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">project</span> <span class="o">=</span> <span class="s2">&quot;Mx_Coculture&quot;</span>
-<span class="n">correction_proportion_threshold</span> <span class="o">=</span> <span class="mf">0.03</span>
+<span class="n">correction_proportion_threshold</span> <span class="o">=</span> <span class="mf">0.01</span>
 </pre></div>
 </div>
 </div>
@@ -479,7 +492,7 @@ div.rendered_html tbody tr:hover {
 
     <span class="c1"># perform the actual quantile regression</span>
     <span class="n">corr_sm_matrix</span> <span class="o">=</span> <span class="n">correct_quantile_inplace</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">sm_matrix</span><span class="p">,</span>
-        <span class="n">reference_ions</span><span class="o">=</span><span class="n">sm_matrix</span><span class="o">.</span><span class="n">var_names</span><span class="p">,</span>
+        <span class="n">reference_ions</span><span class="o">=</span> <span class="n">get_reference_pool</span><span class="p">(</span><span class="n">sm_matrix</span><span class="p">),</span>
         <span class="n">correct_intersect</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">proportion_threshold</span> <span class="o">=</span> <span class="n">correction_proportion_threshold</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -551,7 +564,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 1/1 [00:16&lt;00:00, 16.08s/it]
+100%|██████████| 1/1 [00:14&lt;00:00, 14.10s/it]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -690,42 +703,42 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
     <tr>
       <th>C35H69O8P</th>
       <th>dataset</th>
-      <td>0.012122</td>
+      <td>0.020558</td>
       <td>0.023198</td>
       <td>0.023198</td>
-      <td>-1.038932</td>
-      <td>0.034778</td>
+      <td>-1.018972</td>
+      <td>1.481740e-02</td>
       <td>-1.004155</td>
     </tr>
     <tr>
-      <th>C34H68NO6P</th>
+      <th>C21H43O7P</th>
       <th>dataset</th>
-      <td>0.026882</td>
-      <td>0.034094</td>
-      <td>0.034094</td>
-      <td>-1.007595</td>
-      <td>0.028215</td>
-      <td>-0.979381</td>
-    </tr>
-    <tr>
-      <th>C43H81O13P</th>
-      <th>dataset</th>
-      <td>0.179587</td>
-      <td>0.175546</td>
-      <td>0.175546</td>
-      <td>-0.108584</td>
-      <td>-0.029229</td>
-      <td>-0.137813</td>
+      <td>0.007616</td>
+      <td>0.007465</td>
+      <td>0.007465</td>
+      <td>-1.000192</td>
+      <td>-1.818945e-03</td>
+      <td>-1.002011</td>
     </tr>
     <tr>
       <th>C43H78NO8P</th>
       <th>dataset</th>
-      <td>-0.081978</td>
+      <td>-0.088261</td>
       <td>-0.092249</td>
       <td>-0.092249</td>
-      <td>-0.073275</td>
-      <td>-0.112841</td>
+      <td>-0.159189</td>
+      <td>-2.692784e-02</td>
       <td>-0.186117</td>
+    </tr>
+    <tr>
+      <th>C43H81O13P</th>
+      <th>dataset</th>
+      <td>0.175546</td>
+      <td>0.175546</td>
+      <td>0.175546</td>
+      <td>-0.137813</td>
+      <td>2.716324e-08</td>
+      <td>-0.137813</td>
     </tr>
   </tbody>
 </table>
@@ -744,6 +757,517 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 <div class="output_area docutils container">
 <img alt="../../_images/analysis_Mx_Coculture_pipeline_01_correction_15_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_01_correction_15_2.png" />
 </div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">src.evaluation</span>
+<span class="n">reload</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">evaluation</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">src.const</span>
+<span class="n">reload</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">const</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">compare_pre_post_correction</span>
+<span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">,</span> <span class="n">proportion_threshold</span><span class="o">=</span><span class="n">correction_proportion_threshold</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C20H32O2&#39;</span><span class="p">,</span> <span class="s1">&#39;C35H69O8P&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>intercept_correction</th>
+      <th>intercept_glob_ISM_correction</th>
+      <th>intercept_glob_uncorrected</th>
+      <th>slope_correction</th>
+      <th>slope_glob_ISM_correction</th>
+      <th>slope_glob_uncorrected</th>
+    </tr>
+    <tr>
+      <th>ion</th>
+      <th>well</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>C20H32O2</th>
+      <th>dataset</th>
+      <td>-0.123238</td>
+      <td>-0.151280</td>
+      <td>-0.151279</td>
+      <td>-0.278129</td>
+      <td>-0.133998</td>
+      <td>-0.412127</td>
+    </tr>
+    <tr>
+      <th>C35H69O8P</th>
+      <th>dataset</th>
+      <td>0.020558</td>
+      <td>0.023198</td>
+      <td>0.023198</td>
+      <td>-1.018972</td>
+      <td>0.014817</td>
+      <td>-1.004155</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_01_correction_16_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_01_correction_16_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_01_correction_16_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_01_correction_16_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">am_adata_cor</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>C16H30O2</th>
+      <th>C18H34O2</th>
+      <th>C18H36O2</th>
+      <th>C19H37O6P</th>
+      <th>C19H39O7P</th>
+      <th>C20H32O2</th>
+      <th>C21H39O6P</th>
+      <th>C21H41O6P</th>
+      <th>C21H41O7P</th>
+      <th>C21H43O7P</th>
+      <th>...</th>
+      <th>C43H81O13P</th>
+      <th>C43H82NO8P</th>
+      <th>C44H78NO10P</th>
+      <th>C44H84NO6P</th>
+      <th>C45H78NO8P</th>
+      <th>C45H80NO8P</th>
+      <th>C45H82NO8P</th>
+      <th>C6H11O8P</th>
+      <th>C6H13O9P</th>
+      <th>C9H19O11P</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0_dataset</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>1_dataset</th>
+      <td>23.821061</td>
+      <td>225.426637</td>
+      <td>21.309596</td>
+      <td>36.664910</td>
+      <td>9.268886</td>
+      <td>390.010377</td>
+      <td>272.882474</td>
+      <td>43.838597</td>
+      <td>44.253519</td>
+      <td>6.150212</td>
+      <td>...</td>
+      <td>510.587876</td>
+      <td>8.755105</td>
+      <td>6.157742</td>
+      <td>0.000000</td>
+      <td>6.432499</td>
+      <td>3.969310</td>
+      <td>7.376534</td>
+      <td>201.321150</td>
+      <td>55.322486</td>
+      <td>31.188131</td>
+    </tr>
+    <tr>
+      <th>2_dataset</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>3_dataset</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>4_dataset</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2495_dataset</th>
+      <td>112.539285</td>
+      <td>1257.488043</td>
+      <td>1335.182494</td>
+      <td>1971.404577</td>
+      <td>458.385200</td>
+      <td>880.209529</td>
+      <td>1365.671724</td>
+      <td>1848.349563</td>
+      <td>676.588681</td>
+      <td>453.283878</td>
+      <td>...</td>
+      <td>289.223866</td>
+      <td>231.535336</td>
+      <td>0.000000</td>
+      <td>104.555320</td>
+      <td>112.477369</td>
+      <td>200.936324</td>
+      <td>116.197548</td>
+      <td>3759.256925</td>
+      <td>1390.996837</td>
+      <td>287.221425</td>
+    </tr>
+    <tr>
+      <th>2496_dataset</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2497_dataset</th>
+      <td>311.958510</td>
+      <td>1192.989435</td>
+      <td>925.472932</td>
+      <td>2873.270718</td>
+      <td>576.462049</td>
+      <td>471.270206</td>
+      <td>816.931948</td>
+      <td>2290.260624</td>
+      <td>405.462275</td>
+      <td>586.704062</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>3127.145966</td>
+      <td>1913.803746</td>
+      <td>93.568084</td>
+    </tr>
+    <tr>
+      <th>2498_dataset</th>
+      <td>411.098375</td>
+      <td>1190.124200</td>
+      <td>1052.779015</td>
+      <td>2083.852911</td>
+      <td>706.995388</td>
+      <td>1111.972891</td>
+      <td>1449.911423</td>
+      <td>2003.018959</td>
+      <td>609.083371</td>
+      <td>384.934333</td>
+      <td>...</td>
+      <td>797.580073</td>
+      <td>200.012502</td>
+      <td>0.000000</td>
+      <td>200.507005</td>
+      <td>148.799568</td>
+      <td>189.145389</td>
+      <td>85.166830</td>
+      <td>4645.352921</td>
+      <td>1907.118687</td>
+      <td>220.105292</td>
+    </tr>
+    <tr>
+      <th>2499_dataset</th>
+      <td>537.635254</td>
+      <td>2135.785645</td>
+      <td>1632.460327</td>
+      <td>2615.274902</td>
+      <td>542.671692</td>
+      <td>2053.239746</td>
+      <td>2234.056152</td>
+      <td>2418.620850</td>
+      <td>1060.872192</td>
+      <td>484.894318</td>
+      <td>...</td>
+      <td>1887.967529</td>
+      <td>518.221313</td>
+      <td>322.852539</td>
+      <td>372.113678</td>
+      <td>184.746338</td>
+      <td>134.135086</td>
+      <td>403.948853</td>
+      <td>7431.572266</td>
+      <td>3101.317139</td>
+      <td>669.905701</td>
+    </tr>
+  </tbody>
+</table>
+<p>2500 rows × 58 columns</p>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Minimum intercept: </span><span class="si">%1.2f</span><span class="s2">&quot;</span> <span class="o">%</span><span class="k">am_adata_cor</span>.var[&#39;correction_quantreg_intersect&#39;].min())
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Maximum intercept: </span><span class="si">%1.2f</span><span class="s2">&quot;</span> <span class="o">%</span><span class="k">am_adata_cor</span>.var[&#39;correction_quantreg_intersect&#39;].max())
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Minimum intercept: -0.24
+Maximum intercept: 0.38
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">am_adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;correction_quantreg_intersect&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+C22H32O2      -0.237495
+C45H80NO8P    -0.159299
+C6H11O8P      -0.130538
+C20H32O2      -0.123238
+C6H13O9P      -0.119130
+C41H80NO8P    -0.102326
+C27H53O12P    -0.096219
+C21H39O6P     -0.092816
+C9H19O11P     -0.088515
+C43H78NO8P    -0.088261
+C39H73O8P     -0.077573
+C18H34O2      -0.074027
+C35H67O8P     -0.063198
+C39H76NO8P    -0.058794
+C41H71O8P     -0.055730
+C21H41O7P     -0.053954
+C41H78NO8P    -0.051011
+C23H48NO7P    -0.050869
+C16H30O2      -0.050557
+C37H71O8P     -0.050444
+C43H76NO8P    -0.046908
+C41H73O8P     -0.043980
+C18H36O2      -0.041570
+C44H84NO6P    -0.040638
+C44H78NO10P   -0.040638
+C37H69O8P     -0.039580
+C38H73O8P     -0.037785
+C25H44NO7P    -0.033518
+C23H46NO7P    -0.030378
+C21H41O6P     -0.029713
+C19H37O6P     -0.014706
+C39H75O8P     -0.013755
+C27H51O12P    -0.005616
+C39H71O8P      0.002106
+C42H80NO10P    0.004462
+C21H43O7P      0.007616
+C22H34O2       0.014752
+C35H69O8P      0.020558
+C19H39O7P      0.026094
+C36H69O8P      0.027891
+C34H68NO6P     0.032496
+C45H78NO8P     0.037865
+C29H49O12P     0.040683
+C41H75O8P      0.042441
+C43H82NO8P     0.045409
+C43H73O8P      0.048822
+C25H50NO7P     0.076838
+C43H75O8P      0.097377
+C43H76NO7P     0.112487
+C43H78NO7P     0.113801
+C42H82NO6P     0.115490
+C45H82NO8P     0.146816
+C41H74NO7P     0.147531
+C41H74NO8P     0.162104
+C43H81O13P     0.175546
+C40H76NO10P    0.179235
+C37H74NO8P     0.219950
+C43H79O13P     0.381013
+Name: correction_quantreg_intersect, dtype: float64
+</pre></div></div>
 </div>
 </section>
 
