@@ -7,6 +7,13 @@ Overview
 ========
 
 .. toctree::
+   :caption: Global analysis
+   :titlesonly:
+   implementation_evaluation
+   analysis/intermixing_metric
+   analysis/correction_slopes_correlation
+
+.. toctree::
    :caption: Coculture Dataset (Mx)
    :titlesonly:
    

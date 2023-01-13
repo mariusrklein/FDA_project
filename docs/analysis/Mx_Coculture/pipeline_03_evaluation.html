@@ -306,7 +306,7 @@ div.rendered_html tbody tr:hover {
 <h1>Mx_Coculture: Evaluation<a class="headerlink" href="#Mx_Coculture:-Evaluation" title="Permalink to this heading">¶</a></h1>
 <p>In this notebook, different measures are investigated to quantify the effect of correcting SpaceM ion intensity data for partial pixel-cell overlap. Moreover, The effects of the correction on different metabolites is visualized.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">platform</span>
@@ -332,7 +332,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
@@ -353,7 +353,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>Loading the uncorrected and ISM-corrected dataset from file. Additionally, loading the metadata CSV file to filter out excluded wells.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="s2">&quot;gen_batch_sm_matrix.h5ad&quot;</span><span class="p">))</span>
@@ -362,7 +362,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
@@ -370,7 +370,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -710,7 +710,7 @@ div.rendered_html tbody tr:hover {
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">condition_metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="s1">&#39;MORPHnMOL.csv&#39;</span><span class="p">))</span>
@@ -742,23 +742,23 @@ Name: celltype, dtype: int64
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;seaborn.axisgrid.FacetGrid at 0x7f4fef40d120&gt;
+&lt;seaborn.axisgrid.FacetGrid at 0x7fb085be5de0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_6_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_6_2.png" style="width: 594px; height: 512px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_6_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_6_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># raw_adata = ad.AnnData(obs=condition_metadata[[&#39;ObjectNumber&#39;, &#39;celltype&#39;, &#39;GFP&#39;, &#39;MCherry&#39;, &#39;fluorescence_ratio&#39;]], var=am_adata.var.loc[am_adata.var.index.intersection(condition_metadata.columns)])</span>
@@ -782,7 +782,7 @@ Name: celltype, dtype: int64
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -793,7 +793,7 @@ Name: celltype, dtype: int64
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">condition_name</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -801,7 +801,7 @@ Name: celltype, dtype: int64
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -852,7 +852,7 @@ Name: celltype, dtype: int64
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">included_molecules</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
@@ -890,7 +890,7 @@ Name: celltype, dtype: int64
 </ul>
 <p>After that, both datasets are subset to contain the same ions and cells (intersection).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
@@ -924,7 +924,7 @@ Name: celltype, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
@@ -933,19 +933,8 @@ Name: celltype, dtype: int64
 (1137, 58)
 </pre></div></div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/preprocessing/_simple.py:352: RuntimeWarning: invalid value encountered in log1p
-  np.log1p(X, out=X)
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/preprocessing/_simple.py:352: RuntimeWarning: invalid value encountered in log1p
-  np.log1p(X, out=X)
-</pre></div></div>
-</div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">point_size</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
@@ -976,7 +965,7 @@ Name: celltype, dtype: int64
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1006,8 +995,8 @@ Name: celltype, dtype: int64
 <li><p>normalization to a fixed count (10^4) and log transformation</p></li>
 </ol>
 <p>The normalization to a fixed count has a slightly different effect than TIC normalization. The former normalizes all counts per cell to the given target sum so that all cells from the uncorrected and the corrected set are scaled to this count. In contrast, the latter retains the differences between the datasets by normalizing to the median count across cells in a dataset.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
@@ -1016,43 +1005,8 @@ Name: celltype, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.224534  0.241170          0.091837
-X_pca_ISM correction  10  0.210519  0.254535          0.091837
-X_umap_uncorrected    10  0.311882  0.266482          0.091837
-X_umap_ISM correction 10  0.256253  0.293606          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_1.png" style="width: 1052px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_2.png" style="width: 1070px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_3.png" style="width: 787px; height: 469px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
@@ -1061,44 +1015,18 @@ X_umap_ISM correction 10  0.256253  0.293606          0.091837
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.194769  0.271364          0.091837
-X_pca_ISM correction  10  0.193309  0.273348          0.091837
-X_umap_uncorrected    10  0.160219  0.296534          0.091837
-X_umap_ISM correction 10  0.157251  0.296702          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_1.png" style="width: 1055px; height: 471px;" />
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">)</span>
+<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">)</span>
+<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_2.png" style="width: 1070px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_3.png" style="width: 787px; height: 470px;" />
-</div>
-</div>
-<p>p### dimred_umap(adata, layer=‘scaled_counts’) dimred_umap(adata_cor, layer=‘scaled_counts’) intermixing_layer(adata, adata_cor, condition_name, measures = [‘X_pca’, ‘X_umap’], layer=‘scaled_counts’)</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
@@ -1107,43 +1035,8 @@ X_umap_ISM correction 10  0.157251  0.296702          0.091837
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.171934  0.264122          0.091837
-X_pca_ISM correction  10  0.162445  0.257752          0.091837
-X_umap_uncorrected    10  0.197117  0.300338          0.091837
-X_umap_ISM correction 10  0.206180  0.295240          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_1.png" style="width: 1070px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_2.png" style="width: 1070px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_3.png" style="width: 787px; height: 470px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
@@ -1152,43 +1045,8 @@ X_umap_ISM correction 10  0.206180  0.295240          0.091837
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.185422  0.277041          0.091837
-X_pca_ISM correction  10  0.180770  0.283969          0.091837
-X_umap_uncorrected    10  0.165519  0.304530          0.091837
-X_umap_ISM correction 10  0.157964  0.296019          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_1.png" style="width: 1055px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_2.png" style="width: 1055px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_3.png" style="width: 787px; height: 470px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_norm_counts&#39;</span><span class="p">)</span>
@@ -1197,43 +1055,8 @@ X_umap_ISM correction 10  0.157964  0.296019          0.091837
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.172490  0.263872          0.091837
-X_pca_ISM correction  10  0.162080  0.257680          0.091837
-X_umap_uncorrected    10  0.202449  0.310713          0.091837
-X_umap_ISM correction 10  0.195641  0.299661          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_1.png" style="width: 1070px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_2.png" style="width: 1070px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_3.png" style="width: 787px; height: 470px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
@@ -1242,44 +1065,9 @@ X_umap_ISM correction 10  0.195641  0.299661          0.091837
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.179152  0.276096          0.091837
-X_pca_ISM correction  10  0.174534  0.279676          0.091837
-X_umap_uncorrected    10  0.153394  0.296269          0.091837
-X_umap_ISM correction 10  0.150933  0.296676          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_1.png" style="width: 1070px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_2.png" style="width: 1055px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_3.png" style="width: 787px; height: 470px;" />
-</div>
-</div>
 <p>Before analysis, asserting that the two data files were deconvoluted in the same way. Specifically, the corrected dataframe cannot have non-zero values at positions where the uncorrected dataframe has zero values.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">!=</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
@@ -1287,7 +1075,7 @@ X_umap_ISM correction 10  0.150933  0.296676          0.091837
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;correction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;uncorrected&#39;</span>
@@ -1299,7 +1087,7 @@ X_umap_ISM correction 10  0.150933  0.296676          0.091837
 <h2>Effects of the correction on different molecules<a class="headerlink" href="#Effects-of-the-correction-on-different-molecules" title="Permalink to this heading">¶</a></h2>
 <p>The ISM correction is performed per ion on the logarithmized intensity / sampling proportion ratio. The underlying quantile regression can only be computed with a minimum number of datapoints. If an ion has less than 10 datapoints, the quantile regression is instead computed based on a reference pool of ions. In the following, the resulting slopes by which all ions have been corrected are visualized. Ions that were corrected using the reference pool are shown separately.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[[</span><span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">]],</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1310,7 +1098,7 @@ X_umap_ISM correction 10  0.150933  0.296676          0.091837
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1324,12 +1112,12 @@ Name: corrected_only_using_pool, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_26_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_26_1.png" style="width: 590px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_26_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_26_1.png" />
 </div>
 </div>
 <p>Based on the slopes of the correction but also the logfoldchanges between corrected and uncorrected cells, one can infer the extent of alteration of different metabolites in the correction. These measures not necessarily correlate, thus the degree of correction of ions has to be evaluated on individual datasets.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">src.evaluation</span>
@@ -1362,16 +1150,887 @@ Name: corrected_only_using_pool, dtype: int64
   self.expm1_func(mean_rest) + 1e-9
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
-  self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
+/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
+  self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">impact_ions</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>scores</th>
+      <th>logfoldchanges</th>
+      <th>pvals</th>
+      <th>pvals_adj</th>
+      <th>corrected_only_using_pool</th>
+      <th>mean_correction_quantreg_slope</th>
+      <th>n_cells</th>
+      <th>median_intensity</th>
+      <th>mean_intensity</th>
+      <th>sum_correction_using_ion_pool</th>
+      <th>significant</th>
+    </tr>
+    <tr>
+      <th>names</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>C18H36O2</th>
+      <td>-17.008299</td>
+      <td>-239.228583</td>
+      <td>7.127741e-65</td>
+      <td>4.134090e-63</td>
+      <td>False</td>
+      <td>-0.896086</td>
+      <td>1137</td>
+      <td>-0.053114</td>
+      <td>-2.830827e-08</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C19H37O6P</th>
+      <td>-14.763176</td>
+      <td>-239.228583</td>
+      <td>2.530758e-49</td>
+      <td>7.339197e-48</td>
+      <td>False</td>
+      <td>-0.879267</td>
+      <td>1137</td>
+      <td>0.022314</td>
+      <td>-2.063359e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C21H41O6P</th>
+      <td>-14.452163</td>
+      <td>-239.228583</td>
+      <td>2.429360e-47</td>
+      <td>4.696762e-46</td>
+      <td>False</td>
+      <td>-0.857837</td>
+      <td>1137</td>
+      <td>0.030758</td>
+      <td>-1.000226e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C21H43O7P</th>
+      <td>-13.577346</td>
+      <td>-175.275360</td>
+      <td>5.456849e-42</td>
+      <td>7.912431e-41</td>
+      <td>False</td>
+      <td>-0.995941</td>
+      <td>1126</td>
+      <td>-0.049684</td>
+      <td>-1.890364e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C19H39O7P</th>
+      <td>-12.640441</td>
+      <td>-152.373596</td>
+      <td>1.263441e-36</td>
+      <td>1.465592e-35</td>
+      <td>False</td>
+      <td>-0.920085</td>
+      <td>1136</td>
+      <td>0.025937</td>
+      <td>-1.866249e-08</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C27H53O12P</th>
+      <td>-12.366508</td>
+      <td>-239.228583</td>
+      <td>3.966999e-35</td>
+      <td>3.740038e-34</td>
+      <td>False</td>
+      <td>-0.822777</td>
+      <td>1136</td>
+      <td>-0.072707</td>
+      <td>3.145364e-09</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C35H69O8P</th>
+      <td>-12.356128</td>
+      <td>-217.480530</td>
+      <td>4.513839e-35</td>
+      <td>3.740038e-34</td>
+      <td>False</td>
+      <td>-1.038932</td>
+      <td>1131</td>
+      <td>-0.030755</td>
+      <td>3.281663e-08</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C23H48NO7P</th>
+      <td>-11.462338</td>
+      <td>-164.391922</td>
+      <td>2.039323e-30</td>
+      <td>1.478509e-29</td>
+      <td>False</td>
+      <td>-0.768883</td>
+      <td>1134</td>
+      <td>-0.060374</td>
+      <td>8.387637e-08</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C6H13O9P</th>
+      <td>-10.456831</td>
+      <td>-239.228583</td>
+      <td>1.363400e-25</td>
+      <td>8.786356e-25</td>
+      <td>False</td>
+      <td>-0.770148</td>
+      <td>1137</td>
+      <td>-0.047902</td>
+      <td>1.096683e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C37H71O8P</th>
+      <td>-9.554163</td>
+      <td>-239.228583</td>
+      <td>1.245865e-21</td>
+      <td>7.226015e-21</td>
+      <td>False</td>
+      <td>-0.694062</td>
+      <td>1133</td>
+      <td>-0.097616</td>
+      <td>-7.339182e-09</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C21H41O7P</th>
+      <td>-7.915897</td>
+      <td>-108.691574</td>
+      <td>2.454767e-15</td>
+      <td>1.294332e-14</td>
+      <td>False</td>
+      <td>-0.605811</td>
+      <td>1130</td>
+      <td>-0.007927</td>
+      <td>-6.919800e-09</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C34H68NO6P</th>
+      <td>-7.774347</td>
+      <td>-199.988571</td>
+      <td>7.583743e-15</td>
+      <td>3.665476e-14</td>
+      <td>False</td>
+      <td>-1.007595</td>
+      <td>1091</td>
+      <td>-0.207217</td>
+      <td>1.829553e-08</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C6H11O8P</th>
+      <td>-7.382211</td>
+      <td>-239.228583</td>
+      <td>1.556823e-13</td>
+      <td>6.945825e-13</td>
+      <td>False</td>
+      <td>-0.650612</td>
+      <td>1137</td>
+      <td>-0.105827</td>
+      <td>2.516291e-09</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C16H30O2</th>
+      <td>-7.056793</td>
+      <td>-72.602760</td>
+      <td>1.703887e-12</td>
+      <td>7.058962e-12</td>
+      <td>False</td>
+      <td>-0.612648</td>
+      <td>1124</td>
+      <td>0.040634</td>
+      <td>-4.906768e-08</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C37H74NO8P</th>
+      <td>-6.411355</td>
+      <td>-74.347984</td>
+      <td>1.442312e-10</td>
+      <td>5.576941e-10</td>
+      <td>False</td>
+      <td>-0.829361</td>
+      <td>1052</td>
+      <td>-0.223507</td>
+      <td>-5.294696e-09</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C35H67O8P</th>
+      <td>-5.872687</td>
+      <td>-72.822525</td>
+      <td>4.287870e-09</td>
+      <td>1.554353e-08</td>
+      <td>False</td>
+      <td>-0.610978</td>
+      <td>1100</td>
+      <td>-0.009191</td>
+      <td>5.871346e-09</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C25H44NO7P</th>
+      <td>-4.370349</td>
+      <td>-64.128204</td>
+      <td>1.240478e-05</td>
+      <td>4.232218e-05</td>
+      <td>False</td>
+      <td>-0.565831</td>
+      <td>1072</td>
+      <td>0.016797</td>
+      <td>-1.174269e-08</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C9H19O11P</th>
+      <td>-3.917850</td>
+      <td>-51.969387</td>
+      <td>8.934219e-05</td>
+      <td>2.878804e-04</td>
+      <td>False</td>
+      <td>-0.544195</td>
+      <td>1051</td>
+      <td>0.019763</td>
+      <td>1.174269e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C18H34O2</th>
+      <td>-3.788469</td>
+      <td>-239.228583</td>
+      <td>1.515786e-04</td>
+      <td>4.627136e-04</td>
+      <td>False</td>
+      <td>-0.318061</td>
+      <td>1129</td>
+      <td>0.033506</td>
+      <td>-1.614620e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C36H69O8P</th>
+      <td>-3.724657</td>
+      <td>-32.254681</td>
+      <td>1.955814e-04</td>
+      <td>5.671860e-04</td>
+      <td>False</td>
+      <td>-0.885610</td>
+      <td>885</td>
+      <td>-0.153292</td>
+      <td>-1.574779e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C21H39O6P</th>
+      <td>-3.136005</td>
+      <td>-239.228583</td>
+      <td>1.712664e-03</td>
+      <td>4.730214e-03</td>
+      <td>False</td>
+      <td>-0.276296</td>
+      <td>1126</td>
+      <td>-0.007587</td>
+      <td>1.308471e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C22H32O2</th>
+      <td>-2.999501</td>
+      <td>-24.829544</td>
+      <td>2.704220e-03</td>
+      <td>7.129307e-03</td>
+      <td>False</td>
+      <td>-0.789165</td>
+      <td>897</td>
+      <td>-0.226133</td>
+      <td>4.366813e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C39H75O8P</th>
+      <td>-2.963858</td>
+      <td>-39.523647</td>
+      <td>3.038081e-03</td>
+      <td>7.661249e-03</td>
+      <td>False</td>
+      <td>-0.542173</td>
+      <td>977</td>
+      <td>-0.036995</td>
+      <td>-7.444028e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C23H46NO7P</th>
+      <td>-2.860858</td>
+      <td>-35.290440</td>
+      <td>4.224964e-03</td>
+      <td>1.021033e-02</td>
+      <td>False</td>
+      <td>-0.496469</td>
+      <td>1008</td>
+      <td>-0.079203</td>
+      <td>1.084102e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C22H34O2</th>
+      <td>-2.754791</td>
+      <td>-20.238079</td>
+      <td>5.872958e-03</td>
+      <td>1.362526e-02</td>
+      <td>False</td>
+      <td>-0.795296</td>
+      <td>832</td>
+      <td>-0.154759</td>
+      <td>3.407478e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H80NO8P</th>
+      <td>-2.708992</td>
+      <td>-60.510254</td>
+      <td>6.748796e-03</td>
+      <td>1.505501e-02</td>
+      <td>False</td>
+      <td>-0.299692</td>
+      <td>1097</td>
+      <td>-0.105069</td>
+      <td>4.613200e-09</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C37H69O8P</th>
+      <td>-2.511423</td>
+      <td>-33.873714</td>
+      <td>1.202456e-02</td>
+      <td>2.583053e-02</td>
+      <td>False</td>
+      <td>-0.422694</td>
+      <td>1019</td>
+      <td>-0.021775</td>
+      <td>2.038196e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C39H76NO8P</th>
+      <td>-2.430492</td>
+      <td>-41.308304</td>
+      <td>1.507836e-02</td>
+      <td>3.123374e-02</td>
+      <td>False</td>
+      <td>-0.371236</td>
+      <td>1062</td>
+      <td>-0.037274</td>
+      <td>-5.451964e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C25H50NO7P</th>
+      <td>-2.152885</td>
+      <td>-15.605909</td>
+      <td>3.132769e-02</td>
+      <td>6.265538e-02</td>
+      <td>False</td>
+      <td>-0.823173</td>
+      <td>763</td>
+      <td>-0.160290</td>
+      <td>-2.507904e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C42H82NO6P</th>
+      <td>-2.109961</td>
+      <td>-25.464512</td>
+      <td>3.486176e-02</td>
+      <td>6.739940e-02</td>
+      <td>False</td>
+      <td>-0.857165</td>
+      <td>769</td>
+      <td>-0.207107</td>
+      <td>-9.561906e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C39H71O8P</th>
+      <td>-2.037046</td>
+      <td>-20.532507</td>
+      <td>4.164546e-02</td>
+      <td>7.791730e-02</td>
+      <td>False</td>
+      <td>-0.733491</td>
+      <td>842</td>
+      <td>-0.197531</td>
+      <td>2.067552e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C38H73O8P</th>
+      <td>-1.998049</td>
+      <td>-21.939438</td>
+      <td>4.571131e-02</td>
+      <td>8.285176e-02</td>
+      <td>False</td>
+      <td>-0.529056</td>
+      <td>904</td>
+      <td>-0.213437</td>
+      <td>1.177415e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C20H32O2</th>
+      <td>-1.984060</td>
+      <td>-239.228583</td>
+      <td>4.724911e-02</td>
+      <td>8.304388e-02</td>
+      <td>False</td>
+      <td>-0.203248</td>
+      <td>1105</td>
+      <td>-0.008204</td>
+      <td>-1.174269e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C27H51O12P</th>
+      <td>-1.895528</td>
+      <td>-19.908764</td>
+      <td>5.802250e-02</td>
+      <td>9.897955e-02</td>
+      <td>False</td>
+      <td>-0.475359</td>
+      <td>905</td>
+      <td>-0.262696</td>
+      <td>-1.228789e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H73O8P</th>
+      <td>-1.806516</td>
+      <td>-20.887575</td>
+      <td>7.083772e-02</td>
+      <td>1.173882e-01</td>
+      <td>False</td>
+      <td>-0.380387</td>
+      <td>959</td>
+      <td>-0.044297</td>
+      <td>8.471513e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C45H80NO8P</th>
+      <td>-1.720475</td>
+      <td>-15.740525</td>
+      <td>8.534613e-02</td>
+      <td>1.375021e-01</td>
+      <td>False</td>
+      <td>-0.777399</td>
+      <td>773</td>
+      <td>-0.213716</td>
+      <td>-8.251338e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H82NO8P</th>
+      <td>-1.636701</td>
+      <td>-15.428082</td>
+      <td>1.016929e-01</td>
+      <td>1.594105e-01</td>
+      <td>False</td>
+      <td>-0.708251</td>
+      <td>775</td>
+      <td>-0.210365</td>
+      <td>-1.132331e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H73O8P</th>
+      <td>-1.581672</td>
+      <td>-14.946424</td>
+      <td>1.137245e-01</td>
+      <td>1.735795e-01</td>
+      <td>False</td>
+      <td>-0.932663</td>
+      <td>689</td>
+      <td>-0.308894</td>
+      <td>-1.976075e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H75O8P</th>
+      <td>-1.455900</td>
+      <td>-15.050796</td>
+      <td>1.454204e-01</td>
+      <td>2.162662e-01</td>
+      <td>False</td>
+      <td>-0.622252</td>
+      <td>781</td>
+      <td>-0.206887</td>
+      <td>4.474804e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C29H49O12P</th>
+      <td>-1.407226</td>
+      <td>-12.908792</td>
+      <td>1.593604e-01</td>
+      <td>2.287632e-01</td>
+      <td>False</td>
+      <td>-0.839058</td>
+      <td>687</td>
+      <td>-0.348991</td>
+      <td>-4.223175e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H78NO8P</th>
+      <td>-1.399337</td>
+      <td>-27.787531</td>
+      <td>1.617119e-01</td>
+      <td>2.287632e-01</td>
+      <td>False</td>
+      <td>-0.277194</td>
+      <td>1018</td>
+      <td>-0.090111</td>
+      <td>3.669591e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C39H73O8P</th>
+      <td>-1.345553</td>
+      <td>-34.255653</td>
+      <td>1.784466e-01</td>
+      <td>2.464263e-01</td>
+      <td>False</td>
+      <td>-0.168617</td>
+      <td>1085</td>
+      <td>-0.087252</td>
+      <td>5.368087e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H75O8P</th>
+      <td>-1.218216</td>
+      <td>-12.769893</td>
+      <td>2.231419e-01</td>
+      <td>3.009821e-01</td>
+      <td>False</td>
+      <td>-0.853765</td>
+      <td>619</td>
+      <td>-0.575572</td>
+      <td>1.247661e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H71O8P</th>
+      <td>-1.113938</td>
+      <td>-12.807487</td>
+      <td>2.653058e-01</td>
+      <td>3.497212e-01</td>
+      <td>False</td>
+      <td>-0.337020</td>
+      <td>893</td>
+      <td>-0.231709</td>
+      <td>4.739015e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H76NO7P</th>
+      <td>-0.944187</td>
+      <td>-11.008118</td>
+      <td>3.450742e-01</td>
+      <td>4.443315e-01</td>
+      <td>False</td>
+      <td>-0.782354</td>
+      <td>663</td>
+      <td>-0.432453</td>
+      <td>-6.500419e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C45H78NO8P</th>
+      <td>-0.929942</td>
+      <td>-12.229739</td>
+      <td>3.524009e-01</td>
+      <td>4.443315e-01</td>
+      <td>False</td>
+      <td>-0.862607</td>
+      <td>624</td>
+      <td>-0.554777</td>
+      <td>1.572682e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C42H80NO10P</th>
+      <td>-0.899186</td>
+      <td>-13.741209</td>
+      <td>3.685536e-01</td>
+      <td>4.548108e-01</td>
+      <td>False</td>
+      <td>-0.384496</td>
+      <td>829</td>
+      <td>-0.287100</td>
+      <td>5.871346e-09</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H74NO7P</th>
+      <td>-0.866673</td>
+      <td>-9.464069</td>
+      <td>3.861212e-01</td>
+      <td>4.665631e-01</td>
+      <td>False</td>
+      <td>-0.649104</td>
+      <td>642</td>
+      <td>-0.441513</td>
+      <td>7.423058e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H78NO7P</th>
+      <td>-0.835949</td>
+      <td>-8.824788</td>
+      <td>4.031838e-01</td>
+      <td>4.772380e-01</td>
+      <td>False</td>
+      <td>-0.912686</td>
+      <td>552</td>
+      <td>-0.648098</td>
+      <td>9.519968e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C45H82NO8P</th>
+      <td>-0.816658</td>
+      <td>-7.743455</td>
+      <td>4.141239e-01</td>
+      <td>4.803838e-01</td>
+      <td>False</td>
+      <td>-0.903025</td>
+      <td>507</td>
+      <td>-0.603807</td>
+      <td>-5.619717e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H74NO8P</th>
+      <td>-0.782197</td>
+      <td>-7.869767</td>
+      <td>4.340990e-01</td>
+      <td>4.936812e-01</td>
+      <td>False</td>
+      <td>-0.738583</td>
+      <td>558</td>
+      <td>-0.674214</td>
+      <td>1.543325e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C44H84NO6P</th>
+      <td>-0.592612</td>
+      <td>-6.862571</td>
+      <td>5.534409e-01</td>
+      <td>6.172994e-01</td>
+      <td>True</td>
+      <td>-0.820413</td>
+      <td>486</td>
+      <td>-0.614551</td>
+      <td>-1.593651e-07</td>
+      <td>1</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C40H76NO10P</th>
+      <td>-0.571405</td>
+      <td>-7.079195</td>
+      <td>5.677251e-01</td>
+      <td>6.196739e-01</td>
+      <td>False</td>
+      <td>-0.935572</td>
+      <td>462</td>
+      <td>-0.579962</td>
+      <td>-3.390702e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H78NO8P</th>
+      <td>-0.557863</td>
+      <td>-14.394064</td>
+      <td>5.769377e-01</td>
+      <td>6.196739e-01</td>
+      <td>False</td>
+      <td>-0.073275</td>
+      <td>1078</td>
+      <td>-0.099465</td>
+      <td>-4.906768e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C44H78NO10P</th>
+      <td>-0.509413</td>
+      <td>-6.722568</td>
+      <td>6.104627e-01</td>
+      <td>6.354907e-01</td>
+      <td>True</td>
+      <td>-0.820413</td>
+      <td>454</td>
+      <td>-0.555328</td>
+      <td>-4.613200e-09</td>
+      <td>1</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H76NO8P</th>
+      <td>-0.504974</td>
+      <td>-7.164406</td>
+      <td>6.135773e-01</td>
+      <td>6.354907e-01</td>
+      <td>False</td>
+      <td>-0.122637</td>
+      <td>941</td>
+      <td>-0.082697</td>
+      <td>3.753468e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H81O13P</th>
+      <td>-0.328388</td>
+      <td>-14.016177</td>
+      <td>7.426184e-01</td>
+      <td>7.556468e-01</td>
+      <td>False</td>
+      <td>-0.108584</td>
+      <td>855</td>
+      <td>-0.212411</td>
+      <td>2.941964e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H79O13P</th>
+      <td>-0.140208</td>
+      <td>-2.213482</td>
+      <td>8.884953e-01</td>
+      <td>8.884953e-01</td>
+      <td>False</td>
+      <td>-0.115358</td>
+      <td>627</td>
+      <td>-0.562455</td>
+      <td>8.215690e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">pair_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -1382,11 +2041,11 @@ Name: corrected_only_using_pool, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_30_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_30_0.png" style="width: 1436px; height: 1231px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_31_0.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_31_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -1397,11 +2056,11 @@ Name: corrected_only_using_pool, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_31_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_31_0.png" style="width: 996px; height: 454px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_32_0.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_32_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups_tracksplot</span><span class="p">(</span><span class="n">ma_raw</span><span class="o">.</span><span class="n">conc_adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">dendrogram</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1421,11 +2080,11 @@ Name: corrected_only_using_pool, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_32_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_32_1.png" style="width: 1040px; height: 539px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_33_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_33_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;n_pixels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;list_TPO&#39;</span><span class="p">]]</span>
@@ -1435,24 +2094,24 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;344_dataset&#39;,
- &#39;484_dataset&#39;,
+[&#39;88_dataset&#39;,
+ &#39;1171_dataset&#39;,
  &#39;456_dataset&#39;,
- &#39;749_dataset&#39;,
- &#39;463_dataset&#39;,
- &#39;750_dataset&#39;]
+ &#39;482_dataset&#39;,
+ &#39;336_dataset&#39;,
+ &#39;1102_dataset&#39;]
 </pre></div></div>
 </div>
 <p>The following plot shows the metabolic profiles of sampled cell generated from 1 and increasing numbers of ablation marks. The first row has the uncorrected raw ion intensities, the second row the corrected raw ion intensities and the third row the correction ratio/quotient between the two ( <span class="math notranslate nohighlight">\(correction\_ratio = \frac{I_{corrected}}{I_{uncorrected}}\)</span> ). Most ions have the same correction ratio in a given cells, some have a higher ratio (smaller slope, less ISM correction) and some have a
 lower ratio (steeper slope, stronger ISM correction). The distribution of ion-specific correction ratios in the same cells is shown, separately for self-corrected and pool-corrected ions, in density plots underneath the metabolic profiles. Black horizontal and vertical lines show the sampling proportion of all ablation marks that were combined to the respective cell. Especially from the density plots, it becomes obvious that the majority of ions have correction ratios that colocalize with the
 pixels’ sampling ratios. This can be explained by the fact that most ions had a correction slope of ~-1, the pool-corrected ions had all the same slope close to -1. Thus, these ions are down-corrected by multiplying with ~1 times their sampling proportion. Since many ions seem to occur only in one of the underlying ablation marks, the distribution of correction ratios has prominent peaks and few values between them.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">quotient_plot</span><span class="p">(</span><span class="n">show_cells</span><span class="o">=</span><span class="n">strat_cell_list</span><span class="p">)</span>
@@ -1478,18 +2137,18 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_35_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_35_1.png" style="width: 1983px; height: 871px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_35_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_35_2.png" style="width: 1986px; height: 590px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">top_ion_plot</span><span class="p">()</span>
@@ -1501,13 +2160,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1515,32 +2174,32 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_1.png" style="width: 1502px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_37_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_37_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_2.png" style="width: 1499px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_37_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_37_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_3.png" style="width: 1510px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_37_3.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_37_3.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_4.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_36_4.png" style="width: 1504px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_37_4.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_37_4.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">ma_raw</span><span class="o">.</span><span class="n">save_matrix</span><span class="p">(</span><span class="n">save_to_path</span> <span class="o">=</span> <span class="n">analysis_path</span><span class="p">,</span> <span class="n">safe_to_name</span> <span class="o">=</span> <span class="n">project</span><span class="p">,</span> <span class="n">save_figures</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
@@ -1549,7 +2208,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <p>The same analysis is then carried out for the TIC-corrected and log-transformed data: Here, the differences between uncorrected and ISM-corrected data are much more subtle. This corresponds better with the UMAPs further down, as they also show very little noticebly differences between uncorrected and ISM-corrected datasets.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">]</span>
@@ -1558,7 +2217,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span> <span class="o">=</span> <span class="n">MetaboliteAnalysis</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="o">=</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span>
@@ -1576,12 +2235,25 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="highlight"><pre>
 /home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: invalid value encountered in log2
   self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: invalid value encountered in log2
-  self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_42_0.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_42_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups_tracksplot</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">conc_adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">dendrogram</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1601,11 +2273,11 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_41_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_41_1.png" style="width: 1040px; height: 539px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_43_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_43_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">quotient_plot</span><span class="p">(</span><span class="n">show_cells</span><span class="o">=</span><span class="n">strat_cell_list</span><span class="p">)</span>
@@ -1616,18 +2288,18 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_42_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_42_0.png" style="width: 1984px; height: 871px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_44_0.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_44_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_42_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_42_1.png" style="width: 1985px; height: 590px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_44_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_44_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">top_ion_plot</span><span class="p">()</span>
@@ -1639,13 +2311,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1653,28 +2325,28 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_43_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_43_1.png" style="width: 1488px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_43_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_43_2.png" style="width: 1486px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_43_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_43_3.png" style="width: 1492px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_3.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_3.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_43_4.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_43_4.png" style="width: 1487px; height: 290px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_4.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_4.png" />
 </div>
 </div>
 </section>
@@ -1682,7 +2354,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <h2>Comparison of the datasets<a class="headerlink" href="#Comparison-of-the-datasets" title="Permalink to this heading">¶</a></h2>
 <p>In the following, the uncorrected and ISM-corrected datasets are compared using methods of a typical single-cell analysis. Unless specified otherwise, the data was preprocessed using TOC normalization and log transformation.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_pca</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
@@ -1709,21 +2381,21 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_1.png" style="width: 1260px; height: 435px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_2.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_2.png" style="width: 1590px; height: 479px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_3.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_3.png" style="width: 566px; height: 454px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_3.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -1741,25 +2413,25 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_5.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_5.png" style="width: 1260px; height: 435px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_5.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_5.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_6.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_6.png" style="width: 1590px; height: 480px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_6.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_6.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_7.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_45_7.png" style="width: 557px; height: 454px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_7.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_47_7.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
@@ -1771,18 +2443,18 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_46_0.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_46_0.png" style="width: 1052px; height: 471px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_48_0.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_48_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_46_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_46_1.png" style="width: 1055px; height: 471px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_48_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_48_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># from sklearn.metrics.cluster import completeness_score</span>
@@ -1816,7 +2488,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summaries</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">({</span><span class="s1">&#39;uncorrected&#39;</span><span class="p">:</span> <span class="n">adata</span><span class="p">,</span> <span class="s1">&#39;ISM correction&#39;</span><span class="p">:</span> <span class="n">adata_cor</span><span class="p">},</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">])</span>
@@ -1832,20 +2504,20 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.200389  0.266097          0.091837
-X_pca_ISM correction  10  0.191440  0.257284          0.091837
-X_umap_uncorrected    10  0.257461  0.286475          0.091837
-X_umap_ISM correction 10  0.159124  0.284558          0.091837
+X_pca_ISM correction  10  0.193106  0.258677          0.091837
+X_umap_uncorrected    10  0.262680  0.298624          0.091837
+X_umap_ISM correction 10  0.164124  0.285737          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_48_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_48_1.png" style="width: 787px; height: 469px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_50_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_50_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">(</span>
@@ -1879,11 +2551,11 @@ Index: []
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_49_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_49_1.png" style="width: 789px; height: 466px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_51_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_51_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">trapz</span><span class="p">,</span> <span class="n">simps</span>
@@ -1902,14 +2574,14 @@ Index: []
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Area under the curve for X_umap_uncorrected: 0.3965
-Area under the curve for X_umap_ISM correction: 0.3829
+Area under the curve for X_umap_uncorrected: 0.4005
+Area under the curve for X_umap_ISM correction: 0.3849
 Area under the curve for X_pca_uncorrected: 0.3826
-Area under the curve for X_pca_ISM correction: 0.3762
+Area under the curve for X_pca_ISM correction: 0.3763
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[104]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
@@ -1952,7 +2624,7 @@ Area under the curve for X_pca_ISM correction: 0.3762
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[106]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">,</span> <span class="n">size_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -1971,11 +2643,11 @@ scaled_counts
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_52_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_52_1.png" style="width: 1009px; height: 476px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_54_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_54_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[107]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
@@ -1994,7 +2666,7 @@ log_norm_counts
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_53_1.png" class="no-scaled-link" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_53_1.png" style="width: 1009px; height: 476px;" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_55_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_55_1.png" />
 </div>
 </div>
 </section>

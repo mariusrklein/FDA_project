@@ -305,7 +305,7 @@ div.rendered_html tbody tr:hover {
 <section id="Lx_Glioblastoma:-Correction">
 <h1>Lx_Glioblastoma: Correction<a class="headerlink" href="#Lx_Glioblastoma:-Correction" title="Permalink to this heading">¶</a></h1>
 <p>SpaceM datasets are usually stored as annotated data-matrices, separately for individual wells. With this notebooks, these individual files are corrected for ion suppression on the pixel-level and then deconvoluted to cell-level. All resulting files are saved separately by well to the target_path and the impact of the correction briefly shown for visual inspection.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -332,7 +332,8 @@ div.rendered_html tbody tr:hover {
                             <span class="n">correct_quantile_inplace</span><span class="p">,</span>
                             <span class="n">deconvolution_spacem</span><span class="p">,</span>
                             <span class="n">get_overlap_data</span><span class="p">,</span>
-                            <span class="n">add_overlap_matrix_spacem</span>
+                            <span class="n">add_overlap_matrix_spacem</span><span class="p">,</span>
+                            <span class="n">get_reference_pool</span>
                            <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">const</span>
 <span class="kn">from</span> <span class="nn">SpaceM.lib.modules</span> <span class="kn">import</span> <span class="p">(</span>
@@ -343,6 +344,20 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+</pre></div></div>
 </div>
 <p>The original data lies on the groups shared data storage. Corrected files will be saved in a separate location, preserving the well-specific folder structure.</p>
 <div class="nbinput nblast docutils container">
@@ -356,14 +371,12 @@ div.rendered_html tbody tr:hover {
     <span class="n">source_path</span> <span class="o">=</span> <span class="s1">&#39;/g/alexandr/smenon/2022-07-13_Glioblastoma/processed_files&#39;</span>
     <span class="n">target_path</span> <span class="o">=</span> <span class="s1">&#39;/home/mklein/FDA_project/data/Lx_Glioblastoma&#39;</span>
 
-<span class="c1"># TODO: implement topX reference ion pool.</span>
-<span class="n">reference_pool</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
 <span class="n">deconv_default_min_overlap</span> <span class="o">=</span> <span class="mf">0.0</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
@@ -379,21 +392,9 @@ div.rendered_html tbody tr:hover {
     <span class="s2">&quot;pipeline_03_evaluation.ipynb&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">project</span> <span class="o">=</span> <span class="s2">&quot;Lx_Glioblastoma&quot;</span>
-<span class="n">correction_proportion_threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">correction_proportion_threshold</span> <span class="o">=</span> <span class="mf">0.01</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Using 62 pixels to calculate full-pixel avereage intensities.
-Using 56 pixels to calculate full-pixel avereage intensities.
-Using 35 pixels to calculate full-pixel avereage intensities.
-Using 2 pixels to calculate full-pixel avereage intensities.
-Using 156 pixels to calculate full-pixel avereage intensities.
-</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -489,7 +490,7 @@ Using 156 pixels to calculate full-pixel avereage intensities.
 
     <span class="c1"># perform the actual quantile regression</span>
     <span class="n">corr_sm_matrix</span> <span class="o">=</span> <span class="n">correct_quantile_inplace</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">sm_matrix</span><span class="p">,</span>
-        <span class="n">reference_ions</span><span class="o">=</span><span class="n">sm_matrix</span><span class="o">.</span><span class="n">var_names</span><span class="p">,</span>
+        <span class="n">reference_ions</span><span class="o">=</span> <span class="n">get_reference_pool</span><span class="p">(</span><span class="n">sm_matrix</span><span class="p">),</span>
         <span class="n">correct_intersect</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">proportion_threshold</span><span class="o">=</span><span class="n">correction_proportion_threshold</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -536,74 +537,85 @@ Using 156 pixels to calculate full-pixel avereage intensities.
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
- 40%|████      | 14/35 [00:56&lt;01:38,  4.71s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 20%|████████████████████████████████████████                                                                                                                                                                | 7/35 [00:00&lt;00:00, 45.22it/s]/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+ 20%|████████████████████████████████████████                                                                                                                                                                | 7/35 [00:19&lt;00:00, 45.22it/s]/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 60%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▍                                                                               | 21/35 [06:16&lt;04:51, 20.82s/it]/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
- 60%|██████    | 21/35 [01:45&lt;01:20,  5.77s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 80%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▏                                       | 28/35 [09:17&lt;02:39, 22.78s/it]/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 35/35 [12:15&lt;00:00, 21.03s/it]
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
- 80%|████████  | 28/35 [02:43&lt;00:47,  6.77s/it]/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-100%|██████████| 35/35 [03:39&lt;00:00,  6.27s/it]
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 </pre></div></div>
 </div>
@@ -965,7 +977,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">compare_pre_post_correction</span>
@@ -974,29 +986,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Using 41 pixels to calculate full-pixel avereage intensities.
-Using 67 pixels to calculate full-pixel avereage intensities.
-Using 33 pixels to calculate full-pixel avereage intensities.
-Using 12 pixels to calculate full-pixel avereage intensities.
-Using 9 pixels to calculate full-pixel avereage intensities.
-Using 33 pixels to calculate full-pixel avereage intensities.
-Using 44 pixels to calculate full-pixel avereage intensities.
-Using 15 pixels to calculate full-pixel avereage intensities.
-Using 46 pixels to calculate full-pixel avereage intensities.
-Using 210 pixels to calculate full-pixel avereage intensities.
-Using 46 pixels to calculate full-pixel avereage intensities.
-Using 75 pixels to calculate full-pixel avereage intensities.
-Using 7 pixels to calculate full-pixel avereage intensities.
-Using 3 pixels to calculate full-pixel avereage intensities.
-Using 10 pixels to calculate full-pixel avereage intensities.
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1040,115 +1030,115 @@ Using 10 pixels to calculate full-pixel avereage intensities.
   <tbody>
     <tr>
       <th rowspan="3" valign="top">C37H71O8P+Na</th>
-      <th>E2</th>
-      <td>0.436669</td>
-      <td>0.605490</td>
-      <td>0.605490</td>
-      <td>-1.454037</td>
-      <td>0.400550</td>
-      <td>-1.053487</td>
+      <th>C1</th>
+      <td>0.495894</td>
+      <td>0.538366</td>
+      <td>0.538366</td>
+      <td>-1.186621</td>
+      <td>0.070028</td>
+      <td>-1.116593</td>
     </tr>
     <tr>
-      <th>I2</th>
-      <td>0.458666</td>
-      <td>0.606335</td>
-      <td>0.606335</td>
-      <td>-1.448836</td>
-      <td>0.384817</td>
-      <td>-1.064019</td>
+      <th>G2</th>
+      <td>0.581081</td>
+      <td>0.597584</td>
+      <td>0.597584</td>
+      <td>-1.100312</td>
+      <td>0.037465</td>
+      <td>-1.062847</td>
     </tr>
     <tr>
-      <th>J4</th>
-      <td>0.733393</td>
-      <td>0.800591</td>
-      <td>0.800591</td>
-      <td>-1.183589</td>
-      <td>0.198568</td>
-      <td>-0.985021</td>
+      <th>I4</th>
+      <td>0.706478</td>
+      <td>0.713557</td>
+      <td>0.713557</td>
+      <td>-1.011599</td>
+      <td>0.023030</td>
+      <td>-0.988568</td>
     </tr>
     <tr>
-      <th rowspan="3" valign="top">C39H69O8P+H</th>
-      <th>E2</th>
-      <td>0.527100</td>
-      <td>0.678490</td>
-      <td>0.678490</td>
-      <td>-1.382436</td>
-      <td>0.060428</td>
-      <td>-1.036088</td>
+      <th rowspan="3" valign="top">C49H85NO9+K</th>
+      <th>C1</th>
+      <td>0.392795</td>
+      <td>0.419030</td>
+      <td>0.419030</td>
+      <td>-1.136916</td>
+      <td>0.048678</td>
+      <td>-1.088238</td>
     </tr>
     <tr>
-      <th>I2</th>
-      <td>0.513108</td>
-      <td>0.660373</td>
-      <td>0.660373</td>
-      <td>-1.441015</td>
-      <td>0.377460</td>
-      <td>-1.063554</td>
+      <th>G2</th>
+      <td>0.479489</td>
+      <td>0.494997</td>
+      <td>0.494996</td>
+      <td>-1.051197</td>
+      <td>0.026922</td>
+      <td>-1.024275</td>
     </tr>
     <tr>
-      <th>J4</th>
-      <td>0.781770</td>
-      <td>0.850422</td>
-      <td>0.850422</td>
-      <td>-1.175101</td>
-      <td>0.192225</td>
-      <td>-0.982876</td>
+      <th>I4</th>
+      <td>0.803619</td>
+      <td>0.803088</td>
+      <td>0.803088</td>
+      <td>-0.914884</td>
+      <td>-0.004594</td>
+      <td>-0.919477</td>
     </tr>
     <tr>
-      <th rowspan="3" valign="top">C40H78NO8P+H</th>
-      <th>E2</th>
-      <td>0.357664</td>
-      <td>0.253557</td>
-      <td>0.253557</td>
-      <td>-0.381931</td>
-      <td>-0.302432</td>
-      <td>-0.684363</td>
+      <th rowspan="3" valign="top">C41H80NO8P+H</th>
+      <th>C1</th>
+      <td>0.038851</td>
+      <td>0.027825</td>
+      <td>0.027825</td>
+      <td>-0.560510</td>
+      <td>-0.032739</td>
+      <td>-0.593248</td>
     </tr>
     <tr>
-      <th>I2</th>
-      <td>0.314369</td>
-      <td>0.211536</td>
-      <td>0.211536</td>
-      <td>-0.350315</td>
-      <td>-0.297353</td>
-      <td>-0.647669</td>
+      <th>G2</th>
+      <td>0.224493</td>
+      <td>0.205132</td>
+      <td>0.205132</td>
+      <td>-0.570921</td>
+      <td>-0.056166</td>
+      <td>-0.627088</td>
     </tr>
     <tr>
-      <th>J4</th>
-      <td>0.523481</td>
-      <td>0.422375</td>
-      <td>0.422375</td>
-      <td>-0.348754</td>
-      <td>-0.347930</td>
-      <td>-0.696684</td>
+      <th>I4</th>
+      <td>0.221261</td>
+      <td>0.205754</td>
+      <td>0.205754</td>
+      <td>-0.505635</td>
+      <td>-0.067853</td>
+      <td>-0.573487</td>
     </tr>
     <tr>
       <th rowspan="3" valign="top">C42H82NO8P+H</th>
-      <th>E2</th>
-      <td>0.353756</td>
-      <td>0.244431</td>
-      <td>0.244431</td>
-      <td>-0.294391</td>
-      <td>-0.316857</td>
-      <td>-0.611248</td>
+      <th>C1</th>
+      <td>0.101533</td>
+      <td>0.077144</td>
+      <td>0.077144</td>
+      <td>-0.491343</td>
+      <td>-0.065178</td>
+      <td>-0.556521</td>
     </tr>
     <tr>
-      <th>I2</th>
-      <td>0.144098</td>
-      <td>0.032620</td>
-      <td>0.032620</td>
-      <td>-0.290978</td>
-      <td>-0.272523</td>
-      <td>-0.563502</td>
+      <th>G2</th>
+      <td>0.365952</td>
+      <td>0.331214</td>
+      <td>0.331214</td>
+      <td>-0.532915</td>
+      <td>-0.081692</td>
+      <td>-0.614608</td>
     </tr>
     <tr>
-      <th>J4</th>
-      <td>0.278758</td>
-      <td>0.191052</td>
-      <td>0.191052</td>
-      <td>-0.254807</td>
-      <td>-0.334250</td>
-      <td>-0.589058</td>
+      <th>I4</th>
+      <td>0.219144</td>
+      <td>0.191695</td>
+      <td>0.191695</td>
+      <td>-0.393125</td>
+      <td>-0.086022</td>
+      <td>-0.479148</td>
     </tr>
   </tbody>
 </table>
@@ -1158,32 +1148,15 @@ Using 10 pixels to calculate full-pixel avereage intensities.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_3.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_3.png" />
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-Using 98 pixels to calculate full-pixel avereage intensities.
-Using 47 pixels to calculate full-pixel avereage intensities.
-Using 35 pixels to calculate full-pixel avereage intensities.
-Using 229 pixels to calculate full-pixel avereage intensities.
-Using 52 pixels to calculate full-pixel avereage intensities.
-Using 68 pixels to calculate full-pixel avereage intensities.
-Using 35 pixels to calculate full-pixel avereage intensities.
-Using 8 pixels to calculate full-pixel avereage intensities.
-Using 237 pixels to calculate full-pixel avereage intensities.
-Using 199 pixels to calculate full-pixel avereage intensities.
-</pre></div></div>
+<img alt="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" src="../../_images/analysis_Lx_Glioblastoma_pipeline_01_correction_15_2.png" />
+</div>
 </div>
 </section>
 

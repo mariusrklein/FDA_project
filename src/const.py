@@ -38,3 +38,11 @@ CONFIG = {
         'write_dataset_path': 'ion_suppression_correction',
     },
 }
+
+
+LABEL = {
+    'SProp': r'sampling proportion $p_s$',
+    'IRatio': r'intensity proportion ratio $\mu$',
+    'RDens': r'relative deviation $\frac{J_{Python} - J_R}{J_{Python}}$'
+}
+

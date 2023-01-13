@@ -20,6 +20,7 @@
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Lx_Pancreatic_Cancer: Correction" href="../Lx_Pancreatic_Cancer/pipeline_01_correction.html" />
     <link rel="prev" title="Mx_Seahorse: Processing" href="pipeline_02_processing.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -28,6 +29,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Lx_Pancreatic_Cancer/pipeline_01_correction.html" title="Lx_Pancreatic_Cancer: Correction"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="pipeline_02_processing.html" title="Mx_Seahorse: Processing"
              accesskey="P">previous</a> |</li>
@@ -301,7 +305,7 @@ div.rendered_html tbody tr:hover {
 <section id="Mx_Seahorse:-Evaluation">
 <h1>Mx_Seahorse: Evaluation<a class="headerlink" href="#Mx_Seahorse:-Evaluation" title="Permalink to this heading">¶</a></h1>
 <p>In this notebook, different measures are investigated to quantify the effect of correcting SpaceM ion intensity data for partial pixel-cell overlap. Moreover, The effects of the correction on different metabolites is visualized.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -326,6 +330,20 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
+Traceback (most recent call last):
+  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
+    import cellpose  # pylint: disable=unused-import
+ModuleNotFoundError: No module named &#39;cellpose&#39;
+
+  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -732,9 +750,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.438479  0.241497          0.091837
-X_pca_ISM correction  10  0.290420  0.301301          0.091837
-X_umap_uncorrected    10  0.487343  0.236717          0.091837
-X_umap_ISM correction 10  0.456104  0.263223          0.091837
+X_pca_ISM correction  10  0.315886  0.282447          0.091837
+X_umap_uncorrected    10  0.485478  0.241561          0.091837
+X_umap_ISM correction 10  0.499964  0.235980          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -777,9 +795,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.194661  0.329262          0.091837
-X_pca_ISM correction  10  0.145738  0.357544          0.091837
-X_umap_uncorrected    10  0.275835  0.340895          0.091837
-X_umap_ISM correction 10  0.196897  0.365864          0.091837
+X_pca_ISM correction  10  0.165438  0.349494          0.091837
+X_umap_uncorrected    10  0.276992  0.344744          0.091837
+X_umap_ISM correction 10  0.213772  0.372107          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -822,9 +840,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.336808  0.270114          0.091837
-X_pca_ISM correction  10  0.267901  0.299892          0.091837
-X_umap_uncorrected    10  0.512948  0.229086          0.091837
-X_umap_ISM correction 10  0.462965  0.264200          0.091837
+X_pca_ISM correction  10  0.292555  0.280868          0.091837
+X_umap_uncorrected    10  0.513439  0.228026          0.091837
+X_umap_ISM correction 10  0.485299  0.234500          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -867,9 +885,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.183201  0.337764          0.091837
-X_pca_ISM correction  10  0.146190  0.353865          0.091837
-X_umap_uncorrected    10  0.223039  0.366255          0.091837
-X_umap_ISM correction 10  0.179993  0.382668          0.091837
+X_pca_ISM correction  10  0.166856  0.343809          0.091837
+X_umap_uncorrected    10  0.220275  0.364794          0.091837
+X_umap_ISM correction 10  0.208209  0.372161          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -912,9 +930,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.336808  0.270114          0.091837
-X_pca_ISM correction  10  0.267901  0.299892          0.091837
-X_umap_uncorrected    10  0.511777  0.227490          0.091837
-X_umap_ISM correction 10  0.465851  0.260957          0.091837
+X_pca_ISM correction  10  0.292555  0.280868          0.091837
+X_umap_uncorrected    10  0.515568  0.226239          0.091837
+X_umap_ISM correction 10  0.485403  0.238378          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -957,9 +975,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.164301  0.354018          0.091837
-X_pca_ISM correction  10  0.108066  0.376949          0.091837
-X_umap_uncorrected    10  0.222897  0.384154          0.091837
-X_umap_ISM correction 10  0.147634  0.393544          0.091837
+X_pca_ISM correction  10  0.124670  0.366133          0.091837
+X_umap_uncorrected    10  0.221989  0.387393          0.091837
+X_umap_ISM correction 10  0.162018  0.398279          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1022,8 +1040,8 @@ X_umap_ISM correction 10  0.147634  0.393544          0.091837
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-False    414
-True     133
+False    416
+True     131
 Name: corrected_only_using_pool, dtype: int64
 </pre></div></div>
 </div>
@@ -1063,19 +1081,13 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
   self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
-  self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
-  foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
   self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
 </pre></div></div>
 </div>
@@ -1107,7 +1119,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/pandas/core/arraylike.py:402: RuntimeWarning: divide by zero encountered in log10
   result = getattr(ufunc, method)(*inputs, **kwargs)
 </pre></div></div>
 </div>
@@ -1131,7 +1143,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
   obs_tidy.index.value_counts(sort=False).iteritems()
 </pre></div></div>
 </div>
@@ -1186,13 +1198,13 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:258: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:258: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:258: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:258: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1267,7 +1279,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
   obs_tidy.index.value_counts(sort=False).iteritems()
 </pre></div></div>
 </div>
@@ -1313,13 +1325,13 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:258: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:258: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:258: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:182: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:258: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1353,7 +1365,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <p>The different degree of correction of metabolites could be reflected in the spatial distribution on the corresponding ion images. To this end, the ion images of each two metabolites with the highest (center column) and lowest (right column) correction slopes are shown in the following figure (from well G1, condition NStim). The corresponding dataset is available on
 <a class="reference external" href="https://metaspace2020.eu/annotations?ds=2022-01-27_17h48m39s&amp;fdr=0.5&amp;q=C7H5NO%20%7C%20C5H5N5O%20%7C%20C9H7NO%20%7C%20H5O7P2%20%7C%20C13H10N2%20%7C%20C9H7NO%20%7C%20C10H10N2O%20%7C%20C6H6O4&amp;row=5">metaspace</a>.</p>
-<p align="center"><p><img alt="c6b62e9fb497473db0496ada9424607f" class="no-scaled-link" src="../../_images/ion_images_seahorse.png" style="width: 800px;" /></p>
+<p align="center"><p><img alt="a5e757685efd4c95b739baf7b4522d4e" class="no-scaled-link" src="../../_images/ion_images_seahorse.png" style="width: 800px;" /></p>
 </p></section>
 <section id="Comparison-of-the-datasets">
 <h2>Comparison of the datasets<a class="headerlink" href="#Comparison-of-the-datasets" title="Permalink to this heading">¶</a></h2>
@@ -1376,9 +1388,9 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
 </pre></div></div>
 </div>
@@ -1408,9 +1420,9 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
 </pre></div></div>
 </div>
@@ -1493,7 +1505,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summaries</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">({</span><span class="s1">&#39;uncorrected&#39;</span><span class="p">:</span> <span class="n">adata</span><span class="p">,</span> <span class="s1">&#39;ISM correction&#39;</span><span class="p">:</span> <span class="n">adata_cor</span><span class="p">},</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">])</span>
@@ -1509,9 +1521,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.183201  0.337764          0.091837
-X_pca_ISM correction  10  0.146190  0.353865          0.091837
-X_umap_uncorrected    10  0.223039  0.366255          0.091837
-X_umap_ISM correction 10  0.179993  0.382668          0.091837
+X_pca_ISM correction  10  0.166856  0.343809          0.091837
+X_umap_uncorrected    10  0.220275  0.364794          0.091837
+X_umap_ISM correction 10  0.208209  0.372161          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1522,7 +1534,7 @@ X_umap_ISM correction 10  0.179993  0.382668          0.091837
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">(</span>
@@ -1560,7 +1572,7 @@ Index: []
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">trapz</span><span class="p">,</span> <span class="n">simps</span>
@@ -1580,13 +1592,13 @@ Index: []
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Area under the curve for X_umap_uncorrected: 0.5096
-Area under the curve for X_umap_ISM correction: 0.5000
+Area under the curve for X_umap_ISM correction: 0.5066
 Area under the curve for X_pca_uncorrected: 0.5133
-Area under the curve for X_pca_ISM correction: 0.5013
+Area under the curve for X_pca_ISM correction: 0.5050
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
@@ -1627,7 +1639,7 @@ Area under the curve for X_pca_ISM correction: 0.5013
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
@@ -1650,7 +1662,7 @@ log_norm_counts
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
@@ -1698,6 +1710,11 @@ log_norm_counts
     <p class="topless"><a href="pipeline_02_processing.html"
                           title="previous chapter">Mx_Seahorse: Processing</a></p>
   </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../Lx_Pancreatic_Cancer/pipeline_01_correction.html"
+                          title="next chapter">Lx_Pancreatic_Cancer: Correction</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -1725,6 +1742,9 @@ log_norm_counts
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="../Lx_Pancreatic_Cancer/pipeline_01_correction.html" title="Lx_Pancreatic_Cancer: Correction"
+             >next</a> |</li>
         <li class="right" >
           <a href="pipeline_02_processing.html" title="Mx_Seahorse: Processing"
              >previous</a> |</li>
