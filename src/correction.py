@@ -21,6 +21,7 @@ import anndata as ad
 import scanpy as sc
 from src import const
 import seaborn as sns
+import warnings
 import sys
 sys.path.append('/home/mklein/spacem')
 from SpaceM.lib.modules import (
@@ -442,7 +443,8 @@ def correct_intensities_quantile_regression_parallel(
     min_datapoints = 10,
     correct_intersect = False,
     normalized = True,
-    n_jobs = 1
+    n_jobs = 1,
+    progress = False
     ) -> ad.AnnData:
     """Corrects ion intensities based on cell sampling proportion of respective pixels
 
@@ -492,6 +494,8 @@ def correct_intensities_quantile_regression_parallel(
         raise RuntimeError("The supplied reference pool has only %1d valid data points and is "
         + "therefore unsuitable. Please specify a suitable reference pool."%len(reference_df))
 
+    warnings.filterwarnings("ignore")
+    
     ref_model = smf.quantreg('Q("value") ~ ' + reference, reference_df)
     ref_qrmodel = ref_model.fit(q=0.5)
 
@@ -530,8 +534,12 @@ def correct_intensities_quantile_regression_parallel(
         return (pred, len(df_for_model), qrmodel.iterations, qrmodel.params)
 
     # iterate over molecules
-    predictions_tuples = Parallel(n_jobs=n_jobs)(
-        delayed(quantile_ion)(ion) for ion in log_ratio_df.columns)
+    if progress:
+        predictions_tuples = Parallel(n_jobs=n_jobs)(
+            delayed(quantile_ion)(ion) for ion in tqdm(log_ratio_df.columns))
+    else:
+         predictions_tuples = Parallel(n_jobs=n_jobs)(
+            delayed(quantile_ion)(ion) for ion in log_ratio_df.columns)
     predictions_dict = {i[0].name: i[0] for i in predictions_tuples}
     datapoints_list = [i[1] for i in predictions_tuples]
     iterations_list = [i[2] for i in predictions_tuples]
@@ -547,6 +555,7 @@ def correct_intensities_quantile_regression_parallel(
     predictions_ad.var['correction_quantreg_intersect'] = intersect_list
     predictions_ad.obs['total_pixel_overlap'] = pixels_total_overlap
     
+    warnings.filterwarnings("default")
     # print(pd.concat([ion_intensities['C16H30O2'], sampling_proportion_series, log_ratio_df['C16H30O2'], correction_factors['C16H30O2'], predictions['C16H30O2']], axis=1))
     #print(insufficient_metabolites_list)
     #return((correction_factors, pd.Series(params), predictions))
@@ -558,7 +567,8 @@ def correct_quantile_inplace(adata: ad.AnnData,
     min_datapoints = 10,
     correct_intersect = False,
     normalized = True,
-    n_jobs = 1
+    n_jobs = 1,
+    progress = False,
 ) -> ad.AnnData:
     """Corrects ion intensities based on cell sampling proportion of respective pixels and 
     returns resulting annotated data matrix.
@@ -594,7 +604,8 @@ def correct_quantile_inplace(adata: ad.AnnData,
         min_datapoints = min_datapoints,
         correct_intersect = correct_intersect,
         normalized = normalized,
-        n_jobs = n_jobs
+        n_jobs = n_jobs,
+        progress = progress
         )
 
     return an

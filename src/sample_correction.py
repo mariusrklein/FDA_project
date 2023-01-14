@@ -15,7 +15,7 @@ class SampleCorrection:
         self.config = config
         self.n_jobs = n_jobs
         
-        print("init %s" % sample)
+        print("Calculating corrections for sample %s" % sample)
         
         self.spacem_config = self.get_spacem_config()
         self.analysis_prefix = os.path.join(self.config['runtime']['spacem_dataset_path'], 
@@ -97,7 +97,8 @@ class SampleCorrection:
             correct_intersect = self.config['correction']['correction_intercept'],
             normalized = self.config['correction']['correction_ratios_normalize'],
             proportion_threshold=self.config['correction']['correction_proportion_threshold'],
-            n_jobs=self.n_jobs)
+            n_jobs=self.n_jobs,
+            progress = True)
         
     def deconvolution(self):
         

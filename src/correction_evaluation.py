@@ -13,9 +13,6 @@ class CorrectionEvaluation:
         
         if self.config['evaluation']['run_qc']:
             self.run_qc()
-            
-        if self.config['evaluation']['run_feature_evaluation']:
-            self.run_feature_eval()
         
         if self.config['evaluation']['run_results_evaluation']:
             self.run_performance_eval()
@@ -25,13 +22,6 @@ class CorrectionEvaluation:
         pm.execute_notebook(
             os.path.join(notebooks_location, 'notebook_templates', 'qc.ipynb'),
             os.path.join(self.config['runtime']['evaluation_folder'], 'qc.ipynb'),
-            parameters={'config': self.config}
-        )
-    
-    def run_feature_eval(self):
-        pm.execute_notebook(
-            os.path.join(notebooks_location, 'notebook_templates', 'feature_analysis.ipynb'),
-            os.path.join(self.config['runtime']['evaluation_folder'], 'feature_analysis.ipynb'),
             parameters={'config': self.config}
         )
     

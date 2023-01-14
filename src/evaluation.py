@@ -17,6 +17,7 @@ from src import const
 import seaborn as sns
 import scanpy as sc
 import re
+from sklearn.svm import LinearSVC
 
 
 
@@ -163,18 +164,18 @@ def compare_pre_post_correction(adata, adata_cor, proportion_threshold, row='wel
     return out_df[sorted(out_df.columns)]
 
 
-def plot_deviations_between_adatas(adata, gen_adata, adata_cor):
+def plot_deviations_between_adatas(adata, gen_adata, adata_cor, well_name = 'well'):
 
     def plot_deviations(adata1, adata2, label=""):
         df = (adata2.to_df() - adata1.to_df()) / adata1.to_df()
         # df = df / (adata1.to_df().shape[0] * adata1.to_df().shape[1])
         df = df.mean(axis=1)
 
-        df = pd.concat({'mean relative deviation': df, 'well': adata1.obs['well']}, axis=1)
-        first = df.groupby("well").quantile(q=[0.25]).reset_index()[['well', 'mean relative deviation']].set_index("well")
-        third = df.groupby("well").quantile(q=[0.75]).reset_index()[['well', 'mean relative deviation']].set_index("well")
+        df = pd.concat({'mean relative deviation': df, well_name: adata1.obs[well_name]}, axis=1)
+        first = df.groupby("well").quantile(q=[0.25]).reset_index()[[well_name, 'mean relative deviation']].set_index(well_name)
+        third = df.groupby("well").quantile(q=[0.75]).reset_index()[[well_name, 'mean relative deviation']].set_index(well_name)
 
-        plt = sns.lineplot(df, x='well', y="mean relative deviation", label=label, marker='o', errorbar=None )
+        plt = sns.lineplot(df, x=well_name, y="mean relative deviation", label=label, marker='o', errorbar=None )
         plt.fill_between(first.index, first['mean relative deviation'], third['mean relative deviation'], alpha=0.2)
         plt.set(title = 'Summed absolute deviations across wells', ylabel=const.LABEL['RDev_general'])
         plt.set_xticklabels(plt.get_xticklabels(), rotation=45, horizontalalignment='right')
@@ -197,6 +198,7 @@ class MetaboliteAnalysis:
                  adata, 
                  adata_cor, 
                  condition_name,
+                 well_name = "well",
                  comparison_name = 'correction',
                  obs_columns = [],
                  var_columns = [],
@@ -240,7 +242,7 @@ class MetaboliteAnalysis:
         if use_raw:
             self.conc_adata_raw.X = self.conc_adata_raw.raw.X
         
-        self.obs_columns.extend([comparison_name, condition_name, 'cell', 'well'])
+        self.obs_columns.extend([comparison_name, condition_name, 'cell', well_name])
         self.changed_ions_df = sc.get.obs_df(self.conc_adata_raw, 
                                         keys=(self.obs_columns+list(self.conc_adata.var_names))).melt(id_vars=self.obs_columns, 
                                                                                                  var_name='ion')
@@ -670,4 +672,36 @@ def intermixing(adata_dict: Dict[str, ad.AnnData],
     print(pd.concat({k: v.loc[show_table] for k, v in summaries.items()}))
     
     return (results, summaries)
-   
+
+def analyse_svm_margin(adata, adata_cor, condition_name, layer=None):
+    print(layer)
+    if layer is not None:
+        adata.layers['default_X'] = adata.X
+        adata.X = adata.layers[layer]
+        adata_cor.layers['default_X'] = adata_cor.X
+        adata_cor.X = adata_cor.layers[layer]
+
+    def get_svm_margin(adata, condition_name, size_factor = 1):
+        predictors = adata.X * size_factor
+        result = adata.obs[condition_name]
+        clf = LinearSVC(random_state=0, dual=False)
+        clf.fit(predictors, result)
+        margin_df = pd.DataFrame({'condition': clf.classes_, 'margin': 1 / np.sqrt(np.sum(clf.coef_**2, axis=1))})
+
+        #print(margin_df)
+        return margin_df
+
+    size_factor = np.sum(adata.X) / np.sum(adata_cor.X)
+
+    df = pd.merge(get_svm_margin(adata, condition_name),
+                  get_svm_margin(adata_cor, condition_name, size_factor = size_factor),
+                  on='condition', suffixes=['_uncorrected', '_ISM_corrected'])
+    sns.set(rc={"figure.figsize":(12, 5)})
+    sns.barplot(df.melt(id_vars='condition', var_name='correction', value_name='margin'),
+                x='condition', y='margin', hue='correction').set_title('Comparison of SVM margins for layer %s'%layer)
+
+
+
+    if layer is not None:
+        adata.X = adata.layers['default_X']
+        adata_cor.X = adata_cor.layers['default_X']

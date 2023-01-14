@@ -35,7 +35,6 @@ CONFIG = {
         'evaluation_folder': 'ion_suppression_correction/evaluation',
         'run_qc': True,
         'run_results_evaluation': True,
-        'run_features_evaluation': True,
     },
     'output': {
         'save_am_files': True,

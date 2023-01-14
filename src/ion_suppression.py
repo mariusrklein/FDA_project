@@ -12,7 +12,7 @@ from joblib import Parallel, delayed
 from tqdm import tqdm
 import functools
 import papermill as pm
-sys.path.append('/home/mklein/FDA_project')
+#sys.path.append('/home/mklein/FDA_project')
 from src.correction_evaluation import CorrectionEvaluation
 from src.sample_correction import SampleCorrection
 from src import const
@@ -133,11 +133,26 @@ class ISC:
     
     
     def init_sample_corrections(self):
-
-        corrections = Parallel(n_jobs=2)(
+        
+        jobs_total = multiprocessing.cpu_count() - 1
+    #     factor = np.floor(jobs_total / len(self.samples_list))
+    #     
+    #     if factor < 2:
+    #         jobs_samples = jobs_total
+    #         jobs_corr = 1
+    #     elif factor >= 2:
+    #         jobs_samples = len(self.samples_list)
+    #         jobs_corr = factor
+    #     
+        jobs_samples = 1
+        jobs_corr = 70
+        
+        print("using %d times %d cores for calculations."%(jobs_samples, jobs_corr))
+        
+        corrections = Parallel(n_jobs=jobs_samples)(
         delayed(SampleCorrection)(sample=sample,
                                   config=self.config, 
-                                  n_jobs=16) for sample in tqdm(self.samples_list[:2]))
+                                  n_jobs=jobs_corr) for sample in tqdm(self.samples_list))
         
         return corrections
     
@@ -216,13 +231,16 @@ class ISC:
         self.evaluation = CorrectionEvaluation(correction=self)
         
     
+    def save_config(self, file):
+        with open(file, "w") as fp:
+            json.dump(self.config , fp) 
+    
     
 if __name__ == '__main__':
-    # TODO CLI
 
     args = sys.argv[1:]
     if len(args) < 1 or len(args) < 1:
-        raise IOError('Please give 1 or 2 arguments, separated by space: '
+        raise IOError('Please give 1 to 2 arguments, separated by space: '
                       +'Directory of the SpaceM-generated folder structure and '
                       +'directory/name of the configuration file to be used.')
 
