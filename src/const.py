@@ -4,7 +4,6 @@ CELL_PRE = ''
 PIXEL_PRE = ''
 TPO = 'correction_total_pixel_overlap'
 FPAI = 'correction_full_pixel_avg_intensities'
-SAMPLE_COL = "sample_col"
 
 LABEL = {
     'SProp': r'sampling proportion $p_s$',
