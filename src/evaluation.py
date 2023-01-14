@@ -65,11 +65,32 @@ def plot_all_ion_slopes(
     
 def compare_pre_post_correction(adata, adata_cor, proportion_threshold, row='well', ions=None, wells=None, ratio=True, normalized=True):
     
-    if ions is None:
-        ions = list(adata_cor.var.sort_values('correction_quantreg_slope').head(2).index) + list(adata_cor.var.sort_values('correction_quantreg_slope').tail(2).index)
     if wells is None:
         wells = list(set(adata.obs[row]))[:3]
         
+    if ions is None:
+        
+        if ratio:
+            adata = normalize_proportion_ratios(intensities_ad=adata, normalized=normalized)
+
+        global_df = sc.get.obs_df(adata_cor, keys=[row, const.TPO] + list(adata_cor.var_names)
+                                 ).melt(id_vars=[row, const.TPO], var_name='ion', value_name='intensity')
+        
+        if ratio:
+            global_df['intensity'] = np.log10(1+global_df['intensity'])
+            global_df[const.TPO] = np.log10(1+global_df[const.TPO])
+            
+        avail_ions = list(set(global_df[(global_df['intensity']>0) & 
+                                        (global_df[const.TPO]>0) & (global_df[row].isin(wells))]['ion'] ))
+      #  print(avail_ions)
+        var_table = adata_cor.var[(adata_cor.var.index.isin(avail_ions)) & (adata_cor.var['correction_n_datapoints']>50)
+                                 ].sort_values('correction_quantreg_slope')
+        
+        ions = list(var_table.head(2).index) + list(var_table.sort_values('correction_n_datapoints').tail(2).index) + list(var_table.tail(2).index)
+#        ions = list(var_table.sort_values('correction_n_datapoints').tail(2).index) + list(var_table.tail(2).index)
+      
+#    print(adata_cor.var[adata_cor.var.index.isin(ions)])
+    
     def plot_all_wells(adata, ions, wells, row='well', x=const.TPO, ratio=True, normalized=True, proportion_threshold = 0.1):
 
         adata = adata[adata.obs[row].isin(wells)]
@@ -80,9 +101,10 @@ def compare_pre_post_correction(adata, adata_cor, proportion_threshold, row='wel
             yscale = 'intensity_proportion_ratio'
 
         plot_df = sc.get.obs_df(adata, keys=[row, x] + ions).melt(id_vars=[row, x], var_name='ion', value_name=yscale)
+        
         # getting rid of NaNs and -Inf values
-        plot_df= plot_df[plot_df[yscale] > 0]
-
+        plot_df = plot_df[plot_df[yscale] > 0]
+        
         # mark points that were used for quantreg correction 
         plot_df['include_quantreg'] = plot_df[x] > proportion_threshold
         if ratio:
@@ -93,8 +115,8 @@ def compare_pre_post_correction(adata, adata_cor, proportion_threshold, row='wel
         binw = np.ptp(plot_df[x]) / 30
         
         graph = sns.FacetGrid(plot_df, row=row, col='ion', hue='include_quantreg', sharey=False, margin_titles=True, palette={True: 'tab:green', False: 'tab:red'})
-        graph.map(sns.histplot, x, yscale, stat='frequency', binwidth = (binw, binh)).add_legend(title='Used for correction')
-        # graph.map(sns.scatterplot, x, yscale, size=1).add_legend(title='Used for correction')
+        # graph.map(sns.histplot, x, yscale, stat='frequency', binwidth = (binw, binh)).add_legend(title='Used for correction')
+        graph.map(sns.scatterplot, x, yscale, size=1).add_legend(title='Used for correction')
         
         if ratio:
             graph.set_axis_labels(const.LABEL['SProp'], const.LABEL['IRatio'])
@@ -108,12 +130,14 @@ def compare_pre_post_correction(adata, adata_cor, proportion_threshold, row='wel
         for well_i, well in enumerate(wells):
             for ion_i, i in enumerate(ions):
                 q_df = plot_df[(plot_df['ion'] == i) & (plot_df[row] == well)]
+
                 if len(q_df) == 0:
-                    params[i] = {'Intercept': np.nan, x: np.nan}
+                    # params[ion_i] = {'Intercept': np.nan, x: np.nan}
                     continue
                 model = smf.quantreg(yscale+' ~ '+x, q_df)
                 qrmodel = model.fit(q=0.5)
                 param_dict = {'ion': i, row: well, 'intercept_glob': qrmodel.params[0], 'slope_glob': qrmodel.params[1]}
+                #print(graph.axes)
                 graph.axes[well_i][ion_i].axline((0, param_dict['intercept_glob']), slope=param_dict['slope_glob'], color='black')
 
                 if 'correction_quantreg_slope' not in adata.var.columns and ratio:
@@ -137,6 +161,34 @@ def compare_pre_post_correction(adata, adata_cor, proportion_threshold, row='wel
     df2 = plot_all_wells(adata_cor, ions=ions, wells=wells, ratio=ratio, normalized=normalized, proportion_threshold=proportion_threshold)
     out_df = pd.merge(df1, df2, right_index=True, left_index=True, suffixes=('_uncorrected', '_ISM_correction')).loc[ions]
     return out_df[sorted(out_df.columns)]
+
+
+def plot_deviations_between_adatas(adata, gen_adata, adata_cor):
+
+    def plot_deviations(adata1, adata2, label=""):
+        df = (adata2.to_df() - adata1.to_df()) / adata1.to_df()
+        # df = df / (adata1.to_df().shape[0] * adata1.to_df().shape[1])
+        df = df.mean(axis=1)
+
+        df = pd.concat({'mean relative deviation': df, 'well': adata1.obs['well']}, axis=1)
+        first = df.groupby("well").quantile(q=[0.25]).reset_index()[['well', 'mean relative deviation']].set_index("well")
+        third = df.groupby("well").quantile(q=[0.75]).reset_index()[['well', 'mean relative deviation']].set_index("well")
+
+        plt = sns.lineplot(df, x='well', y="mean relative deviation", label=label, marker='o', errorbar=None )
+        plt.fill_between(first.index, first['mean relative deviation'], third['mean relative deviation'], alpha=0.2)
+        plt.set(title = 'Summed absolute deviations across wells', ylabel=const.LABEL['RDev_general'])
+        plt.set_xticklabels(plt.get_xticklabels(), rotation=45, horizontalalignment='right')
+    
+        df_out = pd.concat([df.groupby("well").median(), third-first], axis=1)
+        df_out.columns = [label+"_median", label+"_iqr"]
+        return df_out
+
+    df1 = plot_deviations(adata, gen_adata, 'gen. data vs. spacem')
+    df2 = plot_deviations(gen_adata, adata_cor, 'corr. data vs. gen. data')
+    
+    return pd.concat([df1, df2], axis=1)
+
+
 
 
 class MetaboliteAnalysis:

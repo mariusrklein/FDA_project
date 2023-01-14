@@ -56,6 +56,7 @@ CONFIG = {
 LABEL = {
     'SProp': r'sampling proportion $p_s$',
     'IRatio': r'intensity proportion ratio $\mu$',
-    'RDens': r'relative deviation $\frac{J_{Python} - J_R}{J_{Python}}$'
+    'RDens': r'relative deviation $\frac{J_{Python} - J_R}{J_{Python}}$',
+    'RDev_general': r'relative deviation $\frac{J_{2} - J_1}{J_{1}}$'
 }
 
