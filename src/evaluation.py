@@ -163,30 +163,63 @@ def compare_pre_post_correction(adata, adata_cor, proportion_threshold, row='wel
     return out_df[sorted(out_df.columns)]
 
 
+# def plot_deviations_between_adatas(adata, gen_adata, adata_cor):
+# 
+#     def plot_deviations(adata1, adata2, label=""):
+#         df = (adata2.to_df() - adata1.to_df()) / adata1.to_df()
+#         # df = df / (adata1.to_df().shape[0] * adata1.to_df().shape[1])
+#         df = df.mean(axis=1)
+# 
+#         df = pd.concat({'mean relative deviation': df, 'well': adata1.obs['well']}, axis=1)
+#         first = df.groupby("well").quantile(q=[0.25]).reset_index()[['well', 'mean relative deviation']].set_index("well")
+#         third = df.groupby("well").quantile(q=[0.75]).reset_index()[['well', 'mean relative deviation']].set_index("well")
+# 
+#         plt = sns.lineplot(df, x='well', y="mean relative deviation", label=label, marker='o', errorbar=None, estimator="median")
+#         plt.fill_between(first.index, first['mean relative deviation'], third['mean relative deviation'], alpha=0.2)
+#         plt.set(title = 'Summed absolute deviations across wells', ylabel=const.LABEL['RDev_general'])
+#         plt.set_xticklabels(plt.get_xticklabels(), rotation=45, horizontalalignment='right')
+#     
+#         df_out = pd.concat([df.groupby("well").median(), third-first], axis=1)
+#         df_out.columns = [label+"_median", label+"_iqr"]
+#         return df_out
+# 
+#     df1 = plot_deviations(adata, gen_adata, 'gen. data vs. spacem')
+#     df2 = plot_deviations(gen_adata, adata_cor, 'corr. data vs. gen. data')
+#     
+#     return pd.concat([df1, df2], axis=1)
+
+
 def plot_deviations_between_adatas(adata, gen_adata, adata_cor):
 
     def plot_deviations(adata1, adata2, label=""):
-        df = (adata2.to_df() - adata1.to_df()) / adata1.to_df()
+        diff_df = (sc.get.obs_df(adata1, keys=['well'] + list(adata1.var_names)).set_index("well")- sc.get.obs_df(
+            adata2, keys=['well'] + list(adata2.var_names)).set_index("well"))/ sc.get.obs_df(
+            adata1, keys=['well'] + list(adata1.var_names)).set_index("well") 
+
         # df = df / (adata1.to_df().shape[0] * adata1.to_df().shape[1])
-        df = df.mean(axis=1)
+        df_out = pd.concat({'median': diff_df.reset_index().melt(id_vars="well").groupby("well").median(), 
+                            '25': diff_df.reset_index().melt(id_vars="well").groupby("well").quantile(q=0.25),
+                            '75': diff_df.reset_index().melt(id_vars="well").groupby("well").quantile(q=0.75),
+                           }, axis=1).reset_index()
 
-        df = pd.concat({'mean relative deviation': df, 'well': adata1.obs['well']}, axis=1)
-        first = df.groupby("well").quantile(q=[0.25]).reset_index()[['well', 'mean relative deviation']].set_index("well")
-        third = df.groupby("well").quantile(q=[0.75]).reset_index()[['well', 'mean relative deviation']].set_index("well")
-
-        plt = sns.lineplot(df, x='well', y="mean relative deviation", label=label, marker='o', errorbar=None )
-        plt.fill_between(first.index, first['mean relative deviation'], third['mean relative deviation'], alpha=0.2)
-        plt.set(title = 'Summed absolute deviations across wells', ylabel=const.LABEL['RDev_general'])
+        df_out.columns = df_out.columns.droplevel(1)
+        
+        plt = sns.lineplot(df_out, x='well', y="median", label=label, marker='o', errorbar=None)
+        plt.fill_between(df_out['well'], df_out['25'], df_out['75'], alpha = 0.2)
+        plt.set(title = 'Median relative deviations across wells', ylabel=const.LABEL['RDev_general'])
         plt.set_xticklabels(plt.get_xticklabels(), rotation=45, horizontalalignment='right')
     
-        df_out = pd.concat([df.groupby("well").median(), third-first], axis=1)
-        df_out.columns = [label+"_median", label+"_iqr"]
-        return df_out
+        df_print = pd.concat({(label,"median"): df_out['median'], (label,"iqr"):df_out['75']-df_out['25']}, axis=1)
+        df_print.index = df_out['well']
+        return df_print
 
-    df1 = plot_deviations(adata, gen_adata, 'gen. data vs. spacem')
-    df2 = plot_deviations(gen_adata, adata_cor, 'corr. data vs. gen. data')
+    df1 = plot_deviations(gen_adata, adata, 'gen. data vs. spacem')
+    df2 = plot_deviations(adata_cor, gen_adata, 'corr. data vs. gen. data')
     
     return pd.concat([df1, df2], axis=1)
+
+
+
 
 
 
