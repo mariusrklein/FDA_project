@@ -12,16 +12,20 @@ from joblib import Parallel, delayed
 from tqdm import tqdm
 import functools
 import papermill as pm
-#sys.path.append('/home/mklein/FDA_project')
 from src.correction_evaluation import CorrectionEvaluation
 from src.sample_correction import SampleCorrection
 from src import const
 
 class ISC:
     
-    def __init__(self, source_path, config = None, verbose=True):
+    def __init__(self, source_path, config = None, n_jobs = None, verbose=True):
         
         self.v = verbose
+        
+        if n_jobs is not None:
+            self.n_jobs=n_jobs
+        else:
+            self.n_jobs = multiprocessing.cpu_count()
         
         if config is None:
             self.config = const.CONFIG
@@ -34,9 +38,6 @@ class ISC:
         self.config['runtime'] = {}
         self.config['runtime']['spacem_dataset_path'] = source_path
         
-        if self.v: 
-            print(self.config)
-        
         self.check_config()
         
         self.spacem_metadata = self.get_spacem_metadata()
@@ -44,13 +45,19 @@ class ISC:
         
     def run(self):
         
+        if self.v: print("Starting calculations for individual samples.")
         self.corrections = self.init_sample_corrections()
         
+        if self.v: print("Combining all samples.")
         self.combine_wells()
         
+        if self.v: print("Writing combined data matrices.")
         self.write_outputs()
         
+        if self.v: print("Running evaluation notebooks.")
         self.trigger_evaluation()
+        
+        print("DONE!")
         
         
     def check_config(self):
@@ -118,14 +125,14 @@ class ISC:
             if 'analysis' in dirnames:
                 samples.append(re.sub(path+'/?', '', dirpath))
         
-        print("Found %d samples in given folder: %s"%(len(samples), ", ".join(samples)))
+        if self.v: print("Found %d samples in given folder: %s"%(len(samples), ", ".join(samples)))
         samples_list = [s for s in samples if s in list(self.spacem_metadata[const.SAMPLE_COL])]
         samples_excluded = [s for s in samples if s not in list(self.spacem_metadata[const.SAMPLE_COL])]
         if len(samples_excluded) > 0:
-            print("Excluded %d samples as they did not exist in %s: %s"%(
-                len(samples_excluded), 
-                self.config['input']['spacem_dataset_metadata_file'],
-                ", ".join(samples_excluded)))
+            if self.v: print("Excluded %d samples as they did not exist in %s: %s"%(
+                             len(samples_excluded), 
+                             self.config['input']['spacem_dataset_metadata_file'],
+                             ", ".join(samples_excluded)))
         
         self.config['runtime']['samples'] = samples_list
         
@@ -134,26 +141,25 @@ class ISC:
     
     def init_sample_corrections(self):
         
-        jobs_total = multiprocessing.cpu_count() - 1
-    #     factor = np.floor(jobs_total / len(self.samples_list))
-    #     
-    #     if factor < 2:
-    #         jobs_samples = jobs_total
-    #         jobs_corr = 1
-    #     elif factor >= 2:
-    #         jobs_samples = len(self.samples_list)
-    #         jobs_corr = factor
-    #     
-        jobs_samples = 1
-        jobs_corr = 70
         
-        print("using %d times %d cores for calculations."%(jobs_samples, jobs_corr))
+        jobs_samples = np.min([self.n_jobs, len(self.samples_list)])
+        jobs_corr = 1
+            
+        if self.v: print("using %d times %d cores for calculations."%(jobs_samples, jobs_corr))
         
-        corrections = Parallel(n_jobs=jobs_samples)(
-        delayed(SampleCorrection)(sample=sample,
-                                  config=self.config, 
-                                  n_jobs=jobs_corr) for sample in tqdm(self.samples_list))
-        
+        if jobs_samples > 1:
+            corrections = Parallel(n_jobs=jobs_samples)(
+                delayed(SampleCorrection)(sample=sample,
+                                          config=self.config, 
+                                          n_jobs=jobs_corr,
+                                          verbose=False) for sample in tqdm(self.samples_list))
+        else:
+            corrections = [SampleCorrection(sample=sample,
+                                          config=self.config, 
+                                          n_jobs=jobs_corr,
+                                          verbose=self.v) for sample in tqdm(self.samples_list)]
+            
+
         return corrections
     
     

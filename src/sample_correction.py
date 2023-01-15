@@ -9,13 +9,14 @@ from src import correction as corr
 
 class SampleCorrection:
     
-    def __init__(self, sample, config, n_jobs):
+    def __init__(self, sample, config, n_jobs, verbose=True):
         
         self.name = sample
         self.config = config
         self.n_jobs = n_jobs
+        self.v = verbose
         
-        print("Calculating corrections for sample %s" % sample)
+        if self.v: print("Preparing, loading file for corrections for sample %s" % sample)
         
         self.spacem_config = self.get_spacem_config()
         self.analysis_prefix = os.path.join(self.config['runtime']['spacem_dataset_path'], 
@@ -23,10 +24,13 @@ class SampleCorrection:
         
         self.load_data_files()
         
+        if self.v: print("Iterating through ions for sample %s" % sample)
         self.correct_suppression()
 
+        if self.v: print("Running deconvolution for sample %s" % sample)
         self.deconvolution()
         
+        if self.v: print("Saving sample %s" % sample)
         if self.config['output']['also_write_sample_results']:
             sample_out_folder = os.path.join(self.config['runtime']["out_folder"], 
                                              self.name,
@@ -98,7 +102,7 @@ class SampleCorrection:
             normalized = self.config['correction']['correction_ratios_normalize'],
             proportion_threshold=self.config['correction']['correction_proportion_threshold'],
             n_jobs=self.n_jobs,
-            progress = True)
+            progress = self.v)
         
     def deconvolution(self):
         

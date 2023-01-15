@@ -172,15 +172,15 @@ def plot_deviations_between_adatas(adata, gen_adata, adata_cor, well_name = 'wel
         df = df.mean(axis=1)
 
         df = pd.concat({'mean relative deviation': df, well_name: adata1.obs[well_name]}, axis=1)
-        first = df.groupby("well").quantile(q=[0.25]).reset_index()[[well_name, 'mean relative deviation']].set_index(well_name)
-        third = df.groupby("well").quantile(q=[0.75]).reset_index()[[well_name, 'mean relative deviation']].set_index(well_name)
+        first = df.groupby(well_name).quantile(q=[0.25]).reset_index()[[well_name, 'mean relative deviation']].set_index(well_name)
+        third = df.groupby(well_name).quantile(q=[0.75]).reset_index()[[well_name, 'mean relative deviation']].set_index(well_name)
 
         plt = sns.lineplot(df, x=well_name, y="mean relative deviation", label=label, marker='o', errorbar=None )
         plt.fill_between(first.index, first['mean relative deviation'], third['mean relative deviation'], alpha=0.2)
         plt.set(title = 'Summed absolute deviations across wells', ylabel=const.LABEL['RDev_general'])
         plt.set_xticklabels(plt.get_xticklabels(), rotation=45, horizontalalignment='right')
     
-        df_out = pd.concat([df.groupby("well").median(), third-first], axis=1)
+        df_out = pd.concat([df.groupby(well_name).median(), third-first], axis=1)
         df_out.columns = [label+"_median", label+"_iqr"]
         return df_out
 
@@ -686,7 +686,7 @@ def analyse_svm_margin(adata, adata_cor, condition_name, layer=None):
         result = adata.obs[condition_name]
         clf = LinearSVC(random_state=0, dual=False)
         clf.fit(predictors, result)
-        margin_df = pd.DataFrame({'condition': clf.classes_, 'margin': 1 / np.sqrt(np.sum(clf.coef_**2, axis=1))})
+        margin_df = pd.DataFrame({'condition': clf.classes_[:clf.coef_.shape[0]], 'margin': 1 / np.sqrt(np.sum(clf.coef_**2, axis=1))})
 
         #print(margin_df)
         return margin_df
@@ -699,8 +699,6 @@ def analyse_svm_margin(adata, adata_cor, condition_name, layer=None):
     sns.set(rc={"figure.figsize":(12, 5)})
     sns.barplot(df.melt(id_vars='condition', var_name='correction', value_name='margin'),
                 x='condition', y='margin', hue='correction').set_title('Comparison of SVM margins for layer %s'%layer)
-
-
 
     if layer is not None:
         adata.X = adata.layers['default_X']
