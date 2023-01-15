@@ -34,7 +34,7 @@ class CorrectionEvaluation:
     def run_qc(self):
         pm.execute_notebook(self.qc_path,
             os.path.join(self.config['runtime']['evaluation_folder'], 'qc.ipynb'),
-            parameters={'config': self.config, 'package_path': }
+            parameters={'config': self.config} # TODO: check if notebooks find installation of ISC
         )
     
     def run_performance_eval(self):
