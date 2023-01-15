@@ -1,7 +1,7 @@
 import sys
 import argparse
-from src.ion_suppression import ISC
-from src import const
+from ISC.src.ion_suppression import ISC
+from ISC.src import const
 
 
 if __name__ == '__main__':

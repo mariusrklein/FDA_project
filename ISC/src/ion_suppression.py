@@ -12,9 +12,9 @@ from joblib import Parallel, delayed
 from tqdm import tqdm
 import functools
 import papermill as pm
-from src.correction_evaluation import CorrectionEvaluation
-from src.sample_correction import SampleCorrection
-from src import const
+from ISC.src.correction_evaluation import CorrectionEvaluation
+from ISC.src.sample_correction import SampleCorrection
+from ISC.src import const
 
 class ISC:
     

@@ -19,7 +19,7 @@ from scipy.sparse import csc_matrix, csr_matrix
 from itertools import chain
 import anndata as ad
 import scanpy as sc
-from src import const
+from ISC.src import const
 import seaborn as sns
 import warnings
 import sys

@@ -4,8 +4,8 @@ import pandas as pd
 import numpy as np
 import scanpy as sc
 import statistics as st
-from src import const
-from src import correction as corr
+from ISC.src import const
+from ISC.src import correction as corr
 
 class SampleCorrection:
     

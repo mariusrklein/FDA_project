@@ -12,8 +12,8 @@ from scipy.spatial import distance_matrix
 from scipy.sparse import csc_matrix, csr_matrix
 from itertools import chain
 import anndata as ad
-from src.correction import normalize_proportion_ratios
-from src import const
+from ISC.src.correction import normalize_proportion_ratios
+from ISC.src import const
 import seaborn as sns
 import scanpy as sc
 import re
