@@ -305,7 +305,7 @@ div.rendered_html tbody tr:hover {
 <section id="Mx_Seahorse:-Correction">
 <h1>Mx_Seahorse: Correction<a class="headerlink" href="#Mx_Seahorse:-Correction" title="Permalink to this heading">¶</a></h1>
 <p>SpaceM datasets are usually stored as annotated data-matrices, separately for individual wells. With this notebooks, these individual files are corrected for ion suppression on the pixel-level and then deconvoluted to cell-level. All resulting files are saved separately by well to the target_path and the impact of the correction briefly shown for visual inspection.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -344,20 +344,6 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-</pre></div></div>
 </div>
 <p>The original data lies on the groups shared data storage. Corrected files will be saved in a separate location, preserving the well-specific folder structure.</p>
 <div class="nbinput nblast docutils container">
@@ -430,6 +416,30 @@ ModuleNotFoundError: No module named &#39;cellpose&#39;
         <span class="s1">&#39;cell_sm_matrix&#39;</span><span class="p">:</span> <span class="s1">&#39;single_cell_analysis/spatiomolecular_adata.h5ad&#39;</span><span class="p">,</span>
     <span class="p">}</span>
 </pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_path</span><span class="p">,</span> <span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;analysis&quot;</span><span class="p">),</span> <span class="n">files</span><span class="p">[</span><span class="s1">&#39;sm_matrix&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;am_area&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot: xlabel=&#39;am_area&#39;, ylabel=&#39;Count&#39;&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Seahorse_pipeline_01_correction_7_1.png" src="../../_images/analysis_Mx_Seahorse_pipeline_01_correction_7_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -537,56 +547,7 @@ ModuleNotFoundError: No module named &#39;cellpose&#39;
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
- 37%|█████████████████████████████████████████████████████████████████████████▋                                                                                                                              | 7/19 [00:19&lt;00:00, 61.22it/s]/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
+ 37%|█████████████████████████████████████████████████████████████████████████▋                                                                                                                              | 7/19 [00:01&lt;00:02,  5.01it/s]/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
@@ -610,43 +571,11 @@ ModuleNotFoundError: No module named &#39;cellpose&#39;
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
 /home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
   warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 19/19 [02:45&lt;00:00,  8.73s/it]
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
-/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/statsmodels/regression/quantile_regression.py:191: IterationLimitWarning: Maximum number of iterations (1000) reached.
-  warnings.warn(&#34;Maximum number of iterations (&#34; + str(max_iter) +
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 19/19 [03:52&lt;00:00, 12.25s/it]
 </pre></div></div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reshape data for immediate analysis</span>
@@ -666,199 +595,12 @@ ModuleNotFoundError: No module named &#39;cellpose&#39;
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>cell_normalization_method</th>
-      <th>ablation_marks_min_overlap_ratio</th>
-      <th>fluorescence_channels</th>
-      <th>cell_ion_max_correlation_distance</th>
-      <th>ions_of_interest</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>A2</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>A3</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>B1</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>B3</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>B4</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>C1</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>D1</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>E1</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>E2</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>E3</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>E4</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>F2</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>F3</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>F4</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>G1</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>G4</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>H3</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>H4</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-    <tr>
-      <th>J2</th>
-      <td>weighted_by_overlap_and_sampling_area</td>
-      <td>0.0</td>
-      <td>[DAPI]</td>
-      <td>None</td>
-      <td>[]</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
-</div>
 <p>The ion suppression correction takes a parameter proportion_threshold to filter the pixels used to compute quantile regression. In particular, pixels with a sampling proportion lower than the threshold are excluded for this step. In contrast, the actual correction is then performed on all pixels in the dataset. As a consequence, for the majority of the dataset, the dependence of the data on the factor “sampling_proportion” is not completely removed by the correction. Instead, depending on the
 difference in slope between the complete and thresholded set of pixels, the corrected set of pixels has a positive or negative dependence on the factor “sampling_proportion”. The larger the proportion_threshold, the stronger this deviation can get.</p>
 <p>In the following figure, these differences are visualized for a subset of ions (with very low/high correction slope) and wells. The top panel shows the logarithmic ion intensity/proportion ratio plotted against the log proportion ratio of the respective pixels. As this is the relationship used to compute the quantile regression, the resulting regression lines can also be shown. The black lines show the quantile regression of the total set of pixels in a well, the red lines for the thresholded
 set (shown as orange squares). In turn, the blue squares are disregarded in calculating the correction slope. The bottom panel shows the corresponding corrected sets of pixels with black lines again representing the quantile regression on the complete set of pixels.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
@@ -867,193 +609,20 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">am_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">const</span><span class="o">.</span><span class="n">TPO</span><span class="p">]</span> <span class="o">=</span> <span class="n">am_adata_cor</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">const</span><span class="o">.</span><span class="n">TPO</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">compare_pre_post_correction</span>
 <span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">,</span> <span class="n">proportion_threshold</span><span class="o">=</span><span class="n">correction_proportion_threshold</span><span class="p">,</span> <span class="n">wells</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;B1&#39;</span><span class="p">,</span> <span class="s1">&#39;E3&#39;</span><span class="p">,</span> <span class="s1">&#39;H3&#39;</span><span class="p">])</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
-</pre></div>
-</div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th></th>
-      <th>intercept_correction</th>
-      <th>intercept_glob_ISM_correction</th>
-      <th>intercept_glob_uncorrected</th>
-      <th>slope_correction</th>
-      <th>slope_glob_ISM_correction</th>
-      <th>slope_glob_uncorrected</th>
-    </tr>
-    <tr>
-      <th>ion</th>
-      <th>well</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th rowspan="3" valign="top">C11H8N2-H</th>
-      <th>B1</th>
-      <td>0.130811</td>
-      <td>0.155191</td>
-      <td>0.155191</td>
-      <td>-1.045887</td>
-      <td>2.767517e-02</td>
-      <td>-1.018211</td>
-    </tr>
-    <tr>
-      <th>E3</th>
-      <td>0.191314</td>
-      <td>0.189638</td>
-      <td>0.189638</td>
-      <td>-1.003116</td>
-      <td>-3.371250e-03</td>
-      <td>-1.006487</td>
-    </tr>
-    <tr>
-      <th>H3</th>
-      <td>0.005330</td>
-      <td>0.028244</td>
-      <td>0.028244</td>
-      <td>-1.158025</td>
-      <td>3.989208e-02</td>
-      <td>-1.118132</td>
-    </tr>
-    <tr>
-      <th rowspan="3" valign="top">C7H5NO-H</th>
-      <th>B1</th>
-      <td>0.193040</td>
-      <td>0.209047</td>
-      <td>0.209047</td>
-      <td>-1.061476</td>
-      <td>2.301467e-02</td>
-      <td>-1.038462</td>
-    </tr>
-    <tr>
-      <th>E3</th>
-      <td>0.261269</td>
-      <td>0.261521</td>
-      <td>0.261521</td>
-      <td>-1.018020</td>
-      <td>1.452606e-03</td>
-      <td>-1.016567</td>
-    </tr>
-    <tr>
-      <th>H3</th>
-      <td>0.003032</td>
-      <td>0.024561</td>
-      <td>0.024561</td>
-      <td>-1.191113</td>
-      <td>3.737558e-02</td>
-      <td>-1.153737</td>
-    </tr>
-    <tr>
-      <th rowspan="3" valign="top">C5H5N5-H</th>
-      <th>B1</th>
-      <td>-0.576350</td>
-      <td>-0.601445</td>
-      <td>-0.601445</td>
-      <td>-0.681408</td>
-      <td>-4.920618e-02</td>
-      <td>-0.730614</td>
-    </tr>
-    <tr>
-      <th>E3</th>
-      <td>-0.960229</td>
-      <td>-0.960229</td>
-      <td>-0.960229</td>
-      <td>-0.999998</td>
-      <td>2.060117e-07</td>
-      <td>-0.999997</td>
-    </tr>
-    <tr>
-      <th>H3</th>
-      <td>-0.006622</td>
-      <td>-0.060483</td>
-      <td>-0.060483</td>
-      <td>-0.653309</td>
-      <td>-9.551995e-02</td>
-      <td>-0.748829</td>
-    </tr>
-    <tr>
-      <th rowspan="3" valign="top">C5H5N5O-H</th>
-      <th>B1</th>
-      <td>-0.353242</td>
-      <td>-0.361346</td>
-      <td>-0.361346</td>
-      <td>-0.649534</td>
-      <td>-2.358780e-02</td>
-      <td>-0.673122</td>
-    </tr>
-    <tr>
-      <th>E3</th>
-      <td>-0.935758</td>
-      <td>-0.935758</td>
-      <td>-0.935758</td>
-      <td>-0.999999</td>
-      <td>-2.018270e-07</td>
-      <td>-0.999999</td>
-    </tr>
-    <tr>
-      <th>H3</th>
-      <td>-0.072316</td>
-      <td>-0.119690</td>
-      <td>-0.119690</td>
-      <td>-0.588074</td>
-      <td>-8.778179e-02</td>
-      <td>-0.675856</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Seahorse_pipeline_01_correction_15_1.png" src="../../_images/analysis_Mx_Seahorse_pipeline_01_correction_15_1.png" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Seahorse_pipeline_01_correction_15_2.png" src="../../_images/analysis_Mx_Seahorse_pipeline_01_correction_15_2.png" />
 </div>
 </div>
 </section>

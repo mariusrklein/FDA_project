@@ -297,7 +297,7 @@ div.rendered_html tbody tr:hover {
 <section id="Mx_Coculture:-Correction">
 <h1>Mx_Coculture: Correction<a class="headerlink" href="#Mx_Coculture:-Correction" title="Permalink to this heading">¶</a></h1>
 <p>SpaceM datasets are usually stored as annotated data-matrices, separately for individual wells. With this notebooks, these individual files are corrected for ion suppression on the pixel-level and then deconvoluted to cell-level. All resulting files are saved separately by well to the target_path and the impact of the correction briefly shown for visual inspection.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -336,20 +336,6 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-</pre></div></div>
 </div>
 <p>The original data lies on the groups shared data storage. Corrected files will be saved in a separate location, preserving the well-specific folder structure.</p>
 <div class="nbinput nblast docutils container">
@@ -557,7 +543,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 1/1 [00:13&lt;00:00, 13.84s/it]
+100%|██████████| 1/1 [00:14&lt;00:00, 14.04s/it]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -698,20 +684,40 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
       <th>dataset</th>
       <td>2.614047</td>
       <td>2.616687</td>
-      <td>2.616687</td>
-      <td>-1.018972</td>
+      <td>2.616685</td>
+      <td>-2.018972</td>
       <td>1.481741e-02</td>
-      <td>-1.004155</td>
+      <td>-2.004155</td>
     </tr>
     <tr>
       <th>C21H43O7P</th>
       <th>dataset</th>
-      <td>2.541476</td>
+      <td>2.541473</td>
       <td>2.541323</td>
       <td>2.541323</td>
-      <td>-1.000189</td>
+      <td>-2.000192</td>
       <td>-1.822450e-03</td>
-      <td>-1.002011</td>
+      <td>-2.002011</td>
+    </tr>
+    <tr>
+      <th>C19H37O6P</th>
+      <th>dataset</th>
+      <td>3.214038</td>
+      <td>3.207239</td>
+      <td>3.207239</td>
+      <td>-1.901925</td>
+      <td>-3.169818e-02</td>
+      <td>-1.933623</td>
+    </tr>
+    <tr>
+      <th>C21H41O6P</th>
+      <th>dataset</th>
+      <td>3.173293</td>
+      <td>3.162557</td>
+      <td>3.162557</td>
+      <td>-1.883844</td>
+      <td>-3.756047e-02</td>
+      <td>-1.921402</td>
     </tr>
     <tr>
       <th>C43H78NO8P</th>
@@ -719,9 +725,9 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
       <td>2.827690</td>
       <td>2.823702</td>
       <td>2.823702</td>
-      <td>-0.159189</td>
+      <td>-1.159189</td>
       <td>-2.692859e-02</td>
-      <td>-0.186117</td>
+      <td>-1.186117</td>
     </tr>
     <tr>
       <th>C43H81O13P</th>
@@ -729,9 +735,9 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
       <td>2.796180</td>
       <td>2.796180</td>
       <td>2.796180</td>
-      <td>-0.137813</td>
+      <td>-1.137813</td>
       <td>-1.801708e-09</td>
-      <td>-0.137813</td>
+      <td>-1.137813</td>
     </tr>
   </tbody>
 </table>
@@ -752,7 +758,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">src.evaluation</span>
@@ -765,7 +771,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -846,7 +852,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_pre_post_correction</span><span class="p">(</span><span class="n">am_adata</span><span class="p">,</span> <span class="n">am_adata_cor</span><span class="p">,</span> <span class="n">proportion_threshold</span><span class="o">=</span><span class="n">correction_proportion_threshold</span><span class="p">,</span> <span class="n">ions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C20H32O2&#39;</span><span class="p">,</span> <span class="s1">&#39;C35H69O8P&#39;</span><span class="p">],</span> <span class="n">ratio</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -854,7 +860,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -927,7 +933,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">am_adata_cor</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
@@ -935,7 +941,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1251,7 +1257,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Minimum intercept: </span><span class="si">%1.2f</span><span class="s2">&quot;</span> <span class="o">%</span><span class="k">am_adata_cor</span>.var[&#39;correction_quantreg_intersect&#39;].min())

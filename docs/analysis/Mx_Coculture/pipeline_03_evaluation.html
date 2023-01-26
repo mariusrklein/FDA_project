@@ -306,7 +306,7 @@ div.rendered_html tbody tr:hover {
 <h1>Mx_Coculture: Evaluation<a class="headerlink" href="#Mx_Coculture:-Evaluation" title="Permalink to this heading">¶</a></h1>
 <p>In this notebook, different measures are investigated to quantify the effect of correcting SpaceM ion intensity data for partial pixel-cell overlap. Moreover, The effects of the correction on different metabolites is visualized.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">platform</span>
@@ -332,7 +332,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
@@ -353,7 +353,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>Loading the uncorrected and ISM-corrected dataset from file. Additionally, loading the metadata CSV file to filter out excluded wells.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="s2">&quot;gen_batch_sm_matrix.h5ad&quot;</span><span class="p">))</span>
@@ -362,7 +362,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
@@ -370,7 +370,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -710,7 +710,7 @@ div.rendered_html tbody tr:hover {
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">condition_metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="s1">&#39;MORPHnMOL.csv&#39;</span><span class="p">))</span>
@@ -742,12 +742,12 @@ Name: celltype, dtype: int64
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;seaborn.axisgrid.FacetGrid at 0x7fb085be5de0&gt;
+&lt;seaborn.axisgrid.FacetGrid at 0x7fb403181870&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -758,7 +758,7 @@ Name: celltype, dtype: int64
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># raw_adata = ad.AnnData(obs=condition_metadata[[&#39;ObjectNumber&#39;, &#39;celltype&#39;, &#39;GFP&#39;, &#39;MCherry&#39;, &#39;fluorescence_ratio&#39;]], var=am_adata.var.loc[am_adata.var.index.intersection(condition_metadata.columns)])</span>
@@ -782,7 +782,7 @@ Name: celltype, dtype: int64
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -793,7 +793,7 @@ Name: celltype, dtype: int64
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">],</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">condition_name</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -801,7 +801,7 @@ Name: celltype, dtype: int64
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -852,7 +852,7 @@ Name: celltype, dtype: int64
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">included_molecules</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
@@ -890,7 +890,7 @@ Name: celltype, dtype: int64
 </ul>
 <p>After that, both datasets are subset to contain the same ions and cells (intersection).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
@@ -934,7 +934,7 @@ Name: celltype, dtype: int64
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">point_size</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
@@ -965,7 +965,7 @@ Name: celltype, dtype: int64
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -995,8 +995,8 @@ Name: celltype, dtype: int64
 <li><p>normalization to a fixed count (10^4) and log transformation</p></li>
 </ol>
 <p>The normalization to a fixed count has a slightly different effect than TIC normalization. The former normalizes all counts per cell to the given target sum so that all cells from the uncorrected and the corrected set are scaled to this count. In contrast, the latter retains the differences between the datasets by normalizing to the median count across cells in a dataset.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
@@ -1005,8 +1005,43 @@ Name: celltype, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X_pca
+X_umap
+                              mean        sd  rel_neighborhood
+X_pca_uncorrected     10  0.224534  0.241170          0.091837
+X_pca_ISM correction  10  0.210661  0.263362          0.091837
+X_umap_uncorrected    10  0.291107  0.263063          0.091837
+X_umap_ISM correction 10  0.262506  0.291603          0.091837
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_3.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_15_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
@@ -1015,8 +1050,43 @@ Name: celltype, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X_pca
+X_umap
+                              mean        sd  rel_neighborhood
+X_pca_uncorrected     10  0.194404  0.271003          0.091837
+X_pca_ISM correction  10  0.192944  0.273877          0.091837
+X_umap_uncorrected    10  0.157648  0.293288          0.091837
+X_umap_ISM correction 10  0.158885  0.299560          0.091837
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_3.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_16_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">)</span>
@@ -1025,8 +1095,43 @@ Name: celltype, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X_pca
+X_umap
+                              mean        sd  rel_neighborhood
+X_pca_uncorrected     10  0.200389  0.266097          0.091837
+X_pca_ISM correction  10  0.191091  0.257246          0.091837
+X_umap_uncorrected    10  0.266744  0.295833          0.091837
+X_umap_ISM correction 10  0.155300  0.279988          0.091837
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_3.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_17_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
@@ -1035,8 +1140,43 @@ Name: celltype, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X_pca
+X_umap
+                              mean        sd  rel_neighborhood
+X_pca_uncorrected     10  0.171760  0.263759          0.091837
+X_pca_ISM correction  10  0.160746  0.261098          0.091837
+X_umap_uncorrected    10  0.201829  0.306158          0.091837
+X_umap_ISM correction 10  0.212291  0.296072          0.091837
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_3.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_18_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
@@ -1045,8 +1185,43 @@ Name: celltype, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X_pca
+X_umap
+                              mean        sd  rel_neighborhood
+X_pca_uncorrected     10  0.185422  0.277041          0.091837
+X_pca_ISM correction  10  0.183706  0.284243          0.091837
+X_umap_uncorrected    10  0.164298  0.292971          0.091837
+X_umap_ISM correction 10  0.155154  0.301294          0.091837
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_3.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_19_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_norm_counts&#39;</span><span class="p">)</span>
@@ -1055,8 +1230,43 @@ Name: celltype, dtype: int64
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X_pca
+X_umap
+                              mean        sd  rel_neighborhood
+X_pca_uncorrected     10  0.171760  0.263759          0.091837
+X_pca_ISM correction  10  0.161302  0.260600          0.091837
+X_umap_uncorrected    10  0.209019  0.310317          0.091837
+X_umap_ISM correction 10  0.215876  0.297578          0.091837
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_3.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_20_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
@@ -1065,9 +1275,44 @@ Name: celltype, dtype: int64
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X_pca
+X_umap
+                              mean        sd  rel_neighborhood
+X_pca_uncorrected     10  0.179152  0.276096          0.091837
+X_pca_ISM correction  10  0.176756  0.277987          0.091837
+X_umap_uncorrected    10  0.144473  0.296506          0.091837
+X_umap_ISM correction 10  0.155393  0.300401          0.091837
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_1.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_3.png" src="../../_images/analysis_Mx_Coculture_pipeline_03_evaluation_21_3.png" />
+</div>
+</div>
 <p>Before analysis, asserting that the two data files were deconvoluted in the same way. Specifically, the corrected dataframe cannot have non-zero values at positions where the uncorrected dataframe has zero values.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">adata</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">!=</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
@@ -1075,7 +1320,7 @@ Name: celltype, dtype: int64
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;correction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;uncorrected&#39;</span>
@@ -1087,7 +1332,7 @@ Name: celltype, dtype: int64
 <h2>Effects of the correction on different molecules<a class="headerlink" href="#Effects-of-the-correction-on-different-molecules" title="Permalink to this heading">¶</a></h2>
 <p>The ISM correction is performed per ion on the logarithmized intensity / sampling proportion ratio. The underlying quantile regression can only be computed with a minimum number of datapoints. If an ion has less than 10 datapoints, the quantile regression is instead computed based on a reference pool of ions. In the following, the resulting slopes by which all ions have been corrected are visualized. Ions that were corrected using the reference pool are shown separately.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[[</span><span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">]],</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;corrected_only_using_pool&#39;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1098,7 +1343,7 @@ Name: celltype, dtype: int64
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1117,7 +1362,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <p>Based on the slopes of the correction but also the logfoldchanges between corrected and uncorrected cells, one can infer the extent of alteration of different metabolites in the correction. These measures not necessarily correlate, thus the degree of correction of ions has to be evaluated on individual datasets.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">src.evaluation</span>
@@ -1128,7 +1373,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span> <span class="o">=</span> <span class="n">MetaboliteAnalysis</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="o">=</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span>
@@ -1144,18 +1389,18 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: overflow encountered in expm1
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:418: RuntimeWarning: overflow encountered in expm1
   self.expm1_func(mean_rest) + 1e-9
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:417: RuntimeWarning: invalid value encountered in divide
   foldchanges = (self.expm1_func(mean_group) + 1e-9) / (
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: divide by zero encountered in log2
   self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">impact_ions</span>
@@ -1163,7 +1408,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1215,813 +1460,813 @@ Name: corrected_only_using_pool, dtype: int64
   <tbody>
     <tr>
       <th>C18H36O2</th>
-      <td>-17.008299</td>
-      <td>-239.228583</td>
-      <td>7.127741e-65</td>
-      <td>4.134090e-63</td>
+      <td>-17.345884</td>
+      <td>-235.960356</td>
+      <td>2.118897e-67</td>
+      <td>1.228960e-65</td>
       <td>False</td>
-      <td>-0.896086</td>
+      <td>-0.916107</td>
       <td>1137</td>
-      <td>-0.053114</td>
-      <td>-2.830827e-08</td>
+      <td>-0.047967</td>
+      <td>-3.061487e-08</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C19H37O6P</th>
-      <td>-14.763176</td>
-      <td>-239.228583</td>
-      <td>2.530758e-49</td>
-      <td>7.339197e-48</td>
+      <td>-15.117243</td>
+      <td>-235.960356</td>
+      <td>1.246544e-51</td>
+      <td>3.614978e-50</td>
       <td>False</td>
-      <td>-0.879267</td>
+      <td>-0.901925</td>
       <td>1137</td>
-      <td>0.022314</td>
-      <td>-2.063359e-07</td>
+      <td>0.025925</td>
+      <td>-5.619717e-08</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C21H41O6P</th>
-      <td>-14.452163</td>
-      <td>-239.228583</td>
-      <td>2.429360e-47</td>
-      <td>4.696762e-46</td>
+      <td>-14.857139</td>
+      <td>-235.960356</td>
+      <td>6.254019e-50</td>
+      <td>1.209110e-48</td>
       <td>False</td>
-      <td>-0.857837</td>
+      <td>-0.883844</td>
       <td>1137</td>
-      <td>0.030758</td>
-      <td>-1.000226e-07</td>
+      <td>0.032047</td>
+      <td>1.727853e-07</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C21H43O7P</th>
-      <td>-13.577346</td>
-      <td>-175.275360</td>
-      <td>5.456849e-42</td>
-      <td>7.912431e-41</td>
+      <td>-13.632024</td>
+      <td>-175.812653</td>
+      <td>2.583168e-42</td>
+      <td>3.745594e-41</td>
       <td>False</td>
-      <td>-0.995941</td>
+      <td>-1.000192</td>
       <td>1126</td>
-      <td>-0.049684</td>
-      <td>-1.890364e-07</td>
+      <td>-0.049866</td>
+      <td>3.900251e-08</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C19H39O7P</th>
-      <td>-12.640441</td>
-      <td>-152.373596</td>
-      <td>1.263441e-36</td>
-      <td>1.465592e-35</td>
+      <td>-12.892241</td>
+      <td>-154.579803</td>
+      <td>4.977624e-38</td>
+      <td>5.774044e-37</td>
       <td>False</td>
-      <td>-0.920085</td>
+      <td>-0.938078</td>
       <td>1136</td>
-      <td>0.025937</td>
-      <td>-1.866249e-08</td>
+      <td>0.034239</td>
+      <td>-7.286759e-08</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C27H53O12P</th>
-      <td>-12.366508</td>
-      <td>-239.228583</td>
-      <td>3.966999e-35</td>
-      <td>3.740038e-34</td>
+      <td>-12.694448</td>
+      <td>-235.960356</td>
+      <td>6.347600e-37</td>
+      <td>6.136014e-36</td>
       <td>False</td>
-      <td>-0.822777</td>
+      <td>-0.847167</td>
       <td>1136</td>
-      <td>-0.072707</td>
-      <td>3.145364e-09</td>
+      <td>-0.076870</td>
+      <td>-1.310568e-07</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C35H69O8P</th>
-      <td>-12.356128</td>
-      <td>-217.480530</td>
-      <td>4.513839e-35</td>
-      <td>3.740038e-34</td>
+      <td>-12.127258</td>
+      <td>-214.509415</td>
+      <td>7.574272e-34</td>
+      <td>6.275825e-33</td>
       <td>False</td>
-      <td>-1.038932</td>
+      <td>-1.018972</td>
       <td>1131</td>
-      <td>-0.030755</td>
-      <td>3.281663e-08</td>
+      <td>-0.032935</td>
+      <td>5.137428e-09</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C23H48NO7P</th>
-      <td>-11.462338</td>
-      <td>-164.391922</td>
-      <td>2.039323e-30</td>
-      <td>1.478509e-29</td>
+      <td>-11.818449</td>
+      <td>-168.652451</td>
+      <td>3.134178e-32</td>
+      <td>2.272279e-31</td>
       <td>False</td>
-      <td>-0.768883</td>
+      <td>-0.794441</td>
       <td>1134</td>
-      <td>-0.060374</td>
-      <td>8.387637e-08</td>
+      <td>-0.053501</td>
+      <td>8.387637e-10</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C6H13O9P</th>
-      <td>-10.456831</td>
-      <td>-239.228583</td>
-      <td>1.363400e-25</td>
-      <td>8.786356e-25</td>
+      <td>-10.820990</td>
+      <td>-235.960356</td>
+      <td>2.738060e-27</td>
+      <td>1.764528e-26</td>
       <td>False</td>
-      <td>-0.770148</td>
+      <td>-0.800593</td>
       <td>1137</td>
-      <td>-0.047902</td>
-      <td>1.096683e-07</td>
+      <td>-0.052177</td>
+      <td>1.193141e-07</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C37H71O8P</th>
-      <td>-9.554163</td>
-      <td>-239.228583</td>
-      <td>1.245865e-21</td>
-      <td>7.226015e-21</td>
+      <td>-10.131892</td>
+      <td>-235.960356</td>
+      <td>3.988554e-24</td>
+      <td>2.313361e-23</td>
       <td>False</td>
-      <td>-0.694062</td>
+      <td>-0.740216</td>
       <td>1133</td>
-      <td>-0.097616</td>
-      <td>-7.339182e-09</td>
+      <td>-0.097005</td>
+      <td>6.961739e-08</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C21H41O7P</th>
-      <td>-7.915897</td>
-      <td>-108.691574</td>
-      <td>2.454767e-15</td>
-      <td>1.294332e-14</td>
+      <td>-8.959699</td>
+      <td>-120.752014</td>
+      <td>3.255660e-19</td>
+      <td>1.716621e-18</td>
       <td>False</td>
-      <td>-0.605811</td>
+      <td>-0.688863</td>
       <td>1130</td>
-      <td>-0.007927</td>
-      <td>-6.919800e-09</td>
-      <td>0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>C34H68NO6P</th>
-      <td>-7.774347</td>
-      <td>-199.988571</td>
-      <td>7.583743e-15</td>
-      <td>3.665476e-14</td>
-      <td>False</td>
-      <td>-1.007595</td>
-      <td>1091</td>
-      <td>-0.207217</td>
-      <td>1.829553e-08</td>
+      <td>-0.010545</td>
+      <td>5.472933e-08</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C6H11O8P</th>
-      <td>-7.382211</td>
-      <td>-239.228583</td>
-      <td>1.556823e-13</td>
-      <td>6.945825e-13</td>
+      <td>-8.044767</td>
+      <td>-235.960356</td>
+      <td>8.640938e-16</td>
+      <td>4.176454e-15</td>
       <td>False</td>
-      <td>-0.650612</td>
+      <td>-0.716180</td>
       <td>1137</td>
-      <td>-0.105827</td>
-      <td>2.516291e-09</td>
+      <td>-0.097710</td>
+      <td>-1.188948e-07</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C16H30O2</th>
-      <td>-7.056793</td>
-      <td>-72.602760</td>
-      <td>1.703887e-12</td>
-      <td>7.058962e-12</td>
+      <td>-7.853011</td>
+      <td>-79.376976</td>
+      <td>4.061664e-15</td>
+      <td>1.812127e-14</td>
       <td>False</td>
-      <td>-0.612648</td>
+      <td>-0.683376</td>
       <td>1124</td>
-      <td>0.040634</td>
-      <td>-4.906768e-08</td>
+      <td>0.052323</td>
+      <td>-3.334086e-08</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C34H68NO6P</th>
+      <td>-7.611112</td>
+      <td>-197.108063</td>
+      <td>2.717487e-14</td>
+      <td>1.125816e-13</td>
+      <td>False</td>
+      <td>-0.987464</td>
+      <td>1091</td>
+      <td>-0.205445</td>
+      <td>7.391605e-08</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C37H74NO8P</th>
-      <td>-6.411355</td>
-      <td>-74.347984</td>
-      <td>1.442312e-10</td>
-      <td>5.576941e-10</td>
+      <td>-6.712085</td>
+      <td>-76.921562</td>
+      <td>1.918627e-11</td>
+      <td>7.418691e-11</td>
       <td>False</td>
-      <td>-0.829361</td>
+      <td>-0.867539</td>
       <td>1052</td>
-      <td>-0.223507</td>
-      <td>-5.294696e-09</td>
+      <td>-0.227815</td>
+      <td>8.964287e-09</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C35H67O8P</th>
-      <td>-5.872687</td>
-      <td>-72.822525</td>
-      <td>4.287870e-09</td>
-      <td>1.554353e-08</td>
+      <td>-6.276896</td>
+      <td>-77.279274</td>
+      <td>3.453985e-10</td>
+      <td>1.252070e-09</td>
       <td>False</td>
-      <td>-0.610978</td>
+      <td>-0.656525</td>
       <td>1100</td>
-      <td>-0.009191</td>
-      <td>5.871346e-09</td>
+      <td>-0.006341</td>
+      <td>5.997160e-08</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C25H44NO7P</th>
-      <td>-4.370349</td>
-      <td>-64.128204</td>
-      <td>1.240478e-05</td>
-      <td>4.232218e-05</td>
+      <td>-5.110228</td>
+      <td>-73.392181</td>
+      <td>3.217698e-07</td>
+      <td>1.097803e-06</td>
       <td>False</td>
-      <td>-0.565831</td>
+      <td>-0.664649</td>
       <td>1072</td>
-      <td>0.016797</td>
-      <td>-1.174269e-08</td>
-      <td>0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>C9H19O11P</th>
-      <td>-3.917850</td>
-      <td>-51.969387</td>
-      <td>8.934219e-05</td>
-      <td>2.878804e-04</td>
-      <td>False</td>
-      <td>-0.544195</td>
-      <td>1051</td>
-      <td>0.019763</td>
-      <td>1.174269e-07</td>
+      <td>0.018974</td>
+      <td>6.290727e-09</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C18H34O2</th>
-      <td>-3.788469</td>
-      <td>-239.228583</td>
-      <td>1.515786e-04</td>
-      <td>4.627136e-04</td>
+      <td>-4.815791</td>
+      <td>-235.960356</td>
+      <td>1.466182e-06</td>
+      <td>4.724363e-06</td>
       <td>False</td>
-      <td>-0.318061</td>
+      <td>-0.407052</td>
       <td>1129</td>
-      <td>0.033506</td>
-      <td>-1.614620e-07</td>
-      <td>0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>C36H69O8P</th>
-      <td>-3.724657</td>
-      <td>-32.254681</td>
-      <td>1.955814e-04</td>
-      <td>5.671860e-04</td>
-      <td>False</td>
-      <td>-0.885610</td>
-      <td>885</td>
-      <td>-0.153292</td>
-      <td>-1.574779e-07</td>
+      <td>0.030756</td>
+      <td>-8.345699e-08</td>
       <td>0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>C21H39O6P</th>
-      <td>-3.136005</td>
-      <td>-239.228583</td>
-      <td>1.712664e-03</td>
-      <td>4.730214e-03</td>
+      <td>-4.309412</td>
+      <td>-235.960356</td>
+      <td>1.636894e-05</td>
+      <td>4.996835e-05</td>
       <td>False</td>
-      <td>-0.276296</td>
+      <td>-0.384635</td>
       <td>1126</td>
-      <td>-0.007587</td>
-      <td>1.308471e-07</td>
+      <td>-0.003916</td>
+      <td>1.992064e-08</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C9H19O11P</th>
+      <td>-4.236784</td>
+      <td>-55.618423</td>
+      <td>2.267437e-05</td>
+      <td>6.575568e-05</td>
+      <td>False</td>
+      <td>-0.589858</td>
+      <td>1051</td>
+      <td>0.017264</td>
+      <td>-1.847377e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C36H69O8P</th>
+      <td>-3.818299</td>
+      <td>-32.924702</td>
+      <td>1.343750e-04</td>
+      <td>3.711309e-04</td>
+      <td>False</td>
+      <td>-0.909464</td>
+      <td>885</td>
+      <td>-0.154275</td>
+      <td>1.242419e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C39H75O8P</th>
+      <td>-3.343603</td>
+      <td>-43.880669</td>
+      <td>8.269809e-04</td>
+      <td>2.180222e-03</td>
+      <td>False</td>
+      <td>-0.612557</td>
+      <td>977</td>
+      <td>-0.034177</td>
+      <td>1.077811e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C23H46NO7P</th>
+      <td>-3.298794</td>
+      <td>-40.143307</td>
+      <td>9.710132e-04</td>
+      <td>2.448642e-03</td>
+      <td>False</td>
+      <td>-0.576423</td>
+      <td>1008</td>
+      <td>-0.070715</td>
+      <td>-1.838989e-07</td>
+      <td>0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C41H80NO8P</th>
+      <td>-3.185956</td>
+      <td>-70.789330</td>
+      <td>1.442765e-03</td>
+      <td>3.486682e-03</td>
+      <td>False</td>
+      <td>-0.355879</td>
+      <td>1097</td>
+      <td>-0.116602</td>
+      <td>5.745531e-08</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C22H32O2</th>
-      <td>-2.999501</td>
-      <td>-24.829544</td>
-      <td>2.704220e-03</td>
-      <td>7.129307e-03</td>
+      <td>-3.038210</td>
+      <td>-25.090530</td>
+      <td>2.379878e-03</td>
+      <td>5.521318e-03</td>
       <td>False</td>
-      <td>-0.789165</td>
+      <td>-0.799300</td>
       <td>897</td>
-      <td>-0.226133</td>
-      <td>4.366813e-08</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C39H75O8P</th>
-      <td>-2.963858</td>
-      <td>-39.523647</td>
-      <td>3.038081e-03</td>
-      <td>7.661249e-03</td>
-      <td>False</td>
-      <td>-0.542173</td>
-      <td>977</td>
-      <td>-0.036995</td>
-      <td>-7.444028e-08</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C23H46NO7P</th>
-      <td>-2.860858</td>
-      <td>-35.290440</td>
-      <td>4.224964e-03</td>
-      <td>1.021033e-02</td>
-      <td>False</td>
-      <td>-0.496469</td>
-      <td>1008</td>
-      <td>-0.079203</td>
-      <td>1.084102e-07</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C22H34O2</th>
-      <td>-2.754791</td>
-      <td>-20.238079</td>
-      <td>5.872958e-03</td>
-      <td>1.362526e-02</td>
-      <td>False</td>
-      <td>-0.795296</td>
-      <td>832</td>
-      <td>-0.154759</td>
-      <td>3.407478e-07</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C41H80NO8P</th>
-      <td>-2.708992</td>
-      <td>-60.510254</td>
-      <td>6.748796e-03</td>
-      <td>1.505501e-02</td>
-      <td>False</td>
-      <td>-0.299692</td>
-      <td>1097</td>
-      <td>-0.105069</td>
-      <td>4.613200e-09</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C37H69O8P</th>
-      <td>-2.511423</td>
-      <td>-33.873714</td>
-      <td>1.202456e-02</td>
-      <td>2.583053e-02</td>
-      <td>False</td>
-      <td>-0.422694</td>
-      <td>1019</td>
-      <td>-0.021775</td>
-      <td>2.038196e-07</td>
+      <td>-0.226776</td>
+      <td>-3.176817e-08</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C39H76NO8P</th>
-      <td>-2.430492</td>
-      <td>-41.308304</td>
-      <td>1.507836e-02</td>
-      <td>3.123374e-02</td>
+      <td>-2.926874</td>
+      <td>-48.999607</td>
+      <td>3.423876e-03</td>
+      <td>7.637877e-03</td>
       <td>False</td>
-      <td>-0.371236</td>
+      <td>-0.448849</td>
       <td>1062</td>
-      <td>-0.037274</td>
-      <td>-5.451964e-08</td>
+      <td>-0.034501</td>
+      <td>4.235757e-08</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>C25H50NO7P</th>
-      <td>-2.152885</td>
-      <td>-15.605909</td>
-      <td>3.132769e-02</td>
-      <td>6.265538e-02</td>
+      <th>C22H34O2</th>
+      <td>-2.834062</td>
+      <td>-20.712328</td>
+      <td>4.596045e-03</td>
+      <td>9.872985e-03</td>
       <td>False</td>
-      <td>-0.823173</td>
-      <td>763</td>
-      <td>-0.160290</td>
-      <td>-2.507904e-07</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C42H82NO6P</th>
-      <td>-2.109961</td>
-      <td>-25.464512</td>
-      <td>3.486176e-02</td>
-      <td>6.739940e-02</td>
-      <td>False</td>
-      <td>-0.857165</td>
-      <td>769</td>
-      <td>-0.207107</td>
-      <td>-9.561906e-08</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C39H71O8P</th>
-      <td>-2.037046</td>
-      <td>-20.532507</td>
-      <td>4.164546e-02</td>
-      <td>7.791730e-02</td>
-      <td>False</td>
-      <td>-0.733491</td>
-      <td>842</td>
-      <td>-0.197531</td>
-      <td>2.067552e-07</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C38H73O8P</th>
-      <td>-1.998049</td>
-      <td>-21.939438</td>
-      <td>4.571131e-02</td>
-      <td>8.285176e-02</td>
-      <td>False</td>
-      <td>-0.529056</td>
-      <td>904</td>
-      <td>-0.213437</td>
-      <td>1.177415e-07</td>
+      <td>-0.818444</td>
+      <td>832</td>
+      <td>-0.157775</td>
+      <td>-3.495548e-07</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C20H32O2</th>
-      <td>-1.984060</td>
-      <td>-239.228583</td>
-      <td>4.724911e-02</td>
-      <td>8.304388e-02</td>
+      <td>-2.681078</td>
+      <td>-235.960356</td>
+      <td>7.338538e-03</td>
+      <td>1.520126e-02</td>
       <td>False</td>
-      <td>-0.203248</td>
+      <td>-0.278129</td>
       <td>1105</td>
-      <td>-0.008204</td>
-      <td>-1.174269e-08</td>
+      <td>-0.003538</td>
+      <td>1.581070e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C37H69O8P</th>
+      <td>-2.644732</td>
+      <td>-35.496391</td>
+      <td>8.175551e-03</td>
+      <td>1.635110e-02</td>
+      <td>False</td>
+      <td>-0.445292</td>
+      <td>1019</td>
+      <td>-0.022123</td>
+      <td>-2.317085e-07</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C27H51O12P</th>
-      <td>-1.895528</td>
-      <td>-19.908764</td>
-      <td>5.802250e-02</td>
-      <td>9.897955e-02</td>
+      <td>-2.313598</td>
+      <td>-23.729599</td>
+      <td>2.068978e-02</td>
+      <td>4.000025e-02</td>
       <td>False</td>
-      <td>-0.475359</td>
+      <td>-0.580794</td>
       <td>905</td>
-      <td>-0.262696</td>
-      <td>-1.228789e-07</td>
+      <td>-0.266547</td>
+      <td>1.281212e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C25H50NO7P</th>
+      <td>-2.283512</td>
+      <td>-16.401844</td>
+      <td>2.240021e-02</td>
+      <td>4.191007e-02</td>
+      <td>False</td>
+      <td>-0.874430</td>
+      <td>763</td>
+      <td>-0.157782</td>
+      <td>1.792857e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C38H73O8P</th>
+      <td>-2.245953</td>
+      <td>-24.282288</td>
+      <td>2.470701e-02</td>
+      <td>4.434831e-02</td>
+      <td>False</td>
+      <td>-0.594335</td>
+      <td>904</td>
+      <td>-0.206570</td>
+      <td>-1.344119e-07</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C41H73O8P</th>
-      <td>-1.806516</td>
-      <td>-20.887575</td>
-      <td>7.083772e-02</td>
-      <td>1.173882e-01</td>
+      <td>-2.223309</td>
+      <td>-25.419670</td>
+      <td>2.619498e-02</td>
+      <td>4.434831e-02</td>
       <td>False</td>
-      <td>-0.380387</td>
+      <td>-0.472775</td>
       <td>959</td>
-      <td>-0.044297</td>
-      <td>8.471513e-08</td>
+      <td>-0.042242</td>
+      <td>-7.590811e-08</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>C45H80NO8P</th>
-      <td>-1.720475</td>
-      <td>-15.740525</td>
-      <td>8.534613e-02</td>
-      <td>1.375021e-01</td>
+      <th>C39H71O8P</th>
+      <td>-2.216602</td>
+      <td>-22.022932</td>
+      <td>2.665031e-02</td>
+      <td>4.434831e-02</td>
       <td>False</td>
-      <td>-0.777399</td>
-      <td>773</td>
-      <td>-0.213716</td>
-      <td>-8.251338e-08</td>
+      <td>-0.796730</td>
+      <td>842</td>
+      <td>-0.196700</td>
+      <td>2.390476e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C42H82NO6P</th>
+      <td>-2.214973</td>
+      <td>-26.538776</td>
+      <td>2.676191e-02</td>
+      <td>4.434831e-02</td>
+      <td>False</td>
+      <td>-0.901934</td>
+      <td>769</td>
+      <td>-0.206853</td>
+      <td>-9.876442e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C39H73O8P</th>
+      <td>-2.058540</td>
+      <td>-51.817539</td>
+      <td>3.953831e-02</td>
+      <td>6.370062e-02</td>
+      <td>False</td>
+      <td>-0.261532</td>
+      <td>1085</td>
+      <td>-0.073392</td>
+      <td>-8.807019e-09</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C43H82NO8P</th>
-      <td>-1.636701</td>
-      <td>-15.428082</td>
-      <td>1.016929e-01</td>
-      <td>1.594105e-01</td>
+      <td>-1.768734</td>
+      <td>-16.584000</td>
+      <td>7.693835e-02</td>
+      <td>1.183385e-01</td>
       <td>False</td>
-      <td>-0.708251</td>
+      <td>-0.770331</td>
       <td>775</td>
-      <td>-0.210365</td>
-      <td>-1.132331e-07</td>
+      <td>-0.210380</td>
+      <td>1.216207e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C45H80NO8P</th>
+      <td>-1.765188</td>
+      <td>-16.113760</td>
+      <td>7.753210e-02</td>
+      <td>1.183385e-01</td>
+      <td>False</td>
+      <td>-0.799105</td>
+      <td>773</td>
+      <td>-0.212065</td>
+      <td>7.763806e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H78NO8P</th>
+      <td>-1.735262</td>
+      <td>-34.254311</td>
+      <td>8.269434e-02</td>
+      <td>1.229813e-01</td>
+      <td>False</td>
+      <td>-0.347388</td>
+      <td>1018</td>
+      <td>-0.098752</td>
+      <td>-5.934253e-08</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C43H73O8P</th>
-      <td>-1.581672</td>
-      <td>-14.946424</td>
-      <td>1.137245e-01</td>
-      <td>1.735795e-01</td>
+      <td>-1.629962</td>
+      <td>-15.326866</td>
+      <td>1.031094e-01</td>
+      <td>1.495087e-01</td>
       <td>False</td>
-      <td>-0.932663</td>
+      <td>-0.961984</td>
       <td>689</td>
-      <td>-0.308894</td>
-      <td>-1.976075e-07</td>
+      <td>-0.307998</td>
+      <td>3.905494e-08</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C41H75O8P</th>
-      <td>-1.455900</td>
-      <td>-15.050796</td>
-      <td>1.454204e-01</td>
-      <td>2.162662e-01</td>
+      <td>-1.555355</td>
+      <td>-15.940056</td>
+      <td>1.198616e-01</td>
+      <td>1.695603e-01</td>
       <td>False</td>
-      <td>-0.622252</td>
+      <td>-0.664129</td>
       <td>781</td>
-      <td>-0.206887</td>
-      <td>4.474804e-07</td>
+      <td>-0.208027</td>
+      <td>3.153752e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H71O8P</th>
+      <td>-1.427826</td>
+      <td>-16.083429</td>
+      <td>1.533420e-01</td>
+      <td>2.117579e-01</td>
+      <td>False</td>
+      <td>-0.432512</td>
+      <td>893</td>
+      <td>-0.235298</td>
+      <td>3.032131e-07</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C29H49O12P</th>
       <td>-1.407226</td>
-      <td>-12.908792</td>
+      <td>-12.908844</td>
       <td>1.593604e-01</td>
-      <td>2.287632e-01</td>
+      <td>2.149513e-01</td>
       <td>False</td>
-      <td>-0.839058</td>
+      <td>-0.839062</td>
       <td>687</td>
-      <td>-0.348991</td>
-      <td>-4.223175e-07</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C41H78NO8P</th>
-      <td>-1.399337</td>
-      <td>-27.787531</td>
-      <td>1.617119e-01</td>
-      <td>2.287632e-01</td>
-      <td>False</td>
-      <td>-0.277194</td>
-      <td>1018</td>
-      <td>-0.090111</td>
-      <td>3.669591e-08</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C39H73O8P</th>
-      <td>-1.345553</td>
-      <td>-34.255653</td>
-      <td>1.784466e-01</td>
-      <td>2.464263e-01</td>
-      <td>False</td>
-      <td>-0.168617</td>
-      <td>1085</td>
-      <td>-0.087252</td>
-      <td>5.368087e-08</td>
+      <td>-0.348990</td>
+      <td>-4.088973e-08</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C43H75O8P</th>
-      <td>-1.218216</td>
-      <td>-12.769893</td>
-      <td>2.231419e-01</td>
-      <td>3.009821e-01</td>
+      <td>-1.240445</td>
+      <td>-12.979169</td>
+      <td>2.148109e-01</td>
+      <td>2.831598e-01</td>
       <td>False</td>
-      <td>-0.853765</td>
+      <td>-0.870931</td>
       <td>619</td>
-      <td>-0.575572</td>
-      <td>1.247661e-07</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C41H71O8P</th>
-      <td>-1.113938</td>
-      <td>-12.807487</td>
-      <td>2.653058e-01</td>
-      <td>3.497212e-01</td>
-      <td>False</td>
-      <td>-0.337020</td>
-      <td>893</td>
-      <td>-0.231709</td>
-      <td>4.739015e-08</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C43H76NO7P</th>
-      <td>-0.944187</td>
-      <td>-11.008118</td>
-      <td>3.450742e-01</td>
-      <td>4.443315e-01</td>
-      <td>False</td>
-      <td>-0.782354</td>
-      <td>663</td>
-      <td>-0.432453</td>
-      <td>-6.500419e-08</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C45H78NO8P</th>
-      <td>-0.929942</td>
-      <td>-12.229739</td>
-      <td>3.524009e-01</td>
-      <td>4.443315e-01</td>
-      <td>False</td>
-      <td>-0.862607</td>
-      <td>624</td>
-      <td>-0.554777</td>
-      <td>1.572682e-08</td>
+      <td>-0.575417</td>
+      <td>-2.078037e-07</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C42H80NO10P</th>
-      <td>-0.899186</td>
-      <td>-13.741209</td>
-      <td>3.685536e-01</td>
-      <td>4.548108e-01</td>
+      <td>-1.223486</td>
+      <td>-18.326834</td>
+      <td>2.211463e-01</td>
+      <td>2.850330e-01</td>
       <td>False</td>
-      <td>-0.384496</td>
+      <td>-0.527728</td>
       <td>829</td>
-      <td>-0.287100</td>
-      <td>5.871346e-09</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C41H74NO7P</th>
-      <td>-0.866673</td>
-      <td>-9.464069</td>
-      <td>3.861212e-01</td>
-      <td>4.665631e-01</td>
-      <td>False</td>
-      <td>-0.649104</td>
-      <td>642</td>
-      <td>-0.441513</td>
-      <td>7.423058e-08</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C43H78NO7P</th>
-      <td>-0.835949</td>
-      <td>-8.824788</td>
-      <td>4.031838e-01</td>
-      <td>4.772380e-01</td>
-      <td>False</td>
-      <td>-0.912686</td>
-      <td>552</td>
-      <td>-0.648098</td>
-      <td>9.519968e-08</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C45H82NO8P</th>
-      <td>-0.816658</td>
-      <td>-7.743455</td>
-      <td>4.141239e-01</td>
-      <td>4.803838e-01</td>
-      <td>False</td>
-      <td>-0.903025</td>
-      <td>507</td>
-      <td>-0.603807</td>
-      <td>-5.619717e-08</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C41H74NO8P</th>
-      <td>-0.782197</td>
-      <td>-7.869767</td>
-      <td>4.340990e-01</td>
-      <td>4.936812e-01</td>
-      <td>False</td>
-      <td>-0.738583</td>
-      <td>558</td>
-      <td>-0.674214</td>
-      <td>1.543325e-07</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C44H84NO6P</th>
-      <td>-0.592612</td>
-      <td>-6.862571</td>
-      <td>5.534409e-01</td>
-      <td>6.172994e-01</td>
-      <td>True</td>
-      <td>-0.820413</td>
-      <td>486</td>
-      <td>-0.614551</td>
-      <td>-1.593651e-07</td>
-      <td>1</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>C40H76NO10P</th>
-      <td>-0.571405</td>
-      <td>-7.079195</td>
-      <td>5.677251e-01</td>
-      <td>6.196739e-01</td>
-      <td>False</td>
-      <td>-0.935572</td>
-      <td>462</td>
-      <td>-0.579962</td>
-      <td>-3.390702e-07</td>
+      <td>-0.286743</td>
+      <td>-1.170075e-07</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C43H78NO8P</th>
-      <td>-0.557863</td>
-      <td>-14.394064</td>
-      <td>5.769377e-01</td>
-      <td>6.196739e-01</td>
+      <td>-1.165454</td>
+      <td>-30.585037</td>
+      <td>2.438352e-01</td>
+      <td>3.074443e-01</td>
       <td>False</td>
-      <td>-0.073275</td>
+      <td>-0.159189</td>
       <td>1078</td>
-      <td>-0.099465</td>
-      <td>-4.906768e-08</td>
+      <td>-0.109587</td>
+      <td>1.090393e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H74NO7P</th>
+      <td>-1.121731</td>
+      <td>-11.940330</td>
+      <td>2.619769e-01</td>
+      <td>3.232906e-01</td>
+      <td>False</td>
+      <td>-0.845227</td>
+      <td>642</td>
+      <td>-0.436403</td>
+      <td>-1.356700e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H76NO7P</th>
+      <td>-1.052010</td>
+      <td>-12.125523</td>
+      <td>2.927950e-01</td>
+      <td>3.537939e-01</td>
+      <td>False</td>
+      <td>-0.875567</td>
+      <td>663</td>
+      <td>-0.441937</td>
+      <td>4.571262e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C45H78NO8P</th>
+      <td>-0.930006</td>
+      <td>-12.229803</td>
+      <td>3.523678e-01</td>
+      <td>4.170884e-01</td>
+      <td>False</td>
+      <td>-0.862613</td>
+      <td>624</td>
+      <td>-0.554777</td>
+      <td>-5.231789e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C41H74NO8P</th>
+      <td>-0.898835</td>
+      <td>-8.879136</td>
+      <td>3.687407e-01</td>
+      <td>4.277392e-01</td>
+      <td>False</td>
+      <td>-0.851415</td>
+      <td>558</td>
+      <td>-0.673176</td>
+      <td>1.467836e-09</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C45H82NO8P</th>
+      <td>-0.877436</td>
+      <td>-8.209733</td>
+      <td>3.802498e-01</td>
+      <td>4.324409e-01</td>
+      <td>False</td>
+      <td>-0.970041</td>
+      <td>507</td>
+      <td>-0.602336</td>
+      <td>-9.016710e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H78NO7P</th>
+      <td>-0.855303</td>
+      <td>-8.986941</td>
+      <td>3.923834e-01</td>
+      <td>4.376584e-01</td>
+      <td>False</td>
+      <td>-0.932611</td>
+      <td>552</td>
+      <td>-0.647861</td>
+      <td>-1.136525e-07</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C43H76NO8P</th>
+      <td>-0.786604</td>
+      <td>-11.393542</td>
+      <td>4.315136e-01</td>
+      <td>4.722225e-01</td>
+      <td>False</td>
+      <td>-0.198495</td>
+      <td>941</td>
+      <td>-0.091159</td>
+      <td>4.193819e-08</td>
+      <td>0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C44H84NO6P</th>
+      <td>-0.611072</td>
+      <td>-7.034124</td>
+      <td>5.411518e-01</td>
+      <td>5.812371e-01</td>
+      <td>True</td>
+      <td>-0.844316</td>
+      <td>486</td>
+      <td>-0.614600</td>
+      <td>-2.801471e-07</td>
+      <td>1</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C40H76NO10P</th>
+      <td>-0.576068</td>
+      <td>-7.129510</td>
+      <td>5.645692e-01</td>
+      <td>5.953639e-01</td>
+      <td>False</td>
+      <td>-0.943563</td>
+      <td>462</td>
+      <td>-0.579913</td>
+      <td>5.703593e-08</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C44H78NO10P</th>
-      <td>-0.509413</td>
-      <td>-6.722568</td>
-      <td>6.104627e-01</td>
-      <td>6.354907e-01</td>
+      <td>-0.523530</td>
+      <td>-6.885424</td>
+      <td>6.006056e-01</td>
+      <td>6.220558e-01</td>
       <td>True</td>
-      <td>-0.820413</td>
+      <td>-0.844316</td>
       <td>454</td>
-      <td>-0.555328</td>
-      <td>-4.613200e-09</td>
+      <td>-0.555446</td>
+      <td>-6.500419e-08</td>
       <td>1</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>C43H76NO8P</th>
-      <td>-0.504974</td>
-      <td>-7.164406</td>
-      <td>6.135773e-01</td>
-      <td>6.354907e-01</td>
-      <td>False</td>
-      <td>-0.122637</td>
-      <td>941</td>
-      <td>-0.082697</td>
-      <td>3.753468e-08</td>
-      <td>0</td>
-      <td>False</td>
-    </tr>
-    <tr>
       <th>C43H81O13P</th>
-      <td>-0.328388</td>
-      <td>-14.016177</td>
-      <td>7.426184e-01</td>
-      <td>7.556468e-01</td>
+      <td>-0.408361</td>
+      <td>-17.669924</td>
+      <td>6.830087e-01</td>
+      <td>6.949913e-01</td>
       <td>False</td>
-      <td>-0.108584</td>
+      <td>-0.137813</td>
       <td>855</td>
-      <td>-0.212411</td>
-      <td>2.941964e-07</td>
+      <td>-0.214357</td>
+      <td>-3.564746e-09</td>
       <td>0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>C43H79O13P</th>
-      <td>-0.140208</td>
-      <td>-2.213482</td>
-      <td>8.884953e-01</td>
-      <td>8.884953e-01</td>
+      <td>-0.238131</td>
+      <td>-3.985167</td>
+      <td>8.117797e-01</td>
+      <td>8.117797e-01</td>
       <td>False</td>
-      <td>-0.115358</td>
+      <td>-0.211185</td>
       <td>627</td>
-      <td>-0.562455</td>
-      <td>8.215690e-07</td>
+      <td>-0.560782</td>
+      <td>3.417962e-07</td>
       <td>0</td>
       <td>False</td>
     </tr>
@@ -2030,7 +2275,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">pair_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -2045,7 +2290,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma_raw</span><span class="o">.</span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -2072,7 +2317,7 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
   obs_tidy.index.value_counts(sort=False).iteritems()
 </pre></div></div>
 </div>
@@ -2099,12 +2344,12 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;88_dataset&#39;,
- &#39;1171_dataset&#39;,
- &#39;456_dataset&#39;,
- &#39;482_dataset&#39;,
- &#39;336_dataset&#39;,
- &#39;1102_dataset&#39;]
+[&#39;556_dataset&#39;,
+ &#39;625_dataset&#39;,
+ &#39;778_dataset&#39;,
+ &#39;756_dataset&#39;,
+ &#39;558_dataset&#39;,
+ &#39;750_dataset&#39;]
 </pre></div></div>
 </div>
 <p>The following plot shows the metabolic profiles of sampled cell generated from 1 and increasing numbers of ablation marks. The first row has the uncorrected raw ion intensities, the second row the corrected raw ion intensities and the third row the correction ratio/quotient between the two ( <span class="math notranslate nohighlight">\(correction\_ratio = \frac{I_{corrected}}{I_{uncorrected}}\)</span> ). Most ions have the same correction ratio in a given cells, some have a higher ratio (smaller slope, less ISM correction) and some have a
@@ -2123,13 +2368,9 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/seaborn/axisgrid.py:848: UserWarning: Dataset has 0 variance; skipping density estimate. Pass `warn_singular=False` to disable this warning.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/seaborn/axisgrid.py:848: UserWarning: Dataset has 0 variance; skipping density estimate. Pass `warn_singular=False` to disable this warning.
   func(*plot_args, **plot_kwargs)
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/seaborn/axisgrid.py:848: UserWarning: Dataset has 0 variance; skipping density estimate. Pass `warn_singular=False` to disable this warning.
-  func(*plot_args, **plot_kwargs)
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/seaborn/axisgrid.py:848: UserWarning: Dataset has 0 variance; skipping density estimate. Pass `warn_singular=False` to disable this warning.
-  func(*plot_args, **plot_kwargs)
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/seaborn/axisgrid.py:848: UserWarning: Dataset has 0 variance; skipping density estimate. Pass `warn_singular=False` to disable this warning.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/seaborn/axisgrid.py:848: UserWarning: Dataset has 0 variance; skipping density estimate. Pass `warn_singular=False` to disable this warning.
   func(*plot_args, **plot_kwargs)
 </pre></div></div>
 </div>
@@ -2160,13 +2401,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -2208,7 +2449,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <p>The same analysis is then carried out for the TIC-corrected and log-transformed data: Here, the differences between uncorrected and ISM-corrected data are much more subtle. This corresponds better with the UMAPs further down, as they also show very little noticebly differences between uncorrected and ISM-corrected datasets.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">]</span>
@@ -2217,7 +2458,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span> <span class="o">=</span> <span class="n">MetaboliteAnalysis</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="o">=</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span>
@@ -2233,12 +2474,12 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: invalid value encountered in log2
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/tools/_rank_genes_groups.py:420: RuntimeWarning: invalid value encountered in log2
   self.stats[group_name, &#39;logfoldchanges&#39;] = np.log2(
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">volcano_plot</span><span class="p">(</span><span class="n">exclude_ref_corrected</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -2253,7 +2494,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">rank_genes_groups_tracksplot</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">conc_adata</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">dendrogram</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -2265,7 +2506,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_anndata.py:2414: FutureWarning: iteritems is deprecated and will be removed in a future version. Use .items instead.
   obs_tidy.index.value_counts(sort=False).iteritems()
 </pre></div></div>
 </div>
@@ -2277,7 +2518,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">quotient_plot</span><span class="p">(</span><span class="n">show_cells</span><span class="o">=</span><span class="n">strat_cell_list</span><span class="p">)</span>
@@ -2299,7 +2540,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ma</span><span class="o">.</span><span class="n">top_ion_plot</span><span class="p">()</span>
@@ -2311,13 +2552,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:249: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -2354,7 +2595,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <h2>Comparison of the datasets<a class="headerlink" href="#Comparison-of-the-datasets" title="Permalink to this heading">¶</a></h2>
 <p>In the following, the uncorrected and ISM-corrected datasets are compared using methods of a typical single-cell analysis. Unless specified otherwise, the data was preprocessed using TOC normalization and log transformation.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_pca</span><span class="p">(</span><span class="n">adata</span><span class="p">):</span>
@@ -2371,9 +2612,9 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
 </pre></div></div>
 </div>
@@ -2403,9 +2644,9 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
-/home/mklein/.conda/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
   cax = scatter(
 </pre></div></div>
 </div>
@@ -2431,7 +2672,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
@@ -2454,7 +2695,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># from sklearn.metrics.cluster import completeness_score</span>
@@ -2488,7 +2729,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summaries</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">({</span><span class="s1">&#39;uncorrected&#39;</span><span class="p">:</span> <span class="n">adata</span><span class="p">,</span> <span class="s1">&#39;ISM correction&#39;</span><span class="p">:</span> <span class="n">adata_cor</span><span class="p">},</span> <span class="n">condition_name</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">])</span>
@@ -2504,9 +2745,9 @@ X_pca
 X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.200389  0.266097          0.091837
-X_pca_ISM correction  10  0.193106  0.258677          0.091837
-X_umap_uncorrected    10  0.262680  0.298624          0.091837
-X_umap_ISM correction 10  0.164124  0.285737          0.091837
+X_pca_ISM correction  10  0.191091  0.257246          0.091837
+X_umap_uncorrected    10  0.266744  0.295833          0.091837
+X_umap_ISM correction 10  0.155300  0.279988          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -2517,7 +2758,7 @@ X_umap_ISM correction 10  0.164124  0.285737          0.091837
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">intermixing</span><span class="p">(</span>
@@ -2555,7 +2796,7 @@ Index: []
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">trapz</span><span class="p">,</span> <span class="n">simps</span>
@@ -2574,14 +2815,14 @@ Index: []
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Area under the curve for X_umap_uncorrected: 0.4005
-Area under the curve for X_umap_ISM correction: 0.3849
+Area under the curve for X_umap_uncorrected: 0.4040
+Area under the curve for X_umap_ISM correction: 0.3837
 Area under the curve for X_pca_uncorrected: 0.3826
-Area under the curve for X_pca_ISM correction: 0.3763
+Area under the curve for X_pca_ISM correction: 0.3764
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
@@ -2624,7 +2865,7 @@ Area under the curve for X_pca_ISM correction: 0.3763
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;scaled_counts&#39;</span><span class="p">,</span> <span class="n">size_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -2647,7 +2888,7 @@ scaled_counts
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
