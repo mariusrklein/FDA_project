@@ -194,7 +194,7 @@ def plot_deviations_between_adatas(adata, gen_adata, adata_cor):
     def plot_deviations(adata1, adata2, label=""):
         diff_df = (sc.get.obs_df(adata1, keys=['well'] + list(adata1.var_names)).set_index("well")- sc.get.obs_df(
             adata2, keys=['well'] + list(adata2.var_names)).set_index("well"))/ sc.get.obs_df(
-            adata1, keys=['well'] + list(adata1.var_names)).set_index("well") 
+            adata2, keys=['well'] + list(adata2.var_names)).set_index("well") 
 
         # df = df / (adata1.to_df().shape[0] * adata1.to_df().shape[1])
         df_out = pd.concat({'median': diff_df.reset_index().melt(id_vars="well").groupby("well").median(), 
@@ -308,9 +308,18 @@ class MetaboliteAnalysis:
         # if 'pearson' not in self.impact_ions.columns:
         #     impact_ions['pearson'] = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(correlate_ions)(ion) for ion in tqdm(impact_ions.index))
         
-
+        if exclude_ref_corrected:
+            sns.pairplot(impact_ions[['scores', 'mean_correction_quantreg_slope', 
+                                      'mean_intensity', 'n_cells']], 
+                         hue='mean_correction_quantreg_slope',
+                         vars=['scores', 'mean_correction_quantreg_slope', 'n_cells'],
+                         height=1.5,
+                         **kwargs
+                        )
+            return
+        
         sns.pairplot(impact_ions[['logfoldchanges', 'mean_correction_quantreg_slope', 
-                                  'median_intensity', 'mean_intensity',
+                                  'mean_intensity',
                                   'corrected_only_using_pool', 'n_cells']], 
                      hue='corrected_only_using_pool',
                      **kwargs
@@ -395,18 +404,26 @@ class MetaboliteAnalysis:
         cells_df['list_TPO'] = [list(np.float_(row.split(";"))) for row in cells_df['set_TPO']]
 
         grid = sns.FacetGrid(self.long_plot_df[self.long_plot_df['cell'].isin(self.cells)], row='correction', col='cell', 
-                             hue='corrected_only_using_pool', margin_titles=True, sharey=False, col_order = self.cells)
+                             hue='corrected_only_using_pool', margin_titles=True, sharey=False, col_order = self.cells, height=2.5)
         grid.map(sns.lineplot, 'ion', 'value', linewidth = 0.5).add_legend()
+        grid.set_axis_labels("ion \n(arbitrary order)", "MALDI intensity")
+
+        for margin_title in grid._margin_titles_texts:
+            margin_title.set_text("")
+        grid.tight_layout()
+            
         for i, ax in enumerate(grid.axes.flat): 
             ax.set_xticks([])
             if i >= 2*len(self.cells):
             #if i % 3 == 2:
                 #cell = self.cells[round(i/3-1/3)]
                 cell = self.cells[round(i-2*len(self.cells))]
-                ax.text(0.05, 0.95, cell, transform=ax.transAxes, verticalalignment='top', fontsize=10)
+                # ax.text(0.05, 0.95, cell, transform=ax.transAxes, verticalalignment='top', fontsize=10)
+                if i == 2*len(self.cells): ax.set_ylabel('corrected / raw \nion intensities ratio')
                 if show_TPO:
                     for line in cells_df.loc[cell, 'list_TPO']:
                         ax.axhline(y=line, color='black')
+                
                         
                         
         if show_TPO:
@@ -415,15 +432,20 @@ class MetaboliteAnalysis:
                                                      (self.long_plot_df['value'] > 0)]
             grid = sns.FacetGrid(cell_impact_ions, col='cell', row='corrected_only_using_pool', 
                                  col_order=self.cells, hue='corrected_only_using_pool', sharey=False, 
-                                 margin_titles=True)
+                                 margin_titles=True, height=2.5)
             grid.map(sns.kdeplot, 'value').add_legend()
+            
+            for margin_title in grid._margin_titles_texts:
+                margin_title.set_text("")
+            
             for i, ax in enumerate(grid.axes.flat): 
                 cell = self.cells[i % len(self.cells)]
                 # cell = re.sub('cell = ', '', ax.get_title())
                 for line in cells_df.loc[cell, 'list_TPO']:
                     ax.axvline(x=line, color='black')
                 # ax.text(0.05, 0.95, cell, transform=ax.transAxes, verticalalignment='top', fontsize=10)
-                ax.set_xlabel('corrected / raw ion intensities ratio')
+                ax.set_xlabel('corrected / raw \nion intensities ratio')
+            grid.tight_layout()
             
 
     def save_matrix(self, save_to_path, safe_to_name = 'metenrichr', save_figures = None):
