@@ -29,7 +29,7 @@ setuptools.setup(
         "pyimzml",
         "chardet",
         "pyqt5",
-        "git+https://git.embl.de/mklein/spacem.git",
+        "SpaceM @ git+https://git.embl.de/mklein/spacem.git",
     ],
     data_files=[("src/notebook_templates",["ISC/src/notebook_templates/qc.ipynb",
                      "ISC/src/notebook_templates/results_analysis.ipynb"])],
