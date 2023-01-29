@@ -57,6 +57,7 @@ class IonSuppressionCorrection:
         """
 
         self.v = verbose
+        self.source_path = source_path
 
         # ensuring that we have some info on number of available cores for correction/deconvolution
         if n_jobs is not None:
@@ -81,7 +82,7 @@ class IonSuppressionCorrection:
         """check configuration and load metadata
         """
         self.config['runtime'] = {}
-        self.config['runtime']['spacem_dataset_path'] = source_path
+        self.config['runtime']['spacem_dataset_path'] = self.source_path
 
         self.check_config()
 
