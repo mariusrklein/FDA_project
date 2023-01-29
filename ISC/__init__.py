@@ -1,4 +1,4 @@
-from ISC.src.ion_suppression import ISC
+from ISC.src.ion_suppression import IonSuppressionCorrection
 from ISC.src.sample_correction import SampleCorrection
 from ISC.src.correction_evaluation import CorrectionEvaluation
 from ISC.src import correction

@@ -1,5 +1,10 @@
-# CONSTANTS
+""" Project constants
 
+Author: Marius Klein (mklein@duck.com), October 2022
+"""
+
+
+# Column names an prefixes
 CELL_PRE = ''
 PIXEL_PRE = ''
 TPO = 'correction_total_pixel_overlap'
@@ -7,6 +12,8 @@ FPAI = 'correction_full_pixel_avg_intensities'
 SAMPLE_COL = "sample_col"
 POPULATION_COL = "population_col"
 
+
+# Default package configuration
 CONFIG = {
     'input': {
         'spacem_config_file': 'config.json',
@@ -20,8 +27,8 @@ CONFIG = {
         'cell_regions_file': 'analysis/overlap_analysis2/cell.regions.csv',
     },
     'correction': {
-        'spacem_library_location': None,
-        'full_pixel_avg_intensity_method': 'median', 
+        'perform_correction': True,
+        'full_pixel_avg_intensity_method': 'median',
         'correction_proportion_threshold': 0.1, # smaller values remove influence of sampling proportion better, but may suffer more from outliers
         'correction_intercept': True,
         'correction_ratios_normalize': False,
@@ -52,6 +59,7 @@ CONFIG = {
     },
 }
 
+# graph labels
 LABEL = {
     'SProp': r'sampling proportion $p_s$',
     'IRatio': r'intensity proportion ratio $\mu$',

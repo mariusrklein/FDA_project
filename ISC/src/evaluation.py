@@ -1,23 +1,27 @@
-from typing import Dict, Tuple, Callable
+"""Functions of ion suppression correction evaluation
+
+Author: Marius Klein (mklein@duck.com), October 2022
+"""
+
+from typing import Dict
 import os
 import multiprocessing
-from joblib import Parallel, delayed
+import re
+from itertools import chain
 import pandas as pd
 import numpy as np
 import statsmodels.formula.api as smf
-from patsy.builtins import Q
-from tqdm import tqdm
 import matplotlib.pyplot as plt
-from scipy.spatial import distance_matrix
-from scipy.sparse import csc_matrix, csr_matrix
-from itertools import chain
 import anndata as ad
-from ISC.src.correction import normalize_proportion_ratios
-from ISC.src import const
 import seaborn as sns
 import scanpy as sc
-import re
+from joblib import Parallel, delayed
+from tqdm import tqdm
+from scipy.spatial import distance_matrix
 from sklearn.svm import LinearSVC
+from ISC.src.correction import normalize_proportion_ratios
+from ISC.src import const
+
 
 
 
@@ -27,13 +31,14 @@ from sklearn.svm import LinearSVC
 
 
 def plot_all_ion_slopes(
-    am_adata, 
-    subset = [], 
-    col_wrap = 10, 
+    am_adata: ad.AnnData,
+    subset = [],
+    col_wrap = 10,
     ratios = True,
     normalized = True,
     log = True,
-    kde = False):
+    kde = False
+):
 
     norm_int = am_adata.copy()
     if ratios:
@@ -192,340 +197,223 @@ def plot_deviations_between_adatas(adata, gen_adata, adata_cor, well_name = 'wel
 
 
 
-class MetaboliteAnalysis:
+# class MetaboliteAnalysis:
     
-    def __init__(self, 
-                 adata, 
-                 adata_cor, 
-                 condition_name,
-                 well_name = "well",
-                 comparison_name = 'correction',
-                 obs_columns = [],
-                 var_columns = [],
-                 use_raw = False,
-                 exclude_pool_corrected = False,
-                 p_val_threshold = 0.001,
-                 q_val_threshold = 0.05,
-                 de_score_threshold = -2,
+#     def __init__(self, 
+#                  adata, 
+#                  adata_cor, 
+#                  condition_name,
+#                  well_name = "well",
+#                  comparison_name = 'correction',
+#                  obs_columns = [],
+#                  var_columns = [],
+#                  use_raw = False,
+#                  exclude_pool_corrected = False,
+#                  p_val_threshold = 0.001,
+#                  q_val_threshold = 0.05,
+#                  de_score_threshold = -2,
                  
-                ):
-        self.adata = adata
-        self.adata_cor = adata_cor
-        self.obs_columns = obs_columns
+#                 ):
+#         self.adata = adata
+#         self.adata_cor = adata_cor
+#         self.obs_columns = obs_columns
         
-        has_correction = 'corrected_only_using_pool' in var_columns
+#         has_correction = 'corrected_only_using_pool' in var_columns
         
-        self.conc_adata = ad.concat({'uncorrected': adata, 'ISM correction': adata_cor}, 
-                                    label='correction', index_unique='_', merge='same')
+#         self.conc_adata = ad.concat({'uncorrected': adata, 'ISM correction': adata_cor}, 
+#                                     label='correction', index_unique='_', merge='same')
         
-        sc.tl.rank_genes_groups(adata=self.conc_adata, groupby='correction', use_raw=use_raw, reference='uncorrected', method='wilcoxon')
-        self.all_ions_dea = sc.get.rank_genes_groups_df(self.conc_adata, group='ISM correction').set_index('names')
+#         sc.tl.rank_genes_groups(adata=self.conc_adata, groupby='correction', use_raw=use_raw, reference='uncorrected', method='wilcoxon')
+#         self.all_ions_dea = sc.get.rank_genes_groups_df(self.conc_adata, group='ISM correction').set_index('names')
 
-        self.impact_ions = pd.merge(self.all_ions_dea, self.adata_cor.var[var_columns], 
-                                    how='left', left_index=True, right_index=True)
-        self.included_molecules = list(self.impact_ions.index)
+#         self.impact_ions = pd.merge(self.all_ions_dea, self.adata_cor.var[var_columns], 
+#                                     how='left', left_index=True, right_index=True)
+#         self.included_molecules = list(self.impact_ions.index)
         
-        self.impact_ions = self.impact_ions.sort_values(by='scores')
+#         self.impact_ions = self.impact_ions.sort_values(by='scores')
         
-        self.impact_ions['logfoldchanges'] = self.impact_ions['logfoldchanges'].replace(-np.Inf, min(self.impact_ions['logfoldchanges'].replace(-np.Inf, 0))*1.1)
-        self.impact_ions['logfoldchanges'] = self.impact_ions['logfoldchanges'].replace(np.nan, min(self.impact_ions['logfoldchanges'].replace(-np.nan, 0))*1.1)
+#         self.impact_ions['logfoldchanges'] = self.impact_ions['logfoldchanges'].replace(-np.Inf, min(self.impact_ions['logfoldchanges'].replace(-np.Inf, 0))*1.1)
+#         self.impact_ions['logfoldchanges'] = self.impact_ions['logfoldchanges'].replace(np.nan, min(self.impact_ions['logfoldchanges'].replace(-np.nan, 0))*1.1)
         
-        self.impact_ions['significant'] = (self.impact_ions['pvals'] < p_val_threshold) & (self.impact_ions['pvals_adj'] < q_val_threshold)
-        self.sign_impact_ions = self.impact_ions[self.impact_ions['significant'] == True]
+#         self.impact_ions['significant'] = (self.impact_ions['pvals'] < p_val_threshold) & (self.impact_ions['pvals_adj'] < q_val_threshold)
+#         self.sign_impact_ions = self.impact_ions[self.impact_ions['significant'] == True]
         
-        if has_correction:
-            self.impact_ions_filtered = self.impact_ions[self.impact_ions['corrected_only_using_pool'] == False]
-            self.included_molecules_filtered = list(self.impact_ions[self.impact_ions['corrected_only_using_pool'] == False].index)
+#         if has_correction:
+#             self.impact_ions_filtered = self.impact_ions[self.impact_ions['corrected_only_using_pool'] == False]
+#             self.included_molecules_filtered = list(self.impact_ions[self.impact_ions['corrected_only_using_pool'] == False].index)
         
-        self.conc_adata_raw = self.conc_adata.copy()
-        self.conc_adata_raw.obs['cell'] = [re.sub('_[a-zA-Z ]+$', '', i) for i in self.conc_adata_raw.obs.index]
-        if use_raw:
-            self.conc_adata_raw.X = self.conc_adata_raw.raw.X
+#         self.conc_adata_raw = self.conc_adata.copy()
+#         self.conc_adata_raw.obs['cell'] = [re.sub('_[a-zA-Z ]+$', '', i) for i in self.conc_adata_raw.obs.index]
+#         if use_raw:
+#             self.conc_adata_raw.X = self.conc_adata_raw.raw.X
         
-        self.obs_columns.extend([comparison_name, condition_name, 'cell', well_name])
-        self.changed_ions_df = sc.get.obs_df(self.conc_adata_raw, 
-                                        keys=(self.obs_columns+list(self.conc_adata.var_names))).melt(id_vars=self.obs_columns, 
-                                                                                                 var_name='ion')
-        self.obs_columns.remove(comparison_name)
-        self.obs_columns.append('ion')
-        self.plot_df = self.changed_ions_df.pivot(index=self.obs_columns, columns=comparison_name, values='value')
-        self.plot_df.reset_index(inplace=True)
-        self.plot_df['quotient'] = self.plot_df['ISM correction'] / self.plot_df['uncorrected'].replace(0, 1)
+#         self.obs_columns.extend([comparison_name, condition_name, 'cell', well_name])
+#         self.changed_ions_df = sc.get.obs_df(self.conc_adata_raw, 
+#                                         keys=(self.obs_columns+list(self.conc_adata.var_names))).melt(id_vars=self.obs_columns, 
+#                                                                                                  var_name='ion')
+#         self.obs_columns.remove(comparison_name)
+#         self.obs_columns.append('ion')
+#         self.plot_df = self.changed_ions_df.pivot(index=self.obs_columns, columns=comparison_name, values='value')
+#         self.plot_df.reset_index(inplace=True)
+#         self.plot_df['quotient'] = self.plot_df['ISM correction'] / self.plot_df['uncorrected'].replace(0, 1)
         
-        if has_correction:
-            self.plot_df_filtered = self.plot_df[self.plot_df['ion'].isin(self.included_molecules_filtered)]
+#         if has_correction:
+#             self.plot_df_filtered = self.plot_df[self.plot_df['ion'].isin(self.included_molecules_filtered)]
     
         
-    def summary(self):
-        print('Of %1d ions, %1d are significantly altered by ion suppression correction (p < 1e-3, DEA score < -2).'
-              %(len(self.impact_ions), len(self.sign_impact_ions)))
+#     def summary(self):
+#         print('Of %1d ions, %1d are significantly altered by ion suppression correction (p < 1e-3, DEA score < -2).'
+#               %(len(self.impact_ions), len(self.sign_impact_ions)))
 
-        print('Association of significance and pool correction:')
-        sign = pd.Series(['significant' if a else 'not significant' 
-            for a in self.impact_ions['significant']], name='Effect on molecule')
-        ref_pool = pd.Series(['corrected using ref. data' if a else 'corrected using own data' 
-            for a in self.impact_ions['corrected_only_using_pool']], name='Mode of correction')
-        print(pd.crosstab(sign, ref_pool, margins=True))
+#         print('Association of significance and pool correction:')
+#         sign = pd.Series(['significant' if a else 'not significant' 
+#             for a in self.impact_ions['significant']], name='Effect on molecule')
+#         ref_pool = pd.Series(['corrected using ref. data' if a else 'corrected using own data' 
+#             for a in self.impact_ions['corrected_only_using_pool']], name='Mode of correction')
+#         print(pd.crosstab(sign, ref_pool, margins=True))
         
-    def pair_plot(self, exclude_ref_corrected=True, **kwargs):
+#     def pair_plot(self, exclude_ref_corrected=True, **kwargs):
         
-        impact_ions = self.impact_ions_filtered if exclude_ref_corrected else self.impact_ions
+#         impact_ions = self.impact_ions_filtered if exclude_ref_corrected else self.impact_ions
             
-        def correlate_ions(ion):
-            return self.plot_df[self.plot_df.ion == ion].corr(numeric_only = True)['uncorrected']['ISM correction']
+#         def correlate_ions(ion):
+#             return self.plot_df[self.plot_df.ion == ion].corr(numeric_only = True)['uncorrected']['ISM correction']
         
-        # if 'pearson' not in self.impact_ions.columns:
-        #     impact_ions['pearson'] = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(correlate_ions)(ion) for ion in tqdm(impact_ions.index))
+#         # if 'pearson' not in self.impact_ions.columns:
+#         #     impact_ions['pearson'] = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(correlate_ions)(ion) for ion in tqdm(impact_ions.index))
         
 
-        sns.pairplot(impact_ions[['logfoldchanges', 'mean_correction_quantreg_slope', 
-                                  'median_intensity', 'mean_intensity',
-                                  'corrected_only_using_pool', 'n_cells']], 
-                     hue='corrected_only_using_pool',
-                     **kwargs
-                    )
+#         sns.pairplot(impact_ions[['logfoldchanges', 'mean_correction_quantreg_slope', 
+#                                   'median_intensity', 'mean_intensity',
+#                                   'corrected_only_using_pool', 'n_cells']], 
+#                      hue='corrected_only_using_pool',
+#                      **kwargs
+#                     )
             
-    def volcano_plot(self, exclude_ref_corrected = True, **kwargs):
+#     def volcano_plot(self, exclude_ref_corrected = True, **kwargs):
 
-        volcano_df = self.impact_ions_filtered if exclude_ref_corrected else self.impact_ions
-        volcano_df['-log pval'] = -np.log10(volcano_df['pvals'])
-        fig, ax = plt.subplots(1,2)
-        sns.scatterplot(volcano_df, x='logfoldchanges', y='-log pval', ax=ax[0], hue='significant', **kwargs)
-        ax[0].set_title('Intensity LFC by ion suppression correction')
-        sns.scatterplot(volcano_df, x='logfoldchanges', y='-log pval', ax=ax[1], hue='corrected_only_using_pool', **kwargs)
-        ax[1].set_title('Intensity LFC by ion suppression correction')
-        fig.set_figwidth(12)
+#         volcano_df = self.impact_ions_filtered if exclude_ref_corrected else self.impact_ions
+#         volcano_df['-log pval'] = -np.log10(volcano_df['pvals'])
+#         fig, ax = plt.subplots(1,2)
+#         sns.scatterplot(volcano_df, x='logfoldchanges', y='-log pval', ax=ax[0], hue='significant', **kwargs)
+#         ax[0].set_title('Intensity LFC by ion suppression correction')
+#         sns.scatterplot(volcano_df, x='logfoldchanges', y='-log pval', ax=ax[1], hue='corrected_only_using_pool', **kwargs)
+#         ax[1].set_title('Intensity LFC by ion suppression correction')
+#         fig.set_figwidth(12)
     
-    def top_ion_plot(self, top_ions = 5, plot_method=sns.histplot, exclude_ref_corrected = True, log=False, **kwargs):
+#     def top_ion_plot(self, top_ions = 5, plot_method=sns.histplot, exclude_ref_corrected = True, log=False, **kwargs):
         
-        plot_df = self.plot_df_filtered if exclude_ref_corrected else self.plot_df
-        plot_df = plot_df[plot_df.uncorrected > 0]
-        impact_ions = self.impact_ions_filtered if exclude_ref_corrected else self.impact_ions
+#         plot_df = self.plot_df_filtered if exclude_ref_corrected else self.plot_df
+#         plot_df = plot_df[plot_df.uncorrected > 0]
+#         impact_ions = self.impact_ions_filtered if exclude_ref_corrected else self.impact_ions
         
-        tops = {
-            'high DE score': list(impact_ions.head(top_ions).index),
-            'low DE score': list(impact_ions.tail(top_ions).index),
-            'high slope': list(impact_ions.sort_values(by='mean_correction_quantreg_slope').head(top_ions).index),
-            'low slope': list(impact_ions.sort_values(by='mean_correction_quantreg_slope').tail(top_ions).index),
-        }
+#         tops = {
+#             'high DE score': list(impact_ions.head(top_ions).index),
+#             'low DE score': list(impact_ions.tail(top_ions).index),
+#             'high slope': list(impact_ions.sort_values(by='mean_correction_quantreg_slope').head(top_ions).index),
+#             'low slope': list(impact_ions.sort_values(by='mean_correction_quantreg_slope').tail(top_ions).index),
+#         }
         
-        for condition, ion_list in tops.items():
-            self.ion_plot(ions=ion_list, title=condition, plot_method=plot_method, 
-                          exclude_ref_corrected=exclude_ref_corrected, log=log, **kwargs)
+#         for condition, ion_list in tops.items():
+#             self.ion_plot(ions=ion_list, title=condition, plot_method=plot_method, 
+#                           exclude_ref_corrected=exclude_ref_corrected, log=log, **kwargs)
         
-    def ion_plot(self, ions, title='', plot_method=sns.histplot, exclude_ref_corrected=True, log=False, **kwargs):
+#     def ion_plot(self, ions, title='', plot_method=sns.histplot, exclude_ref_corrected=True, log=False, **kwargs):
 
-        plot_df = self.plot_df_filtered.copy() if exclude_ref_corrected else self.plot_df.copy()
-        plot_df = plot_df[self.plot_df.uncorrected > 0]
-        impact_ions = self.impact_ions_filtered if exclude_ref_corrected else self.impact_ions
+#         plot_df = self.plot_df_filtered.copy() if exclude_ref_corrected else self.plot_df.copy()
+#         plot_df = plot_df[self.plot_df.uncorrected > 0]
+#         impact_ions = self.impact_ions_filtered if exclude_ref_corrected else self.impact_ions
         
-        plot_df['set'] = title
+#         plot_df['set'] = title
         
-        params = {
-            'quantreg_slope': [impact_ions.loc[ion, 'mean_correction_quantreg_slope'] for ion in ions],
-           # 'pearson': [plot_df[plot_df.ion == ion].corr(numeric_only=True)['uncorrected']['ISM correction'] for ion in ions],
-            'DE scores': [float(impact_ions.loc[ion, 'scores']) for ion in ions],
-            'corrected_using_pool': [float(impact_ions.loc[ion, 'sum_correction_using_ion_pool']) for ion in ions],
-           # 'n_cells': [float(impact_ions.loc[ion, 'n_cells']) for ion in ions],
-        }
-        grid = sns.FacetGrid(plot_df, col='ion', row='set', sharex=False, sharey=False, col_order=ions, palette='cividis', margin_titles=True)
-        grid.map(plot_method, 'uncorrected', 'ISM correction', **kwargs).add_legend()
-        if not log:
-            grid.set(aspect = 1)
-        for i, ax in enumerate(grid.axes.flat): 
-            lim_max = max([ax.get_xlim()[1], ax.get_ylim()[1]])
-            lim_min = min([ax.get_xlim()[0], ax.get_ylim()[0]])
+#         params = {
+#             'quantreg_slope': [impact_ions.loc[ion, 'mean_correction_quantreg_slope'] for ion in ions],
+#            # 'pearson': [plot_df[plot_df.ion == ion].corr(numeric_only=True)['uncorrected']['ISM correction'] for ion in ions],
+#             'DE scores': [float(impact_ions.loc[ion, 'scores']) for ion in ions],
+#             'corrected_using_pool': [float(impact_ions.loc[ion, 'sum_correction_using_ion_pool']) for ion in ions],
+#            # 'n_cells': [float(impact_ions.loc[ion, 'n_cells']) for ion in ions],
+#         }
+#         grid = sns.FacetGrid(plot_df, col='ion', row='set', sharex=False, sharey=False, col_order=ions, palette='cividis', margin_titles=True)
+#         grid.map(plot_method, 'uncorrected', 'ISM correction', **kwargs).add_legend()
+#         if not log:
+#             grid.set(aspect = 1)
+#         for i, ax in enumerate(grid.axes.flat): 
+#             lim_max = max([ax.get_xlim()[1], ax.get_ylim()[1]])
+#             lim_min = min([ax.get_xlim()[0], ax.get_ylim()[0]])
             
-            textstr = '\n'.join(['%s = %1.3f'%(name, value[i]) for name, value in params.items()])
-            #  'quantreg slope = %1.3f\npearson r = %1.5f\nscores = %1.2f'%(slopes[i], pearson[i], scores[i])
-            props = dict(boxstyle='round', alpha=0.5)
+#             textstr = '\n'.join(['%s = %1.3f'%(name, value[i]) for name, value in params.items()])
+#             #  'quantreg slope = %1.3f\npearson r = %1.5f\nscores = %1.2f'%(slopes[i], pearson[i], scores[i])
+#             props = dict(boxstyle='round', alpha=0.5)
             
-            if log:
-                #ax.set_xlim(np.log(lim_min), np.log(lim_max))
-                #ax.set_ylim(np.log(lim_min), np.log(lim_max))
+#             if log:
+#                 #ax.set_xlim(np.log(lim_min), np.log(lim_max))
+#                 #ax.set_ylim(np.log(lim_min), np.log(lim_max))
                 
-                ax.axline((1,1), (2,2))
-            else:
-                ax.set_xlim(lim_min, lim_max)
-                ax.set_ylim(lim_min, lim_max)
+#                 ax.axline((1,1), (2,2))
+#             else:
+#                 ax.set_xlim(lim_min, lim_max)
+#                 ax.set_ylim(lim_min, lim_max)
                
-                ax.axline((lim_min,lim_min), slope=1)
+#                 ax.axline((lim_min,lim_min), slope=1)
                 
-            ax.text(0.05, 0.95, textstr, transform=ax.transAxes, verticalalignment='top', bbox=props, fontsize=10)
+#             ax.text(0.05, 0.95, textstr, transform=ax.transAxes, verticalalignment='top', bbox=props, fontsize=10)
     
-    def quotient_plot(self, show_cells = None, show_TPO = True):
+#     def quotient_plot(self, show_cells = None, show_TPO = True):
         
-        self.long_plot_df = self.plot_df.melt(id_vars=self.obs_columns, var_name='correction')
-        self.long_plot_df = pd.merge(self.long_plot_df, self.adata_cor.var[['corrected_only_using_pool']], left_on='ion', right_index=True)
+#         self.long_plot_df = self.plot_df.melt(id_vars=self.obs_columns, var_name='correction')
+#         self.long_plot_df = pd.merge(self.long_plot_df, self.adata_cor.var[['corrected_only_using_pool']], left_on='ion', right_index=True)
 
-        self.cells = list(set(self.long_plot_df['cell']))[:6] if show_cells is None else show_cells
-        cells_df = pd.DataFrame(index=self.cells)
-        cells_df['set_TPO'] = [self.adata_cor.obs.loc[c, 'list_TPO'] for c in self.cells]
-        cells_df['list_TPO'] = [list(np.float_(row.split(";"))) for row in cells_df['set_TPO']]
+#         self.cells = list(set(self.long_plot_df['cell']))[:6] if show_cells is None else show_cells
+#         cells_df = pd.DataFrame(index=self.cells)
+#         cells_df['set_TPO'] = [self.adata_cor.obs.loc[c, 'list_TPO'] for c in self.cells]
+#         cells_df['list_TPO'] = [list(np.float_(row.split(";"))) for row in cells_df['set_TPO']]
 
-        grid = sns.FacetGrid(self.long_plot_df[self.long_plot_df['cell'].isin(self.cells)], row='correction', col='cell', 
-                             hue='corrected_only_using_pool', margin_titles=True, sharey=False, col_order = self.cells)
-        grid.map(sns.lineplot, 'ion', 'value', linewidth = 0.5).add_legend()
-        for i, ax in enumerate(grid.axes.flat): 
-            ax.set_xticks([])
-            if i >= 2*len(self.cells):
-            #if i % 3 == 2:
-                #cell = self.cells[round(i/3-1/3)]
-                cell = self.cells[round(i-2*len(self.cells))]
-                ax.text(0.05, 0.95, cell, transform=ax.transAxes, verticalalignment='top', fontsize=10)
-                if show_TPO:
-                    for line in cells_df.loc[cell, 'list_TPO']:
-                        ax.axhline(y=line, color='black')
+#         grid = sns.FacetGrid(self.long_plot_df[self.long_plot_df['cell'].isin(self.cells)], row='correction', col='cell', 
+#                              hue='corrected_only_using_pool', margin_titles=True, sharey=False, col_order = self.cells)
+#         grid.map(sns.lineplot, 'ion', 'value', linewidth = 0.5).add_legend()
+#         for i, ax in enumerate(grid.axes.flat): 
+#             ax.set_xticks([])
+#             if i >= 2*len(self.cells):
+#             #if i % 3 == 2:
+#                 #cell = self.cells[round(i/3-1/3)]
+#                 cell = self.cells[round(i-2*len(self.cells))]
+#                 ax.text(0.05, 0.95, cell, transform=ax.transAxes, verticalalignment='top', fontsize=10)
+#                 if show_TPO:
+#                     for line in cells_df.loc[cell, 'list_TPO']:
+#                         ax.axhline(y=line, color='black')
                         
                         
-        if show_TPO:
-            cell_impact_ions = self.long_plot_df.loc[(self.long_plot_df['cell'].isin(self.cells)) & 
-                                                     (self.long_plot_df['correction'] == 'quotient') & 
-                                                     (self.long_plot_df['value'] > 0)]
-            grid = sns.FacetGrid(cell_impact_ions, col='cell', row='corrected_only_using_pool', 
-                                 col_order=self.cells, hue='corrected_only_using_pool', sharey=False, 
-                                 margin_titles=True)
-            grid.map(sns.kdeplot, 'value').add_legend()
-            for i, ax in enumerate(grid.axes.flat): 
-                cell = self.cells[i % len(self.cells)]
-                # cell = re.sub('cell = ', '', ax.get_title())
-                for line in cells_df.loc[cell, 'list_TPO']:
-                    ax.axvline(x=line, color='black')
-                # ax.text(0.05, 0.95, cell, transform=ax.transAxes, verticalalignment='top', fontsize=10)
-                ax.set_xlabel('corrected / raw ion intensities ratio')
+#         if show_TPO:
+#             cell_impact_ions = self.long_plot_df.loc[(self.long_plot_df['cell'].isin(self.cells)) & 
+#                                                      (self.long_plot_df['correction'] == 'quotient') & 
+#                                                      (self.long_plot_df['value'] > 0)]
+#             grid = sns.FacetGrid(cell_impact_ions, col='cell', row='corrected_only_using_pool', 
+#                                  col_order=self.cells, hue='corrected_only_using_pool', sharey=False, 
+#                                  margin_titles=True)
+#             grid.map(sns.kdeplot, 'value').add_legend()
+#             for i, ax in enumerate(grid.axes.flat): 
+#                 cell = self.cells[i % len(self.cells)]
+#                 # cell = re.sub('cell = ', '', ax.get_title())
+#                 for line in cells_df.loc[cell, 'list_TPO']:
+#                     ax.axvline(x=line, color='black')
+#                 # ax.text(0.05, 0.95, cell, transform=ax.transAxes, verticalalignment='top', fontsize=10)
+#                 ax.set_xlabel('corrected / raw ion intensities ratio')
             
 
-    def save_matrix(self, save_to_path, safe_to_name = 'metenrichr', save_figures = None):
-        subset_adata = self.conc_adata_raw.copy()
-        df = subset_adata.to_df()
-        # compress data by rounding
-        significant_figures = int(df.shape[0] * df.shape[1] / 6e6) if save_figures is None else save_figures
-        df = df.applymap(lambda x: 0 if x == 0 else round(x, significant_figures - int(np.floor(np.log10(np.abs(x))))))
-        df.to_csv(os.path.join(save_to_path, safe_to_name+'_matrix.csv'))
+#     def save_matrix(self, save_to_path, safe_to_name = 'metenrichr', save_figures = None):
+#         subset_adata = self.conc_adata_raw.copy()
+#         df = subset_adata.to_df()
+#         # compress data by rounding
+#         significant_figures = int(df.shape[0] * df.shape[1] / 6e6) if save_figures is None else save_figures
+#         df = df.applymap(lambda x: 0 if x == 0 else round(x, significant_figures - int(np.floor(np.log10(np.abs(x))))))
+#         df.to_csv(os.path.join(save_to_path, safe_to_name+'_matrix.csv'))
 
-        metadata = pd.DataFrame(subset_adata.obs['correction'])
-        metadata['correction'].name = 'condition'
-        metadata.to_csv(os.path.join(save_to_path, safe_to_name+'_metadata.csv'))
+#         metadata = pd.DataFrame(subset_adata.obs['correction'])
+#         metadata['correction'].name = 'condition'
+#         metadata.to_csv(os.path.join(save_to_path, safe_to_name+'_metadata.csv'))
         
-        return (df, metadata)
+#         return (df, metadata)
 
-        
-        
-
-def analyse_corrected_metabolites(adata,
-    adata_cor,
-    condition_name,
-    top_ions = 5,
-    save_to_path = None,
-    exclude_pool_corrected = True,
-    volcano_plot = True,
-    pair_plot = True,
-    top_plot = True
-):
-    conc_adata = ad.concat({'uncorrected': adata, 'ISM correction': adata_cor}, label='correction', index_unique='_', merge='same')
-    
-    sc.tl.rank_genes_groups(adata=conc_adata, groupby='correction', use_raw=True, method='wilcoxon')
-    all_ions_dea = sc.get.rank_genes_groups_df(conc_adata, group='ISM correction')
-
-    adata_cor.var['names'] = adata_cor.var.index
-    impact_ions = pd.merge(all_ions_dea, adata_cor.var[['names', 'correction_using_ion_pool', 'correction_n_iterations', 'correction_n_datapoints', 'mean_correction_quantreg_slope']], on='names', how='left')
-    impact_ions = impact_ions.sort_values(by='scores')
-    impact_ions['logfoldchanges'] = impact_ions['logfoldchanges'].replace(-np.Inf, min(impact_ions['logfoldchanges'])*1.1)
-
-    impact_ions['significant'] = (impact_ions['pvals'] < 0.001) & (impact_ions['scores'] < -2)
-    sign_impact_ions = impact_ions[impact_ions['significant'] == True]
-    print('Of %1d ions, %1d are significantly altered by ion suppression correction (p < 1e-3, DEA score < -2).'%(len(impact_ions), len(sign_impact_ions)))
-    
-    print('Association of significance and pool correction')
-    print(pd.crosstab(impact_ions['significant'], impact_ions['correction_using_ion_pool'], margins=True))
-    included_molecules = list(impact_ions['names'])
-    if exclude_pool_corrected:
-        print('excluding pool_corrected')
-        impact_ions = impact_ions[impact_ions['correction_using_ion_pool'] == False]
-        included_molecules = list(impact_ions.loc[impact_ions['correction_using_ion_pool'] == False, 'names'])
-    
-    # impact_ions
-    if volcano_plot:
-        print('volcano plot of changed intensities')
-        volcano_df = impact_ions
-        volcano_df['-log pval'] = -np.log10(volcano_df['pvals'])
-        fig, ax = plt.subplots(1,2)
-        sns.scatterplot(volcano_df, x='logfoldchanges', y='-log pval', ax=ax[0], hue='significant')
-        sns.scatterplot(volcano_df, x='scores', y='-log pval', ax=ax[1], hue='significant')
-        ax[0].set_title('Intensity LFC by ion suppression correction')
-        ax[1].set_title('Corresponding scores')
-        fig.set_figwidth(12)
-    
-    conc_adata_raw = conc_adata.copy()
-    conc_adata_raw.obs['cell'] = [re.sub('_[a-zA-Z ]+$', '', i) for i in conc_adata_raw.obs.index]
-    conc_adata_raw.X = conc_adata_raw.raw.X
-    changed_ions_df = sc.get.obs_df(conc_adata_raw, keys=(['correction', condition_name, 'cell', 'well']+list(conc_adata.var_names)))
-    plot_df = changed_ions_df.melt(id_vars=['correction', condition_name, 'cell', 'well'], var_name='ion').pivot(index=['ion', condition_name, 'cell', 'well'], columns='correction', values='value')
-    plot_df.reset_index(inplace=True)
-    plot_df = plot_df[plot_df.uncorrected > 0]
-    
-    # impact_ions
-    if pair_plot:
-        def correlate_ions(ion):
-            return plot_df[plot_df.ion == ion].corr(numeric_only = True)['uncorrected']['ISM correction']
-        print('associations between measures')
-        impact_ions['pearson'] = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(correlate_ions)(ion) for ion in tqdm(impact_ions['names']))
-        sns.pairplot(impact_ions[['scores', 'logfoldchanges', 'mean_correction_quantreg_slope', 'pearson', 
-                                  'significant']], 
-                     hue='significant'
-                    )
-        if exclude_pool_corrected == False:
-            sns.pairplot(impact_ions[['scores', 'logfoldchanges', 'mean_correction_quantreg_slope', 'pearson', 
-                                      'mean_correction_quantreg_slope']], 
-                         hue='mean_correction_quantreg_slope'
-                        )
-    # plot_df, adata_cor
-    if top_plot:
-        print('top most and least corrected ions')
-        ions_corr = list(impact_ions['names'].head(top_ions))
-        ions_uncorr = list(impact_ions['names'].tail(top_ions))
-        ions_max_slope = list(impact_ions.sort_values(by='mean_correction_quantreg_slope')['names'].head(top_ions))
-        ions_min_slope = list(impact_ions.sort_values(by='mean_correction_quantreg_slope')['names'].tail(top_ions))
-        ions = ions_corr + ions_uncorr + ions_max_slope + ions_min_slope
-        # simple way to remove duplicates
-        ions = list(dict.fromkeys(ions))
-        plot_df['group'] = ['strongly corr' if (ion in ions_corr) 
-                            else 'hardly corr' if (ion in ions_uncorr)
-                            else 'hardly corr' if (ion in ions_uncorr)
-                            else 'max slope' if (ion in ions_max_slope)
-                            else 'min_slope' if (ion in ions_min_slope)
-                            else 'other' for ion in plot_df['ion'] ]
-
-        slopes = [adata_cor.var.loc[ion, 'correction_quantreg_slope'] for ion in ions]
-        # intersects = [adata_cor.var.loc[ion, 'correction_quantreg_intersect'] for ion in ions]
-        pearson = [plot_df[plot_df.ion == ion].corr(numeric_only=True)['uncorrected']['ISM correction'] for ion in ions]
-        scores = [float(impact_ions.loc[impact_ions.names == ion, 'scores']) for ion in ions]
-        grid = sns.FacetGrid(plot_df, col='ion', hue='group', col_wrap=5, sharex=False, sharey=False, col_order=ions, palette='cividis')
-        grid.map(sns.histplot, 'uncorrected', 'ISM correction').add_legend()
-        grid.set(aspect = 1)
-        for i, ax in enumerate(grid.axes.flat): 
-            lim = max([ax.get_xlim()[1], ax.get_ylim()[1]])
-            lim_min = min([ax.get_xlim()[1], ax.get_ylim()[1]])
-            textstr = 'quantreg slope = %1.3f\npearson r = %1.5f\nscores = %1.2f'%(slopes[i], pearson[i], scores[i])
-            props = dict(boxstyle='round', alpha=0.5)
-            ax.text(0.05, 0.95, textstr, transform=ax.transAxes, verticalalignment='top', bbox=props, fontsize=10)
-            ax.axline((lim_min,lim_min), slope=1)
-            
-    if save_to_path is not None:
-        subset_adata = conc_adata_raw.copy()
-        df = subset_adata.to_df()
-        # compress data by rounding
-        significant_figures = int(df.shape[0] * df.shape[1] / 6e6)
-        df = df.applymap(lambda x: 0 if x == 0 else round(x, significant_figures - int(np.floor(np.log10(np.abs(x))))))
-        df.to_csv(os.path.join(save_to_path, 'metenrichr_matrix.csv'))
-
-        metadata = pd.DataFrame(subset_adata.obs['correction'])
-        metadata['correction'].name = 'condition'
-        metadata.to_csv(os.path.join(save_to_path, 'metenrichr_metadata.csv'))
-    
-    return (impact_ions, plot_df)
-        
-    
 
 
 def plot_intermixing_graph(ax, summary_df, label):
@@ -588,12 +476,12 @@ def intermixing_metric_sampled(
         neighbors = pd.Series(dist_matrix[index],
             index=adata_orig.obs[condition_name]).sort_values()
         if normalized:
-            return [ 1 - (neighbors[:i].index.value_counts()[celltype] / i / 
+            return [ 1 - (neighbors[:i].index.value_counts()[celltype] / i /
                 norm_factors[celltype])  for i in sampling_range]
         return [ 1 - (neighbors[:i].index.value_counts()[celltype] / i) for i in sampling_range]
 
     neighborhood_df = pd.DataFrame(
-        Parallel(n_jobs=n_jobs)(delayed(get_neighborhood_series)(index, celltype) 
+        Parallel(n_jobs=n_jobs)(delayed(get_neighborhood_series)(index, celltype)
         for index, celltype in enumerate(adata.obs[condition_name])),
         columns=sampling_range, index=adata.obs.index
     )
@@ -609,17 +497,41 @@ def intermixing_metric_sampled(
     return (neighborhood_df, summary)
 
 
-def intermixing(adata_dict: Dict[str, ad.AnnData],
+def intermixing(
+    adata_dict: Dict[str, ad.AnnData],
     condition_name: str,
-    measures = ['X', 'X_pca', 'X_umap'],
-    show_table = [10],
-    sample_frac = 0.2,
-    sample_log = False,
-    n_datapoints = 100,
-    neighborhood_size = 100,
-    normalized = True,
-    n_jobs = multiprocessing.cpu_count()
+    measures: list = ['X', 'X_pca', 'X_umap'],
+    show_table: list = [10],
+    sample_frac: float = 0.2,
+    sample_log: bool = False,
+    n_datapoints: int = 100,
+    neighborhood_size: int = 100,
+    normalized: bool = True,
+    n_jobs: int = multiprocessing.cpu_count()
 )  -> pd.DataFrame:
+    """creates a graph with intermixing metrics of supplied annotated data matrices
+
+    Args:
+        adata_dict (Dict[str, ad.AnnData]): dictionary with annotated data matrices
+        condition_name (str): column name of the cellular populations in adata.obs table
+        measures (list, optional): names of data spaces in adata.obsm table to use. 
+        Defaults to ['X', 'X_pca', 'X_umap'].
+        show_table (list, optional): neighborhood sizes to show as a data table. Defaults to [10].
+        sample_frac (float, optional): fraction of datapoints to calculate the metric on.
+        Data points are selected by random sampling, stratified by populations. Defaults to 0.2.
+        sample_log (bool, optional): whether abnalysed neighborhoods should increase in log space
+        or not (linear increase). Defaults to False.
+        n_datapoints (int, optional): number of neighborhood sizes that should be analysed.
+        Defaults to 100.
+        neighborhood_size (int, optional): Maximum size of analysed neighborhood. Defaults to 100.
+        normalized (bool, optional): Whether intermixing metric should be normalised to uneven 
+        fractions of populations in the data. Defaults to True.
+        n_jobs (int, optional): Number of cores to be used by calculation. Defaults to 
+        multiprocessing.cpu_count().
+
+    Returns:
+        pd.DataFrame: This function produces a seaborn graph and outputs a pd.DataFrame 
+    """
 
     fig, ax = plt.subplots(1, len(measures), sharey=True)
     if len(measures) == 1:
@@ -633,12 +545,12 @@ def intermixing(adata_dict: Dict[str, ad.AnnData],
     for i, measure in enumerate(measures):
         print(measure)
         for label, adata in adata_dict.items():
-            res = intermixing_metric_sampled(adata_orig = adata, 
-                condition_name = condition_name, 
-                sample_frac = sample_frac, 
+            res = intermixing_metric_sampled(adata_orig = adata,
+                condition_name = condition_name,
+                sample_frac = sample_frac,
                 sample_log = sample_log,
-                ax = ax[i], 
-                label = measure+'_'+label, 
+                ax = ax[i],
+                label = measure+'_'+label,
                 measure = measure,
                 n_datapoints = n_datapoints,
                 neighborhood_size = neighborhood_size,
@@ -650,8 +562,6 @@ def intermixing(adata_dict: Dict[str, ad.AnnData],
             results[measure+'_'+label] = res[0]
 
         ax[i].legend()
-
-
 
     fig.tight_layout()
     
@@ -673,8 +583,26 @@ def intermixing(adata_dict: Dict[str, ad.AnnData],
     
     return (results, summaries)
 
-def analyse_svm_margin(adata, adata_cor, condition_name, layer=None):
-    print(layer)
+
+
+def analyse_svm_margin(
+    adata: ad.AnnData,
+    adata_cor: ad.AnnData,
+    condition_name: str,
+    layer: str = None
+):
+    """ Graph with SVM metric on two annotated data matrices
+
+    Args:
+        adata (ad.AnnData): uncorrected data
+        adata_cor (ad.AnnData): corrected data
+        condition_name (str): column name of the cellular populations in adata.obs table
+        layer (str, optional): adata layer to use. Defaults to None.
+
+    Returns:
+        prints a seaborn graph
+    """
+
     if layer is not None:
         adata.layers['default_X'] = adata.X
         adata.X = adata.layers[layer]
@@ -682,24 +610,41 @@ def analyse_svm_margin(adata, adata_cor, condition_name, layer=None):
         adata_cor.X = adata_cor.layers[layer]
 
     def get_svm_margin(adata, condition_name, size_factor = 1):
+        
         predictors = adata.X * size_factor
         result = adata.obs[condition_name]
         clf = LinearSVC(random_state=0, dual=False)
         clf.fit(predictors, result)
-        margin_df = pd.DataFrame({'condition': clf.classes_[:clf.coef_.shape[0]], 'margin': 1 / np.sqrt(np.sum(clf.coef_**2, axis=1))})
+        margin_df = pd.DataFrame(
+            {
+                'condition': clf.classes_[:clf.coef_.shape[0]],
+                'margin': 1 / np.sqrt(np.sum(clf.coef_**2, axis=1))
+            }
+        )
 
-        #print(margin_df)
         return margin_df
 
     size_factor = np.sum(adata.X) / np.sum(adata_cor.X)
 
-    df = pd.merge(get_svm_margin(adata, condition_name),
-                  get_svm_margin(adata_cor, condition_name, size_factor = size_factor),
-                  on='condition', suffixes=['_uncorrected', '_ISM_corrected'])
-    sns.set(rc={"figure.figsize":(12, 5)})
-    sns.barplot(df.melt(id_vars='condition', var_name='correction', value_name='margin'),
-                x='condition', y='margin', hue='correction').set_title('Comparison of SVM margins for layer %s'%layer)
+    plot_margins_df = pd.merge(
+        get_svm_margin(adata, condition_name),
+        get_svm_margin(adata_cor, condition_name, size_factor = size_factor),
+        on='condition',
+        suffixes=['_uncorrected', '_ISM_corrected']
+    )
 
+    fig, ax = plt.subplots()
+    sns.barplot(plot_margins_df.melt(
+            id_vars='condition',
+            var_name='correction',
+            value_name='margin'),
+        x='condition',
+        y='margin',
+        hue='correction',
+        ax=ax
+    )
+    ax.set_title(f"Comparison of SVM margins for layer {layer}")
+    fig.tight_layout()
     if layer is not None:
         adata.X = adata.layers['default_X']
         adata_cor.X = adata_cor.layers['default_X']
