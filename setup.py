@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/mariusrklein/FDA_project",
     license='MIT',
     entry_points={"gui_scripts": ["ISC=ISC.__main__:main"]},
-    python_requires='>=3.10',
+    python_requires='>=3.7',
     install_requires=["setuptools>=61.0",
         "bioinfokit",
         "importlib_resources",
