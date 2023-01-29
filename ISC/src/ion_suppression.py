@@ -76,6 +76,10 @@ class IonSuppressionCorrection:
             raise IOError("The config argument has to be a dictionary or a string that specifies "+
                 "the location of a JSON config file.")
 
+    
+    def prepare(self):
+        """check configuration and load metadata
+        """
         self.config['runtime'] = {}
         self.config['runtime']['spacem_dataset_path'] = source_path
 
@@ -84,8 +88,9 @@ class IonSuppressionCorrection:
         self.spacem_metadata = self.get_spacem_metadata()
         self.samples_list = self.get_samples()
 
+
     def run(self):
-        """AI is creating summary for run
+        """actually run workflow
         """
         
         if self.v:
@@ -431,4 +436,4 @@ columns to create well name using spacem_dataset_metadata_well_name
             file (str): file path and name to save to.
         """
         with open(file, mode="w", encoding="UTF8") as fp:
-            json.dump(self.config , fp)
+            json.dump(self.config, fp, indent=4)

@@ -4,6 +4,8 @@ Main command line application of ion suppression correction tool
 Author: Marius Klein (mklein@duck.com), January 2023
 """
 import argparse
+import os
+import warnings
 from ISC.src.ion_suppression import IonSuppressionCorrection
 from ISC.src import const
 
@@ -18,8 +20,27 @@ def main():
     parser.add_argument("-c", "--config", help = "Location and name of config file")
     parser.add_argument("-j", "--jobs", help = "set number of jobs for multiprocessing", type=int)
     parser.add_argument("-v", "--verbose", help = "produce more output", action='store_true')
+    parser.add_argument("-m", "--make-config", help = "only create a default correction config " +
+        "file in folder specified by path", action='store_true')
 
     args = parser.parse_args()
+
+    if args.make_config:
+        if args.verbose:
+            print("Saving standard config file 'correction_config.json' to specified location "+
+            f"'{args.path}'.")
+
+        isc = IonSuppressionCorrection(source_path = args.path,
+                config = None,
+                n_jobs = 1,
+                verbose = False)
+        
+        isc.save_config(file = os.path.join(args.path, "correction_config.json"))
+        
+        if args.verbose:
+            print("Done. Exiting...")
+
+        return
 
     if args.config is not None:
         conf = args.config
@@ -27,7 +48,6 @@ def main():
         conf=None
         
     if args.verbose:
-
         print(f"Running ion suppression correction with folder {args.path}")
         if args.config is not None:
             print(f"Using config file at {args.config}")
@@ -44,6 +64,8 @@ def main():
                 n_jobs = args.jobs,
                 verbose = args.verbose)
 
+    # perform checks on config and load metadata
+    isc.prepare()
     # running correction, deconvolution, evaluation
     isc.run()
 
