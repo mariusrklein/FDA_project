@@ -41,8 +41,8 @@ class CorrectionEvaluation:
     def find_notebooks(self):
         """locate template notebooks for QC and results analysis in package folder.
         """
-        qc_file = files('src.notebook_templates').joinpath('qc.ipynb')
-        ra_file = files('src.notebook_templates').joinpath('results_analysis.ipynb')
+        qc_file = files('ISC.notebook_templates').joinpath('qc.ipynb')
+        ra_file = files('ISC.notebook_templates').joinpath('results_analysis.ipynb')
 
         with as_file(qc_file) as qc_path:
             self.qc_path = qc_path

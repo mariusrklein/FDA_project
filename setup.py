@@ -39,6 +39,5 @@ setuptools.setup(
     ],
     # data_files=[("src/notebook_templates",["ISC/src/notebook_templates/qc.ipynb",
     #                  "ISC/src/notebook_templates/results_analysis.ipynb"])],
-    package_data={'ISC': ["src/notebook_templates/qc.ipynb",
-        "src/notebook_templates/results_analysis.ipynb"]},
+    package_data={'ISC': ["notebook_templates/*.ipynb"]},
 )
