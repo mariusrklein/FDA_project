@@ -16,6 +16,7 @@ setuptools.setup(
     entry_points={"gui_scripts": ["ISC=ISC.__main__:main"]},
     python_requires='>=3.7',
     install_requires=["setuptools>=61.0",
+        "wheel",
         "bioinfokit",
         "importlib_resources",
         "nbconvert",
@@ -36,6 +37,8 @@ setuptools.setup(
         "pyqt5",
         "SpaceM @ git+https://git.embl.de/mklein/spacem.git",
     ],
-    data_files=[("src/notebook_templates",["ISC/src/notebook_templates/qc.ipynb",
-                     "ISC/src/notebook_templates/results_analysis.ipynb"])],
+    # data_files=[("src/notebook_templates",["ISC/src/notebook_templates/qc.ipynb",
+    #                  "ISC/src/notebook_templates/results_analysis.ipynb"])],
+    package_data={'ISC': ["src/notebook_templates/qc.ipynb",
+        "src/notebook_templates/results_analysis.ipynb"]},
 )
