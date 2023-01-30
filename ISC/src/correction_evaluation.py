@@ -72,8 +72,8 @@ class CorrectionEvaluation:
 
 # print locations of notebooks for testing purposes.
 if __name__ == '__main__':
-    qc = files('src.notebook_templates').joinpath('qc.ipynb')
-    ra = files('src.notebook_templates').joinpath('results_analysis.ipynb')
+    qc = files('ISC.notebook_templates').joinpath('qc.ipynb')
+    ra = files('ISC.notebook_templates').joinpath('results_analysis.ipynb')
 
     with as_file(qc) as path:
         print(path)
