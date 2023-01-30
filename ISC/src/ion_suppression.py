@@ -32,6 +32,8 @@ class IonSuppressionCorrection:
 
     """
 
+    spacem_metadata = None
+    samples_list = None
     corrections = []
     adata = None
     gen_adata = None
@@ -243,6 +245,11 @@ columns to create well name using spacem_dataset_metadata_well_name
             if s in list(self.spacem_metadata[const.SAMPLE_COL])]
         samples_excluded = [s for s in samples
             if s not in list(self.spacem_metadata[const.SAMPLE_COL])]
+
+        if len(samples_list) == 0:
+            raise Exception("Intersection of matadata file and  dataset subfolders is empty. No samples found to correct.")
+
+
         if len(samples_excluded) > 0:
             if self.v:
                 print(f"Excluded {len(samples_excluded)} samples as they did not exist in "+

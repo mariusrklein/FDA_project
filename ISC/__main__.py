@@ -5,7 +5,6 @@ Author: Marius Klein (mklein@duck.com), January 2023
 """
 import argparse
 import os
-import warnings
 from ISC.src.ion_suppression import IonSuppressionCorrection
 from ISC.src import const
 
@@ -41,16 +40,11 @@ def main():
             print("Done. Exiting...")
 
         return
-
-    if args.config is not None:
-        conf = args.config
-    else:
-        conf=None
         
     if args.verbose:
-        print(f"Running ion suppression correction with folder {args.path}")
+        print(f"Running ion suppression correction with folder {get_abs_path(args.path)}")
         if args.config is not None:
-            print(f"Using config file at {args.config}")
+            print(f"Using config file at {get_abs_path(args.config)}")
         else:
             print('Using default config:')
             print(const.CONFIG)
@@ -59,8 +53,8 @@ def main():
 
 
     # initializing instance of ion suppression correction objet
-    isc = IonSuppressionCorrection(source_path = args.path,
-                config = conf,
+    isc = IonSuppressionCorrection(source_path = get_abs_path(args.path),
+                config = get_abs_path(args.config),
                 n_jobs = args.jobs,
                 verbose = args.verbose)
 
@@ -72,6 +66,20 @@ def main():
     if args.verbose:
         print("DONE! Exiting application.")
             
+
+def get_abs_path(path: str) -> str:
+        """ returns absolute path based on relative path and current directory
+
+        Args:
+            path (str): relative or absolute path
+
+        Returns:
+            str: absolute path
+        """
+        if os.path.isabs(path):
+            return path
+        
+        return os.path.join(os.getcwd(), path)
 
 if __name__ == "__main__":
     main()
