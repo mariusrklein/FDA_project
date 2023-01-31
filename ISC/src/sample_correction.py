@@ -62,9 +62,16 @@ class SampleCorrection:
         if self.config['output']['also_write_sample_results']:
 
             # constructing save_to folder
-            sample_out_folder = os.path.join(self.config['runtime']["out_folder"],
-                                             self.name,
-                                             self.config['output']['write_sample_folder_path'])
+            if self.config['output']["write_to_input_folder"]:
+                samples_folder = self.config['runtime']["spacem_dataset_path"]
+            else:
+                samples_folder = self.config['runtime']["out_folder"]
+                
+            sample_out_folder = os.path.join(
+                samples_folder,
+                self.name,
+                self.config['output']['write_sample_folder_path']
+            )
 
             if not os.path.exists(sample_out_folder):
                 os.makedirs(sample_out_folder)

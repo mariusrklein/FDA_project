@@ -8,6 +8,8 @@ Author: Marius Klein (mklein@duck.com), January 2023
 import os
 import papermill as pm
 from importlib_resources import files, as_file
+import ISC
+from pathlib import Path
 
 class CorrectionEvaluation:
     """Correction evaluation
@@ -16,6 +18,9 @@ class CorrectionEvaluation:
      * __init__: runs whole evaluation based on given IonSuppressionCorrection data and config.
 
     """
+
+    # getting installation path of ISC package
+    isc_path = str(Path(ISC.__file__).parent.parent.absolute())
     
     def __init__(self, correction):
         """trigger whole evaluation process.
@@ -57,15 +62,22 @@ class CorrectionEvaluation:
         """
         pm.execute_notebook(self.qc_path,
             os.path.join(self.config['runtime']['evaluation_folder'], 'qc.ipynb'),
-            parameters={'config': self.config} # TODO: check if notebooks find installation of ISC
+            parameters = {
+                'config': self.config, 
+                'isc_path': self.isc_path
+            }
         )
+
     
     def run_performance_eval(self):
         """Run results analysis notebook with papermill
         """
         pm.execute_notebook(self.ra_path,
             os.path.join(self.config['runtime']['evaluation_folder'], 'results_analysis.ipynb'),
-            parameters={'config': self.config}
+            parameters={
+                'config': self.config,
+                'isc_path': self.isc_path
+            }
         )
 
 

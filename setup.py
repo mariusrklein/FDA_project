@@ -16,6 +16,7 @@ setuptools.setup(
     entry_points={"gui_scripts": ["ISC=ISC.__main__:main"]},
     python_requires='>=3.7',
     install_requires=["setuptools>=61.0",
+        "jupyter-client==7.4.9",
         "wheel",
         "bioinfokit",
         "importlib_resources",
@@ -27,6 +28,7 @@ setuptools.setup(
         "papermill",
         "ipywidgets",
         "leidenalg",
+        "black",
         # these are actually SpaceM dependencies
         "imageio",
         "metaspace2020",
