@@ -301,7 +301,7 @@ div.rendered_html tbody tr:hover {
 <section id="Lx_Pancreatic_Cancer:-Evaluation">
 <h1>Lx_Pancreatic_Cancer: Evaluation<a class="headerlink" href="#Lx_Pancreatic_Cancer:-Evaluation" title="Permalink to this heading">¶</a></h1>
 <p>In this notebook, different measures are investigated to quantify the effect of correcting SpaceM ion intensity data for partial pixel-cell overlap. Moreover, The effects of the correction on different metabolites is visualized.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -327,20 +327,6 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;retina&#39;]
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -666,7 +652,7 @@ ModuleNotFoundError: No module named &#39;cellpose&#39;
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span>
         <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
@@ -674,7 +660,9 @@ ModuleNotFoundError: No module named &#39;cellpose&#39;
     <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
     <span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;cosine&#39;</span><span class="p">)</span>
     <span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="n">min_dist</span><span class="p">,</span> <span class="n">spread</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="c1">#sc.pl.umap(adata, color=[&#39;well&#39;, condition_name], palette=&#39;cividis&#39;)</span>
+    <span class="c1"># sc.pp.neighbors(adata, random_state=12345)</span>
+    <span class="c1"># sc.tl.umap(adata, random_state=12345)</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;cividis&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="n">label</span><span class="p">])</span>
     <span class="n">f</span> <span class="o">=</span> <span class="n">osm</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">highlight_scatterplot</span><span class="p">(</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">adata</span><span class="p">,</span>
         <span class="n">obsm_key</span> <span class="o">=</span> <span class="s2">&quot;X_umap&quot;</span><span class="p">,</span>
@@ -682,7 +670,7 @@ ModuleNotFoundError: No module named &#39;cellpose&#39;
         <span class="n">col</span> <span class="o">=</span> <span class="n">condition_name</span><span class="p">,</span>
         <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;cividis&quot;</span><span class="p">,</span>
         <span class="n">trim_axes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
         <span class="n">scatter_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
     <span class="p">)</span>
 
@@ -724,149 +712,87 @@ ModuleNotFoundError: No module named &#39;cellpose&#39;
 <li><p>normalization to a fixed count (10^4) and log transformation</p></li>
 </ol>
 <p>The normalization to a fixed count has a slightly different effect than TIC normalization. The former normalizes all counts per cell to the given target sum so that all cells from the uncorrected and the corrected set are scaled to this count. In contrast, the latter retains the differences between the datasets by normalizing to the median count across cells in a dataset.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
-<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;raw_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dimred_umap(adata, layer=&#39;raw_counts&#39;)</span>
+<span class="c1"># dimred_umap(adata_cor, layer=&#39;raw_counts&#39;)</span>
+<span class="c1"># intermixing_layer(adata, adata_cor, condition_name, measures = [&#39;X_pca&#39;, &#39;X_umap&#39;], layer=&#39;raw_counts&#39;)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.038461  0.236313          0.091837
-X_pca_ISM correction  10  0.048130  0.237258          0.091837
-X_umap_uncorrected    10  0.084246  0.276813          0.091837
-X_umap_ISM correction 10  0.137816  0.298764          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_1.png" style="width: 2087px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_2.png" style="width: 2085px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_14_3.png" style="width: 788px; height: 470px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
-<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_raw_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dimred_umap(adata, layer=&#39;log_raw_counts&#39;)</span>
+<span class="c1"># dimred_umap(adata_cor, layer=&#39;log_raw_counts&#39;)</span>
+<span class="c1"># intermixing_layer(adata, adata_cor, condition_name, measures = [&#39;X_pca&#39;, &#39;X_umap&#39;], layer=&#39;log_raw_counts&#39;)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.009543  0.220377          0.091837
-X_pca_ISM correction  10  0.010168  0.220533          0.091837
-X_umap_uncorrected    10  0.008984  0.226399          0.091837
-X_umap_ISM correction 10  0.010490  0.228098          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_15_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_15_1.png" style="width: 2075px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_15_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_15_2.png" style="width: 2085px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_15_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_15_3.png" style="width: 788px; height: 470px;" />
-</div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
-<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;norm_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dimred_umap(adata, layer=&#39;norm_counts&#39;)</span>
+<span class="c1"># dimred_umap(adata_cor, layer=&#39;norm_counts&#39;)</span>
+<span class="c1"># intermixing_layer(adata, adata_cor, condition_name, measures = [&#39;X_pca&#39;, &#39;X_umap&#39;], layer=&#39;norm_counts&#39;)</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.028401  0.230441          0.091837
-X_pca_ISM correction  10  0.025339  0.228185          0.091837
-X_umap_uncorrected    10  0.044456  0.253831          0.091837
-X_umap_ISM correction 10  0.036736  0.247035          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_16_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_16_1.png" style="width: 2085px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_16_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_16_2.png" style="width: 2071px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_16_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_16_3.png" style="width: 787px; height: 470px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;uncorrected&quot;</span><span class="p">)</span>
+<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;ISM correction&quot;</span><span class="p">)</span>
 <span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_1.png" style="width: 1275px; height: 435px;" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_3.png" style="width: 1282px; height: 271px;" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_4.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_4.png" style="width: 1275px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -879,84 +805,85 @@ X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.008542  0.220384          0.091837
 X_pca_ISM correction  10  0.008254  0.219908          0.091837
-X_umap_uncorrected    10  0.008303  0.225947          0.091837
-X_umap_ISM correction 10  0.008058  0.225539          0.091837
+X_umap_uncorrected    10  0.007993  0.224737          0.091837
+X_umap_ISM correction 10  0.008393  0.225823          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_1.png" style="width: 2075px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_2.png" style="width: 2085px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_6.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_6.png" style="width: 1272px; height: 271px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_3.png" style="width: 788px; height: 470px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_7.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_17_7.png" style="width: 788px; height: 470px;" />
 </div>
 </div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_norm_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_norm_counts&#39;</span><span class="p">)</span>
-<span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_norm_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dimred_umap(adata, layer=&#39;1e4_norm_counts&#39;)</span>
+<span class="c1"># dimred_umap(adata_cor, layer=&#39;1e4_norm_counts&#39;)</span>
+<span class="c1"># intermixing_layer(adata, adata_cor, condition_name, measures = [&#39;X_pca&#39;, &#39;X_umap&#39;], layer=&#39;1e4_norm_counts&#39;)</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-X_pca
-X_umap
-                              mean        sd  rel_neighborhood
-X_pca_uncorrected     10  0.028401  0.230441          0.091837
-X_pca_ISM correction  10  0.025339  0.228185          0.091837
-X_umap_uncorrected    10  0.042732  0.252342          0.091837
-X_umap_ISM correction 10  0.037765  0.247285          0.091837
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_18_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_18_1.png" style="width: 2071px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_18_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_18_2.png" style="width: 2071px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_18_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_18_3.png" style="width: 787px; height: 470px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
-<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;uncorrected&quot;</span><span class="p">)</span>
+<span class="n">dimred_umap</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;ISM correction&quot;</span><span class="p">)</span>
 <span class="n">intermixing_layer</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X_pca&#39;</span><span class="p">,</span> <span class="s1">&#39;X_umap&#39;</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_1.png" style="width: 1275px; height: 435px;" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_3.png" style="width: 1272px; height: 271px;" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_4.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_4.png" style="width: 1275px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -969,29 +896,22 @@ X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.007171  0.219083          0.091837
 X_pca_ISM correction  10  0.007086  0.219141          0.091837
-X_umap_uncorrected    10  0.007793  0.225000          0.091837
-X_umap_ISM correction 10  0.007525  0.224584          0.091837
+X_umap_uncorrected    10  0.007866  0.224996          0.091837
+X_umap_ISM correction 10  0.007100  0.223587          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_1.png" style="width: 2075px; height: 471px;" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_2.png" style="width: 2075px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_6.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_6.png" style="width: 1272px; height: 271px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_3.png" style="width: 788px; height: 470px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_7.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_19_7.png" style="width: 788px; height: 470px;" />
 </div>
 </div>
 <p>Before analysis, asserting that the two data files were deconvoluted in the same way. Specifically, the corrected dataframe cannot have non-zero values at positions where the uncorrected dataframe has zero values.</p>
@@ -1044,6 +964,59 @@ Name: corrected_only_using_pool, dtype: int64
 <img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_24_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_24_1.png" style="width: 590px; height: 290px;" />
 </div>
 </div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">median_iqr</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">median</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="c1"># First quartile (Q1)</span>
+    <span class="n">Q1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="n">interpolation</span> <span class="o">=</span> <span class="s1">&#39;midpoint&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Third quartile (Q3)</span>
+    <span class="n">Q3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="n">interpolation</span> <span class="o">=</span> <span class="s1">&#39;midpoint&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Interquaritle range (IQR)</span>
+    <span class="n">iqr</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Median: </span><span class="si">%1.3f</span><span class="s2">, (</span><span class="si">%1.4f</span><span class="s2">)&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">median</span><span class="p">,</span> <span class="n">iqr</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">median</span><span class="p">,</span> <span class="n">iqr</span>
+
+<span class="n">median_iqr</span><span class="p">(</span><span class="n">adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Median: -0.999, (0.0005)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/tmp/ipykernel_139/2208352112.py:4: DeprecationWarning: the `interpolation=` argument to percentile was renamed to `method=`, which has additional options.
+Users of the modes &#39;nearest&#39;, &#39;lower&#39;, &#39;higher&#39;, or &#39;midpoint&#39; are encouraged to review the method they used. (Deprecated NumPy 1.22)
+  Q1 = np.percentile(data, 25, interpolation = &#39;midpoint&#39;)
+/tmp/ipykernel_139/2208352112.py:7: DeprecationWarning: the `interpolation=` argument to percentile was renamed to `method=`, which has additional options.
+Users of the modes &#39;nearest&#39;, &#39;lower&#39;, &#39;higher&#39;, or &#39;midpoint&#39; are encouraged to review the method they used. (Deprecated NumPy 1.22)
+  Q3 = np.percentile(data, 75, interpolation = &#39;midpoint&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(-0.9991840408213376, 0.0004925187923262575)
+</pre></div></div>
+</div>
 <p>Based on the slopes of the correction but also the logfoldchanges between corrected and uncorrected cells, one can infer the extent of alteration of different metabolites in the correction. These measures not necessarily correlate, thus the degree of correction of ions has to be evaluated on individual datasets.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
@@ -1095,7 +1068,7 @@ Name: corrected_only_using_pool, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_28_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_28_0.png" style="width: 1436px; height: 1231px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_29_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_29_0.png" style="width: 1188px; height: 986px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1119,7 +1092,7 @@ Name: corrected_only_using_pool, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_29_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_29_1.png" style="width: 1005px; height: 454px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_30_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_30_1.png" style="width: 1005px; height: 454px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1143,7 +1116,7 @@ Name: corrected_only_using_pool, dtype: int64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_30_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_30_1.png" style="width: 1071px; height: 346px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_31_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_31_1.png" style="width: 1071px; height: 346px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1162,11 +1135,11 @@ Name: corrected_only_using_pool, dtype: int64
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;2297_S1_W8&#39;,
- &#39;1458_S2_W5&#39;,
- &#39;3112_S2_W5&#39;,
- &#39;2091_S3_W5&#39;,
- &#39;2526_S1_W7&#39;,
+[&#39;1207_S3_W5&#39;,
+ &#39;1994_S2_W8&#39;,
+ &#39;1399_S2_W7&#39;,
+ &#39;885_S1_W5&#39;,
+ &#39;1303_S2_W7&#39;,
  &#39;944_S3_W6&#39;]
 </pre></div></div>
 </div>
@@ -1194,14 +1167,14 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_1.png" style="width: 1983px; height: 871px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_1.png" style="width: 1695px; height: 721px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_33_2.png" style="width: 1985px; height: 590px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_2.png" style="width: 1692px; height: 506px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1217,13 +1190,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1231,28 +1204,28 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_1.png" style="width: 1501px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_35_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_35_1.png" style="width: 1501px; height: 290px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_2.png" style="width: 1498px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_35_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_35_2.png" style="width: 1498px; height: 290px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_3.png" style="width: 1501px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_35_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_35_3.png" style="width: 1501px; height: 290px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_4.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_34_4.png" style="width: 1505px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_35_4.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_35_4.png" style="width: 1505px; height: 290px;" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -1297,7 +1270,7 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_38_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_38_1.png" style="width: 1071px; height: 346px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_39_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_39_1.png" style="width: 1071px; height: 346px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1312,14 +1285,14 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_39_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_39_0.png" style="width: 1980px; height: 871px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_0.png" style="width: 1696px; height: 721px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_39_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_39_1.png" style="width: 1985px; height: 590px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_1.png" style="width: 1692px; height: 506px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1335,13 +1308,13 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
-/home/mklein/FDA_project/src/evaluation.py:265: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+/home/mklein/FDA_project/src/evaluation.py:359: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   plot_df = plot_df[self.plot_df.uncorrected &gt; 0]
 </pre></div></div>
 </div>
@@ -1349,28 +1322,28 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_1.png" style="width: 1493px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_41_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_41_1.png" style="width: 1493px; height: 290px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_2.png" style="width: 1493px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_41_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_41_2.png" style="width: 1493px; height: 290px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_3.png" style="width: 1487px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_41_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_41_3.png" style="width: 1487px; height: 290px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_4.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_40_4.png" style="width: 1486px; height: 290px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_41_4.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_41_4.png" style="width: 1486px; height: 290px;" />
 </div>
 </div>
 </section>
@@ -1405,21 +1378,21 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_1.png" style="width: 1275px; height: 435px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_1.png" style="width: 1275px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_2.png" style="width: 1601px; height: 512px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_2.png" style="width: 1601px; height: 512px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_3.png" style="width: 566px; height: 454px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_3.png" style="width: 566px; height: 454px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -1437,21 +1410,21 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_5.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_5.png" style="width: 1275px; height: 435px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_5.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_5.png" style="width: 1275px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_6.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_6.png" style="width: 1601px; height: 512px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_6.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_6.png" style="width: 1601px; height: 512px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_7.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_42_7.png" style="width: 566px; height: 454px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_7.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_7.png" style="width: 566px; height: 454px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1466,15 +1439,51 @@ pixels’ sampling ratios. This can be explained by the fact that most ions had 
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_0.png" style="width: 2075px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_44_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_44_1.png" style="width: 1275px; height: 435px;" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+/home/mklein/miniconda3/envs/ion_suppression/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_44_3.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_44_3.png" style="width: 1282px; height: 271px;" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_44_4.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_44_4.png" style="width: 1275px; height: 435px;" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_43_1.png" style="width: 2085px; height: 471px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_44_5.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_44_5.png" style="width: 1272px; height: 271px;" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -1529,15 +1538,15 @@ X_umap
                               mean        sd  rel_neighborhood
 X_pca_uncorrected     10  0.008542  0.220384          0.091837
 X_pca_ISM correction  10  0.008254  0.219908          0.091837
-X_umap_uncorrected    10  0.008303  0.225947          0.091837
-X_umap_ISM correction 10  0.008058  0.225539          0.091837
+X_umap_uncorrected    10  0.007993  0.224737          0.091837
+X_umap_ISM correction 10  0.008393  0.225823          0.091837
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_45_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_45_1.png" style="width: 788px; height: 470px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_46_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_46_1.png" style="width: 788px; height: 470px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1575,7 +1584,7 @@ Index: []
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_46_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_46_1.png" style="width: 789px; height: 466px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_47_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_47_1.png" style="width: 789px; height: 466px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1598,14 +1607,14 @@ Index: []
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Area under the curve for X_umap_uncorrected: 0.4875
-Area under the curve for X_umap_ISM correction: 0.4755
+Area under the curve for X_umap_uncorrected: 0.4781
+Area under the curve for X_umap_ISM correction: 0.4735
 Area under the curve for X_pca_uncorrected: 0.5193
 Area under the curve for X_pca_ISM correction: 0.5170
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
@@ -1632,21 +1641,26 @@ Area under the curve for X_pca_ISM correction: 0.5170
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">get_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">),</span>
                   <span class="n">get_svm_margin</span><span class="p">(</span><span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">size_factor</span> <span class="o">=</span> <span class="n">size_factor</span><span class="p">),</span>
-                  <span class="n">on</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_uncorrected&#39;</span><span class="p">,</span> <span class="s1">&#39;_ISM_corrected&#39;</span><span class="p">])</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">)})</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;margin&#39;</span><span class="p">),</span>
-                <span class="n">x</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;margin&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Comparison of SVM margins for layer </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">layer</span>)
-
+                  <span class="n">on</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_uncorrected&#39;</span><span class="p">,</span> <span class="s1">&#39;_ISM_correction&#39;</span><span class="p">])</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)})</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+    <span class="n">plt</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;margin&#39;</span><span class="p">),</span>
+                <span class="n">x</span><span class="o">=</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;margin&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;correction&#39;</span><span class="p">,</span>
+               <span class="p">)</span>
+    <span class="c1">#plt.set_title(&#39;Comparison of SVM margins&#39;)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
 
 
     <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span>
         <span class="n">adata_cor</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata_cor</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;default_X&#39;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">plt</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
@@ -1665,14 +1679,14 @@ log_norm_counts
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_49_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_49_1.png" style="width: 1009px; height: 476px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_50_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_50_1.png" style="width: 467px; height: 501px;" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;log_norm_counts&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">move_legend</span><span class="p">(</span><span class="n">analyse_svm_margin</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">,</span> <span class="n">condition_name</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;1e4_log_norm_counts&#39;</span><span class="p">),</span> <span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1681,14 +1695,14 @@ log_norm_counts
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-log_norm_counts
+1e4_log_norm_counts
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_50_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_50_1.png" style="width: 1009px; height: 476px;" />
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_51_1.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_03_evaluation_51_1.png" style="width: 476px; height: 501px;" />
 </div>
 </div>
 </section>

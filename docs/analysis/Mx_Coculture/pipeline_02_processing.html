@@ -414,7 +414,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00&lt;00:00,  7.12it/s]
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00&lt;00:00,  1.20it/s]
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -581,8 +581,24 @@ dataset. These dataset should exhibit differences on a comparable level across s
 gen. data vs. Martijns data
 summed deviation    0.00235
 dtype: float64
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/tmp/ipykernel_12201/3240923703.py:7: FutureWarning: The default value of numeric_only in DataFrame.mean is deprecated. In a future version, it will default to False. In addition, specifying &#39;numeric_only=None&#39; is deprecated. Select only valid columns or specify the value of numeric_only to silence this warning.
+  print(df.mean())
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
 corr. data vs. gen. data
-summed deviation    0.055711
+summed deviation    0.059227
 dtype: float64
 </pre></div></div>
 </div>
@@ -591,9 +607,7 @@ dtype: float64
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/scratch/jobs/61915146/ipykernel_3490523/3240923703.py:7: FutureWarning: The default value of numeric_only in DataFrame.mean is deprecated. In a future version, it will default to False. In addition, specifying &#39;numeric_only=None&#39; is deprecated. Select only valid columns or specify the value of numeric_only to silence this warning.
-  print(df.mean())
-/scratch/jobs/61915146/ipykernel_3490523/3240923703.py:7: FutureWarning: The default value of numeric_only in DataFrame.mean is deprecated. In a future version, it will default to False. In addition, specifying &#39;numeric_only=None&#39; is deprecated. Select only valid columns or specify the value of numeric_only to silence this warning.
+/tmp/ipykernel_12201/3240923703.py:7: FutureWarning: The default value of numeric_only in DataFrame.mean is deprecated. In a future version, it will default to False. In addition, specifying &#39;numeric_only=None&#39; is deprecated. Select only valid columns or specify the value of numeric_only to silence this warning.
   print(df.mean())
 </pre></div></div>
 </div>
@@ -601,7 +615,7 @@ dtype: float64
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/analysis_Mx_Coculture_pipeline_02_processing_17_2.png" src="../../_images/analysis_Mx_Coculture_pipeline_02_processing_17_2.png" />
+<img alt="../../_images/analysis_Mx_Coculture_pipeline_02_processing_17_4.png" src="../../_images/analysis_Mx_Coculture_pipeline_02_processing_17_4.png" />
 </div>
 </div>
 </section>

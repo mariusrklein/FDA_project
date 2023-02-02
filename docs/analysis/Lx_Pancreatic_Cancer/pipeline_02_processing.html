@@ -305,7 +305,7 @@ div.rendered_html tbody tr:hover {
 <section id="Lx_Pancreatic_Cancer:-Processing">
 <h1>Lx_Pancreatic_Cancer: Processing<a class="headerlink" href="#Lx_Pancreatic_Cancer:-Processing" title="Permalink to this heading">¶</a></h1>
 <p>Datasets typically consist of several wells on a microscopy slide. In this notebook, the wells are integrated to one annotated data matrix.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -335,20 +335,6 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;retina&#39;]
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -425,7 +411,7 @@ ModuleNotFoundError: No module named &#39;cellpose&#39;
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 12/12 [00:11&lt;00:00,  1.06it/s]
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 12/12 [00:08&lt;00:00,  1.35it/s]
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -578,6 +564,179 @@ dataset. These dataset should exhibit differences on a comparable level across s
 </div>
 <div class="output_area docutils container">
 <img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_02_processing_16_0.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_02_processing_16_0.png" style="width: 577px; height: 454px;" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.evaluation</span> <span class="kn">import</span> <span class="n">plot_deviations_between_adatas</span>
+<span class="n">plot_deviations_between_adatas</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">gen_adata</span><span class="p">,</span> <span class="n">adata_cor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/mklein/FDA_project/src/evaluation.py:200: FutureWarning: The default value of numeric_only in DataFrameGroupBy.median is deprecated. In a future version, numeric_only will default to False. Either specify numeric_only or select only columns which should be valid for the function.
+  df_out = pd.concat({&#39;median&#39;: diff_df.reset_index().melt(id_vars=&#34;well&#34;).groupby(&#34;well&#34;).median(),
+/home/mklein/FDA_project/src/evaluation.py:201: FutureWarning: The default value of numeric_only in DataFrameGroupBy.quantile is deprecated. In a future version, numeric_only will default to False. Either specify numeric_only or select only columns which should be valid for the function.
+  &#39;25&#39;: diff_df.reset_index().melt(id_vars=&#34;well&#34;).groupby(&#34;well&#34;).quantile(q=0.25),
+/home/mklein/FDA_project/src/evaluation.py:202: FutureWarning: The default value of numeric_only in DataFrameGroupBy.quantile is deprecated. In a future version, numeric_only will default to False. Either specify numeric_only or select only columns which should be valid for the function.
+  &#39;75&#39;: diff_df.reset_index().melt(id_vars=&#34;well&#34;).groupby(&#34;well&#34;).quantile(q=0.75),
+/home/mklein/FDA_project/src/evaluation.py:210: UserWarning: FixedFormatter should only be used together with FixedLocator
+  plt.set_xticklabels(plt.get_xticklabels(), rotation=45, horizontalalignment=&#39;right&#39;)
+/home/mklein/FDA_project/src/evaluation.py:200: FutureWarning: The default value of numeric_only in DataFrameGroupBy.median is deprecated. In a future version, numeric_only will default to False. Either specify numeric_only or select only columns which should be valid for the function.
+  df_out = pd.concat({&#39;median&#39;: diff_df.reset_index().melt(id_vars=&#34;well&#34;).groupby(&#34;well&#34;).median(),
+/home/mklein/FDA_project/src/evaluation.py:201: FutureWarning: The default value of numeric_only in DataFrameGroupBy.quantile is deprecated. In a future version, numeric_only will default to False. Either specify numeric_only or select only columns which should be valid for the function.
+  &#39;25&#39;: diff_df.reset_index().melt(id_vars=&#34;well&#34;).groupby(&#34;well&#34;).quantile(q=0.25),
+/home/mklein/FDA_project/src/evaluation.py:202: FutureWarning: The default value of numeric_only in DataFrameGroupBy.quantile is deprecated. In a future version, numeric_only will default to False. Either specify numeric_only or select only columns which should be valid for the function.
+  &#39;75&#39;: diff_df.reset_index().melt(id_vars=&#34;well&#34;).groupby(&#34;well&#34;).quantile(q=0.75),
+/home/mklein/FDA_project/src/evaluation.py:210: UserWarning: FixedFormatter should only be used together with FixedLocator
+  plt.set_xticklabels(plt.get_xticklabels(), rotation=45, horizontalalignment=&#39;right&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">gen. data vs. spacem</th>
+      <th colspan="2" halign="left">corr. data vs. gen. data</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>median</th>
+      <th>iqr</th>
+      <th>median</th>
+      <th>iqr</th>
+    </tr>
+    <tr>
+      <th>well</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>S3_W5</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.376980</td>
+      <td>0.372009</td>
+    </tr>
+    <tr>
+      <th>S2_W5</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.294367</td>
+      <td>0.341894</td>
+    </tr>
+    <tr>
+      <th>S1_W7</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.135600</td>
+      <td>0.318315</td>
+    </tr>
+    <tr>
+      <th>S1_W8</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.177027</td>
+      <td>0.292853</td>
+    </tr>
+    <tr>
+      <th>S1_W6</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.311337</td>
+      <td>0.346558</td>
+    </tr>
+    <tr>
+      <th>S3_W8</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.234165</td>
+      <td>0.313128</td>
+    </tr>
+    <tr>
+      <th>S3_W6</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.370437</td>
+      <td>0.338418</td>
+    </tr>
+    <tr>
+      <th>S3_W7</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.160016</td>
+      <td>0.340935</td>
+    </tr>
+    <tr>
+      <th>S2_W7</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.151136</td>
+      <td>0.358105</td>
+    </tr>
+    <tr>
+      <th>S2_W8</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.209586</td>
+      <td>0.312833</td>
+    </tr>
+    <tr>
+      <th>S2_W6</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.387003</td>
+      <td>0.327947</td>
+    </tr>
+    <tr>
+      <th>S1_W5</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.295722</td>
+      <td>0.335145</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_02_processing_17_2.png" class="no-scaled-link" src="../../_images/analysis_Lx_Pancreatic_Cancer_pipeline_02_processing_17_2.png" style="width: 590px; height: 483px;" />
 </div>
 </div>
 </section>

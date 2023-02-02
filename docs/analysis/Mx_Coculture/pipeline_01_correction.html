@@ -305,7 +305,7 @@ div.rendered_html tbody tr:hover {
 <section id="Mx_Coculture:-Correction">
 <h1>Mx_Coculture: Correction<a class="headerlink" href="#Mx_Coculture:-Correction" title="Permalink to this heading">¶</a></h1>
 <p>SpaceM datasets are usually stored as annotated data-matrices, separately for individual wells. With this notebooks, these individual files are corrected for ion suppression on the pixel-level and then deconvoluted to cell-level. All resulting files are saved separately by well to the target_path and the impact of the correction briefly shown for visual inspection.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
@@ -344,20 +344,6 @@ div.rendered_html tbody tr:hover {
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used.
-Traceback (most recent call last):
-  File &#34;/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py&#34;, line 28, in &lt;module&gt;
-    import cellpose  # pylint: disable=unused-import
-ModuleNotFoundError: No module named &#39;cellpose&#39;
-
-  warn(f&#34;Failed to load CellPose, it cannot be used. \n{traceback.format_exc()}&#34;)
-</pre></div></div>
 </div>
 <p>The original data lies on the groups shared data storage. Corrected files will be saved in a separate location, preserving the well-specific folder structure.</p>
 <div class="nbinput nblast docutils container">
@@ -547,7 +533,7 @@ ModuleNotFoundError: No module named &#39;cellpose&#39;
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-  0%|          | 0/1 [00:00&lt;?, ?it/s]
+  0%|                                                                                                                                                | 0/1 [00:00&lt;?, ?it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -564,7 +550,7 @@ Using 115 pixels to calculate full-pixel avereage intensities.
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 1/1 [00:14&lt;00:00, 14.10s/it]
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:30&lt;00:00, 30.92s/it]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -703,42 +689,62 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
     <tr>
       <th>C35H69O8P</th>
       <th>dataset</th>
-      <td>0.020558</td>
+      <td>-2.572930</td>
       <td>0.023198</td>
-      <td>0.023198</td>
-      <td>-1.018972</td>
+      <td>-2.570291</td>
+      <td>-2.018972</td>
       <td>1.481740e-02</td>
-      <td>-1.004155</td>
+      <td>-2.004155</td>
     </tr>
     <tr>
       <th>C21H43O7P</th>
       <th>dataset</th>
-      <td>0.007616</td>
+      <td>-2.526239</td>
       <td>0.007465</td>
-      <td>0.007465</td>
-      <td>-1.000192</td>
+      <td>-2.526392</td>
+      <td>-2.000189</td>
       <td>-1.818945e-03</td>
-      <td>-1.002011</td>
+      <td>-2.002011</td>
+    </tr>
+    <tr>
+      <th>C18H36O2</th>
+      <th>dataset</th>
+      <td>-3.050703</td>
+      <td>-0.045256</td>
+      <td>-3.054389</td>
+      <td>-1.916107</td>
+      <td>-1.653224e-02</td>
+      <td>-1.932639</td>
+    </tr>
+    <tr>
+      <th>C6H11O8P</th>
+      <th>dataset</th>
+      <td>-3.754817</td>
+      <td>-0.156261</td>
+      <td>-3.780541</td>
+      <td>-1.716180</td>
+      <td>-6.596007e-02</td>
+      <td>-1.782140</td>
     </tr>
     <tr>
       <th>C43H78NO8P</th>
       <th>dataset</th>
-      <td>-0.088261</td>
+      <td>-3.004212</td>
       <td>-0.092249</td>
-      <td>-0.092249</td>
-      <td>-0.159189</td>
+      <td>-3.008200</td>
+      <td>-1.159189</td>
       <td>-2.692784e-02</td>
-      <td>-0.186117</td>
+      <td>-1.186117</td>
     </tr>
     <tr>
       <th>C43H81O13P</th>
       <th>dataset</th>
+      <td>-2.445088</td>
       <td>0.175546</td>
-      <td>0.175546</td>
-      <td>0.175546</td>
-      <td>-0.137813</td>
+      <td>-2.445088</td>
+      <td>-1.137813</td>
       <td>2.716324e-08</td>
-      <td>-0.137813</td>
+      <td>-1.137813</td>
     </tr>
   </tbody>
 </table>
@@ -1177,7 +1183,7 @@ set (shown as orange squares). In turn, the blue squares are disregarded in calc
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Minimum intercept: </span><span class="si">%1.2f</span><span class="s2">&quot;</span> <span class="o">%</span><span class="k">am_adata_cor</span>.var[&#39;correction_quantreg_intersect&#39;].min())
@@ -1195,7 +1201,7 @@ Maximum intercept: 0.38
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">am_adata_cor</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;correction_quantreg_intersect&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
@@ -1203,7 +1209,7 @@ Maximum intercept: 0.38
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area docutils container">

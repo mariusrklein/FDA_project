@@ -34,21 +34,7 @@
     },
     "tags": []
    },
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py:30: UserWarning: Failed to load CellPose, it cannot be used. \n",
-      "Traceback (most recent call last):\n",
-      "  File \"/home/mklein/spacem/SpaceM/lib/modules/cell_segmentation/cell_pose.py\", line 28, in <module>\n",
-      "    import cellpose  # pylint: disable=unused-import\n",
-      "ModuleNotFoundError: No module named 'cellpose'\n",
-      "\n",
-      "  warn(f\"Failed to load CellPose, it cannot be used. \\n{traceback.format_exc()}\")\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "import platform\n",
     "import os\n",
@@ -143,7 +129,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": 4,
    "id": "17117d12-18c5-4240-90f8-0fa6073ba34e",
    "metadata": {},
    "outputs": [
@@ -190,7 +176,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 8,
+   "execution_count": 5,
    "id": "f3b730f6-0c1b-4ef5-87cf-e826695dd0c1",
    "metadata": {},
    "outputs": [
@@ -236,7 +222,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 9,
+   "execution_count": 6,
    "id": "606266d6-6f82-4b7b-a14a-4b403c1cf5c8",
    "metadata": {
     "papermill": {
@@ -267,7 +253,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 10,
+   "execution_count": 7,
    "id": "5c58f7de-9b9d-4efc-8539-4bdd535d283d",
    "metadata": {
     "tags": []
@@ -301,7 +287,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 11,
+   "execution_count": 8,
    "id": "3717d5f8-46c1-4010-b60c-b9fdad70690e",
    "metadata": {},
    "outputs": [
@@ -373,7 +359,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 12,
+   "execution_count": 9,
    "id": "ecadd833-2338-42d3-8ab4-43db9b5477bd",
    "metadata": {},
    "outputs": [

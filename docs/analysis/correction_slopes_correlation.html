@@ -299,7 +299,7 @@ div.rendered_html tbody tr:hover {
 <p>Since ion suppression is a complicated and multifactorial process, it is hard to tackle it mechanistically. Although this method revolves around the mere area of overlap as influence parameter, the different ion-specific slopes gathered in the correction of various datasets should still contain molecular information about the susceptibility to ion suppression. An indication for that would be a correlation of the slopes for ions acquired in multiple datasets. As we analyzed two Metabolomics and
 two Lipidomics datasets, one can compare those separately.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
@@ -307,34 +307,22 @@ two Lipidomics datasets, one can compare those separately.</p>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">re</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">source_path</span> <span class="o">=</span> <span class="s1">&#39;/home/mklein/FDA_project/data&#39;</span>
-<span class="n">datasets</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dir</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">scandir</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span> <span class="k">if</span> <span class="nb">dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">dir</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;.&quot;</span><span class="p">]</span>
-<span class="n">datasets</span>
+<span class="c1"># datasets = [dir.name for dir in os.scandir(source_path) if dir.is_dir() and dir.name[0] != &quot;.&quot; and dir.name[2] == &quot;_&quot;]</span>
+<span class="n">datasets</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Lx_Glioblastoma&#39;</span><span class="p">,</span> <span class="s1">&#39;Mx_Seahorse&#39;</span><span class="p">,</span> <span class="s1">&#39;Lx_Pancreatic_Cancer&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[&#39;Lx_Glioblastoma&#39;,
- &#39;Mx_Seahorse&#39;,
- &#39;Lx_Pancreatic_Cancer&#39;,
- &#39;Mx_Co_Cultured&#39;,
- &#39;Mx_Seahorse_low_thrs&#39;]
-</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adatas</span> <span class="o">=</span> <span class="p">{}</span>
@@ -347,7 +335,7 @@ two Lipidomics datasets, one can compare those separately.</p>
 </div>
 <p>All slope information is loaded from the respective annotated data matrices. As the datasets usually consist of multiple wells, the reported correction slopes are mean values of the corresponding set of wells. Ions that were only corrected using the reference pool are excluded (one could be more strict by thresholding for a max. fraction of wells corrected by reference pool, e.g. 50%).</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">adatas</span><span class="p">)</span>
@@ -357,16 +345,35 @@ two Lipidomics datasets, one can compare those separately.</p>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wide_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;ion&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">)</span>
+<span class="c1"># wide_df[&quot;ion&quot;] =</span>
+<span class="n">wide_df</span><span class="p">[</span><span class="s2">&quot;ion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([\d\w]+)[+-](\w)+&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">wide_df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+<span class="n">wide_df</span><span class="p">[</span><span class="s2">&quot;adduct&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([\d\w]+)([+-]\w+)&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\2&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">wide_df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+<span class="n">wide_df</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="s2">&quot;adduct&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+adduct
++H     336
+-H     323
++Na    298
++K     151
++Cl     94
+dtype: int64
+</pre></div></div>
+</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">wide_df</span><span class="p">)</span>
@@ -375,7 +382,16 @@ two Lipidomics datasets, one can compare those separately.</p>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/tmp/ipykernel_80/1828577948.py:2: FutureWarning: The default value of numeric_only in DataFrame.corr is deprecated. In a future version, it will default to False. Select only valid columns or specify the value of numeric_only to silence this warning.
+  wide_df.corr(method=&#34;spearman&#34;)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -399,14 +415,10 @@ two Lipidomics datasets, one can compare those separately.</p>
       <th>dataset</th>
       <th>Lx_Glioblastoma</th>
       <th>Lx_Pancreatic_Cancer</th>
-      <th>Mx_Co_Cultured</th>
       <th>Mx_Seahorse</th>
-      <th>Mx_Seahorse_low_thrs</th>
     </tr>
     <tr>
       <th>dataset</th>
-      <th></th>
-      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -416,42 +428,20 @@ two Lipidomics datasets, one can compare those separately.</p>
     <tr>
       <th>Lx_Glioblastoma</th>
       <td>1.000000</td>
-      <td>0.582703</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>0.516545</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>Lx_Pancreatic_Cancer</th>
-      <td>0.582703</td>
+      <td>0.516545</td>
       <td>1.000000</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>Mx_Co_Cultured</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1.0</td>
-      <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>Mx_Seahorse</th>
       <td>NaN</td>
       <td>NaN</td>
-      <td>NaN</td>
-      <td>1.000000</td>
-      <td>0.965684</td>
-    </tr>
-    <tr>
-      <th>Mx_Seahorse_low_thrs</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.965684</td>
-      <td>1.000000</td>
+      <td>1.0</td>
     </tr>
   </tbody>
 </table>
@@ -461,21 +451,22 @@ two Lipidomics datasets, one can compare those separately.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/analysis_correction_slopes_correlation_7_1.png" src="../_images/analysis_correction_slopes_correlation_7_1.png" />
+<img alt="../_images/analysis_correction_slopes_correlation_7_2.png" src="../_images/analysis_correction_slopes_correlation_7_2.png" />
 </div>
 </div>
 <p>No metabolites were found in both Metabolomics datasets as the ions in the coculture set were only available as sum formulas without a specific adduct. All the other datasets use sum formulas with specific adducts. However, between the Lipidomics datasets, a number of ions overlap and their slopes have a positive correlation with Spearman r = 0.583.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">wide_df</span><span class="p">[[</span><span class="s1">&#39;Lx_Glioblastoma&#39;</span><span class="p">,</span> <span class="s1">&#39;Lx_Pancreatic_Cancer&#39;</span><span class="p">]],</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Lx_Pancreatic_Cancer&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Lx_Glioblastoma&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">wide_df</span><span class="p">[[</span><span class="s1">&#39;Lx_Glioblastoma&#39;</span><span class="p">,</span> <span class="s1">&#39;Lx_Pancreatic_Cancer&#39;</span><span class="p">,</span> <span class="s1">&#39;adduct&#39;</span><span class="p">]],</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Lx_Pancreatic_Cancer&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Lx_Glioblastoma&#39;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;cividis&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">set_axis_labels</span><span class="p">(</span><span class="s2">&quot;correction slope (Pancreatic cancer)&quot;</span><span class="p">,</span> <span class="s2">&quot;correction slope (Glioblastoma)&quot;</span><span class="p">)</span>
 <span class="n">wide_df</span><span class="p">[[</span><span class="s1">&#39;Lx_Glioblastoma&#39;</span><span class="p">,</span> <span class="s1">&#39;Lx_Pancreatic_Cancer&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;spearman&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -510,11 +501,11 @@ two Lipidomics datasets, one can compare those separately.</p>
     <tr>
       <th>Lx_Glioblastoma</th>
       <td>1.000000</td>
-      <td>0.582703</td>
+      <td>0.516545</td>
     </tr>
     <tr>
       <th>Lx_Pancreatic_Cancer</th>
-      <td>0.582703</td>
+      <td>0.516545</td>
       <td>1.000000</td>
     </tr>
   </tbody>
@@ -528,9 +519,120 @@ two Lipidomics datasets, one can compare those separately.</p>
 <img alt="../_images/analysis_correction_slopes_correlation_9_1.png" src="../_images/analysis_correction_slopes_correlation_9_1.png" />
 </div>
 </div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">wide_df</span><span class="p">[[</span><span class="s1">&#39;Lx_Glioblastoma&#39;</span><span class="p">,</span> <span class="s1">&#39;Lx_Pancreatic_Cancer&#39;</span><span class="p">,</span> <span class="s1">&#39;adduct&#39;</span><span class="p">]],</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Lx_Pancreatic_Cancer&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Lx_Glioblastoma&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;adduct&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s2">&quot;adduct&quot;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;cividis&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">set_axis_labels</span><span class="p">(</span><span class="s2">&quot;correction slope (Pancreatic cancer)&quot;</span><span class="p">,</span> <span class="s2">&quot;correction slope (Glioblastoma)&quot;</span><span class="p">)</span>
+<span class="n">wide_df</span><span class="p">[[</span><span class="s1">&#39;Lx_Glioblastoma&#39;</span><span class="p">,</span> <span class="s1">&#39;Lx_Pancreatic_Cancer&#39;</span><span class="p">,</span> <span class="s1">&#39;adduct&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;adduct&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;spearman&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dataset</th>
+      <th>Lx_Glioblastoma</th>
+      <th>Lx_Pancreatic_Cancer</th>
+    </tr>
+    <tr>
+      <th>adduct</th>
+      <th>dataset</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="2" valign="top">+Cl</th>
+      <th>Lx_Glioblastoma</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Lx_Pancreatic_Cancer</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">+H</th>
+      <th>Lx_Glioblastoma</th>
+      <td>1.000000</td>
+      <td>0.498914</td>
+    </tr>
+    <tr>
+      <th>Lx_Pancreatic_Cancer</th>
+      <td>0.498914</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">+K</th>
+      <th>Lx_Glioblastoma</th>
+      <td>1.000000</td>
+      <td>0.000988</td>
+    </tr>
+    <tr>
+      <th>Lx_Pancreatic_Cancer</th>
+      <td>0.000988</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">+Na</th>
+      <th>Lx_Glioblastoma</th>
+      <td>1.000000</td>
+      <td>0.680346</td>
+    </tr>
+    <tr>
+      <th>Lx_Pancreatic_Cancer</th>
+      <td>0.680346</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">-H</th>
+      <th>Lx_Glioblastoma</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Lx_Pancreatic_Cancer</th>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/analysis_correction_slopes_correlation_10_1.png" src="../_images/analysis_correction_slopes_correlation_10_1.png" />
+</div>
+</div>
 <p>In order to enable a comparison of the metabolites annotated in the Metabolomics datasets, one has to strip the adducts from the ions in the Seahorse dataset. However, due to the low number of metabolites annotated for the coculture dataset (58), still only a very small set of 8 jointly annotated metabolites can be found. The corresponding slopes do not show a positive correlation.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;ion_stripped&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ion&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([^-^+]+)&#39;</span><span class="p">)</span>
@@ -539,7 +641,7 @@ two Lipidomics datasets, one can compare those separately.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wide_df_stripped</span> <span class="o">=</span> <span class="n">df_stripped</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;ion_stripped&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;mean_correction_quantreg_slope&#39;</span><span class="p">)</span>
@@ -548,7 +650,7 @@ two Lipidomics datasets, one can compare those separately.</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">wide_df_stripped</span><span class="p">[[</span><span class="s1">&#39;Mx_Co_Cultured&#39;</span><span class="p">,</span> <span class="s1">&#39;Mx_Seahorse&#39;</span><span class="p">]],</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Mx_Co_Cultured&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Mx_Seahorse&#39;</span><span class="p">)</span>
@@ -557,7 +659,7 @@ two Lipidomics datasets, one can compare those separately.</p>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -592,11 +694,11 @@ two Lipidomics datasets, one can compare those separately.</p>
     <tr>
       <th>Mx_Co_Cultured</th>
       <td>1.000000</td>
-      <td>-0.047619</td>
+      <td>-0.214286</td>
     </tr>
     <tr>
       <th>Mx_Seahorse</th>
-      <td>-0.047619</td>
+      <td>-0.214286</td>
       <td>1.000000</td>
     </tr>
   </tbody>
@@ -607,13 +709,13 @@ two Lipidomics datasets, one can compare those separately.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/analysis_correction_slopes_correlation_13_1.png" src="../_images/analysis_correction_slopes_correlation_13_1.png" />
+<img alt="../_images/analysis_correction_slopes_correlation_14_1.png" src="../_images/analysis_correction_slopes_correlation_14_1.png" />
 </div>
 </div>
 <p>So far, only mean correction slopes were compared. As the different wells of a dataset are corrected separately, a comparison of all the individual correction slopes would be interesting as well. To this end, all slopes across wells and datasets are combined in one table and visualized using PCA (NaNs are replaced by 0). This shows that the wells within a dataset have much higher similarity than across datasets. Also, Lipidomics datasets tend to localize to the left and changing the correction
 parameter <code class="docutils literal notranslate"><span class="pre">correction_proportion_threshold</span></code> has relatively little effect on the slopes.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_adatas</span> <span class="o">=</span> <span class="p">{}</span>
@@ -629,16 +731,161 @@ parameter <code class="docutils literal notranslate"><span class="pre">correctio
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_wells_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_adatas</span><span class="p">)</span>
+<span class="n">all_wells_df</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th></th>
+      <th>correction_full_pixel_avg_intensities</th>
+      <th>correction_n_datapoints</th>
+      <th>correction_n_iterations</th>
+      <th>correction_quantreg_intersect</th>
+      <th>correction_quantreg_slope</th>
+      <th>correction_using_ion_pool</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="5" valign="top">Lx_Glioblastoma</th>
+      <th rowspan="5" valign="top">B4</th>
+      <th>C10H20NO8P+H</th>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>129</td>
+      <td>0.307747</td>
+      <td>-1.244042</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C10H20NO8P+K</th>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>129</td>
+      <td>0.307747</td>
+      <td>-1.244042</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C10H20NO8P+Na</th>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>129</td>
+      <td>0.307747</td>
+      <td>-1.244042</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C20H34O5+H</th>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>129</td>
+      <td>0.307747</td>
+      <td>-1.244042</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>C20H34O5+K</th>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>129</td>
+      <td>0.307747</td>
+      <td>-1.244042</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <th>...</th>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th rowspan="5" valign="top">Mx_Co_Cultured</th>
+      <th rowspan="5" valign="top">dataset</th>
+      <th>C45H80NO8P</th>
+      <td>180.509995</td>
+      <td>502</td>
+      <td>204</td>
+      <td>-0.159299</td>
+      <td>-0.799105</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C45H82NO8P</th>
+      <td>70.392250</td>
+      <td>299</td>
+      <td>36</td>
+      <td>0.146816</td>
+      <td>-0.970041</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C6H11O8P</th>
+      <td>4209.976562</td>
+      <td>1343</td>
+      <td>180</td>
+      <td>-0.130538</td>
+      <td>-0.716180</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C6H13O9P</th>
+      <td>1867.312866</td>
+      <td>1342</td>
+      <td>71</td>
+      <td>-0.119130</td>
+      <td>-0.800593</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>C9H19O11P</th>
+      <td>340.232025</td>
+      <td>999</td>
+      <td>57</td>
+      <td>-0.088515</td>
+      <td>-0.589858</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+<p>126305 rows × 6 columns</p>
+</div></div>
+</div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_wells_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="s1">&#39;ion&#39;</span><span class="p">]</span>
@@ -649,7 +896,7 @@ parameter <code class="docutils literal notranslate"><span class="pre">correctio
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_wells_wide_df</span> <span class="o">=</span> <span class="n">all_wells_df</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;ion&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;well&#39;</span><span class="p">,</span> <span class="s1">&#39;set_well&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;correction_quantreg_slope&#39;</span><span class="p">)</span>
@@ -659,7 +906,7 @@ parameter <code class="docutils literal notranslate"><span class="pre">correctio
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -874,144 +1121,494 @@ parameter <code class="docutils literal notranslate"><span class="pre">correctio
       <td>...</td>
     </tr>
     <tr>
-      <th>Mx_Seahorse_low_thrs_G1</th>
-      <td>Mx_Seahorse_low_thrs</td>
-      <td>G1</td>
-      <td>-1.046079</td>
-      <td>-1.014938</td>
-      <td>-1.080636</td>
-      <td>-1.080202</td>
-      <td>-1.037796</td>
-      <td>-1.040042</td>
+      <th>Lx_Pancreatic_Cancer_S2_W8</th>
+      <td>Lx_Pancreatic_Cancer</td>
+      <td>S2_W8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>...</td>
       <td>NaN</td>
-      <td>-1.066279</td>
-      <td>-1.076990</td>
-      <td>-1.035811</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>-0.921385</td>
-      <td>-0.677594</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>Mx_Seahorse_low_thrs_G4</th>
-      <td>Mx_Seahorse_low_thrs</td>
-      <td>G4</td>
-      <td>-1.048195</td>
+      <th>Lx_Pancreatic_Cancer_S2_W6</th>
+      <td>Lx_Pancreatic_Cancer</td>
+      <td>S2_W6</td>
       <td>NaN</td>
-      <td>-1.154761</td>
-      <td>-1.147166</td>
-      <td>-1.101122</td>
-      <td>-1.076248</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>...</td>
-      <td>-1.108591</td>
-      <td>-1.101165</td>
-      <td>-1.101706</td>
-      <td>-1.102049</td>
       <td>NaN</td>
-      <td>-0.883562</td>
-      <td>-1.034538</td>
-      <td>-0.957768</td>
-      <td>-0.551927</td>
-      <td>-0.856544</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Mx_Seahorse_low_thrs_H3</th>
-      <td>Mx_Seahorse_low_thrs</td>
-      <td>H3</td>
-      <td>-1.080342</td>
+      <th>Lx_Pancreatic_Cancer_S1_W5</th>
+      <td>Lx_Pancreatic_Cancer</td>
+      <td>S1_W5</td>
       <td>NaN</td>
-      <td>-1.143339</td>
-      <td>-1.152112</td>
-      <td>-1.110041</td>
-      <td>-1.071783</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>...</td>
       <td>NaN</td>
-      <td>-1.132500</td>
-      <td>-1.087797</td>
-      <td>-1.097473</td>
       <td>NaN</td>
-      <td>-0.862859</td>
       <td>NaN</td>
-      <td>-0.986616</td>
-      <td>-0.768695</td>
-      <td>-0.896105</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Mx_Seahorse_low_thrs_H4</th>
-      <td>Mx_Seahorse_low_thrs</td>
-      <td>H4</td>
+      <th>Mx_Co_Cultured_dataset_threshold_0.1</th>
+      <td>Mx_Co_Cultured</td>
+      <td>dataset_threshold_0.1</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>-1.108907</td>
-      <td>-1.085960</td>
-      <td>-1.078183</td>
-      <td>-1.045607</td>
       <td>NaN</td>
-      <td>-0.962629</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>...</td>
-      <td>-1.091898</td>
-      <td>-1.073067</td>
-      <td>-1.075602</td>
-      <td>-1.079728</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>-1.019675</td>
-      <td>-1.006552</td>
-      <td>-0.719677</td>
-      <td>-0.932669</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Mx_Seahorse_low_thrs_J2</th>
-      <td>Mx_Seahorse_low_thrs</td>
-      <td>J2</td>
-      <td>-1.005538</td>
+      <th>Mx_Co_Cultured_dataset</th>
+      <td>Mx_Co_Cultured</td>
+      <td>dataset</td>
       <td>NaN</td>
-      <td>-0.992928</td>
-      <td>-0.980450</td>
-      <td>-0.973936</td>
-      <td>-0.991810</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>...</td>
       <td>NaN</td>
-      <td>-0.997050</td>
-      <td>-0.997465</td>
-      <td>-1.009778</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>-1.000004</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>NaN</td>
     </tr>
   </tbody>
 </table>
-<p>86 rows × 1857 columns</p>
+<p>68 rows × 1859 columns</p>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pc_df</span><span class="p">[</span><span class="n">all_wells_wide_df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ion</th>
+      <th>C10H10ClN3-H</th>
+      <th>C10H10N2O+Cl</th>
+      <th>C10H10N2O-H</th>
+      <th>C10H10N2O2-H</th>
+      <th>C10H10N2O3S-H</th>
+      <th>C10H10N2O4S-H</th>
+      <th>C10H10N4O+Cl</th>
+      <th>C10H11F3N2O5+Cl</th>
+      <th>C10H11N-H</th>
+      <th>C10H11N3O2S-H</th>
+      <th>...</th>
+      <th>C9H9N+Cl</th>
+      <th>C9H9N-H</th>
+      <th>C9H9NO-H</th>
+      <th>C9H9NO2-H</th>
+      <th>C9H9NO3-H</th>
+      <th>CH3O5P+Cl</th>
+      <th>CH4NO5P+Cl</th>
+      <th>CH5O4P-H</th>
+      <th>H4O7P2-H</th>
+      <th>H5O10P3-H</th>
+    </tr>
+    <tr>
+      <th>set_well</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Lx_Glioblastoma_B4</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Lx_Glioblastoma_C1</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Lx_Glioblastoma_B1</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Lx_Glioblastoma_D2</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Lx_Glioblastoma_C4</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>Lx_Pancreatic_Cancer_S2_W8</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Lx_Pancreatic_Cancer_S2_W6</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Lx_Pancreatic_Cancer_S1_W5</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Mx_Co_Cultured_dataset_threshold_0.1</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Mx_Co_Cultured_dataset</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>68 rows × 1857 columns</p>
 </div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
 <span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">principalComponents</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">pc_df</span><span class="p">[</span><span class="n">all_wells_wide_df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">pc_df</span><span class="p">[</span><span class="n">all_wells_wide_df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">pc_df</span><span class="p">[</span><span class="s1">&#39;dataset&#39;</span><span class="p">])]</span>
+<span class="n">principalComponents</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="n">principalDf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">principalComponents</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;PC1&#39;</span><span class="p">,</span> <span class="s1">&#39;PC2&#39;</span><span class="p">])</span>
 <span class="n">principalDf</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pc_df</span><span class="o">.</span><span class="n">index</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">finalDf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">principalDf</span><span class="p">,</span> <span class="n">pc_df</span><span class="p">[[</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;well&#39;</span><span class="p">]]],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
@@ -1019,7 +1616,7 @@ parameter <code class="docutils literal notranslate"><span class="pre">correctio
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">finalDf</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;PC1&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;PC2&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;cividis&quot;</span><span class="p">)</span>
@@ -1027,7 +1624,7 @@ parameter <code class="docutils literal notranslate"><span class="pre">correctio
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1039,7 +1636,97 @@ parameter <code class="docutils literal notranslate"><span class="pre">correctio
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/analysis_correction_slopes_correlation_21_1.png" src="../_images/analysis_correction_slopes_correlation_21_1.png" />
+<img alt="../_images/analysis_correction_slopes_correlation_23_1.png" src="../_images/analysis_correction_slopes_correlation_23_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([0.46366229, 0.10656095])
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pca</span> <span class="kn">import</span> <span class="n">pca</span>
+<span class="c1"># Initialize</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">pca</span><span class="p">()</span>
+<span class="c1"># Fit transform</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Print the top features. The results show that f1 is best, followed by f2 etc</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;topfeat&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[pca] &gt;Processing dataframe..
+[pca] &gt;The PCA reduction is performed to capture [95.0%] explained variance using the [1857] columns of the input data.
+[pca] &gt;Fit using PCA.
+[pca] &gt;Compute loadings and PCs.
+[pca] &gt;Compute explained variance.
+[pca] &gt;Number of components is [39] that covers the [95.00%] explained variance.
+[pca] &gt;The PCA reduction is performed on the [1857] columns of the input dataframe.
+[pca] &gt;Fit using PCA.
+[pca] &gt;Compute loadings and PCs.
+[pca] &gt;Outlier detection using Hotelling T2 test with alpha=[0.05] and n_components=[39]
+[pca] &gt;Outlier detection using SPE/DmodX with n_std=[2]
+        PC        feature   loading  type
+0      PC1       C7H5NO-H -0.056071  best
+1      PC2  C33H64NO9P+Na -0.095066  best
+2      PC3   C48H83NO9+Na -0.074459  best
+3      PC4   C48H83NO9+Na -0.079627  best
+4      PC5  C44H82NO8P+Na  0.105691  best
+...    ...            ...       ...   ...
+1853  PC10      CH3O5P+Cl -0.052403  weak
+1854  PC20     CH4NO5P+Cl -0.087952  weak
+1855  PC33       CH5O4P-H  0.084530  weak
+1856  PC19       H4O7P2-H  0.036490  weak
+1857   PC7      H5O10P3-H  0.060768  weak
+
+[1858 rows x 4 columns]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#model.plot()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">biplot</span><span class="p">(</span><span class="n">n_feat</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[pca] &gt;Plot PC1 vs PC2 with loadings.
+[colourmap]&gt; Warning: Colormap [Set1] can not create [68] unique colors! Available unique colors: [9].
+[colourmap]&gt; Warning: Colormap [Set1] can not create [68] unique colors! Available unique colors: [9].
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/analysis_correction_slopes_correlation_26_1.png" src="../_images/analysis_correction_slopes_correlation_26_1.png" />
 </div>
 </div>
 </section>
