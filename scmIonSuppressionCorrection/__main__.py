@@ -76,6 +76,10 @@ def get_abs_path(path: str) -> str:
         Returns:
             str: absolute path
         """
+
+        if path is None:
+            return None
+            
         if os.path.isabs(path):
             return path
         

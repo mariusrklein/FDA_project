@@ -1,1 +1,1 @@
-include ISC/src/notebook_templates/*.ipynb
+include scmIonSuppressionCorrection/src/notebook_templates/*.ipynb

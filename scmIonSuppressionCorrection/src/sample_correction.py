@@ -28,7 +28,7 @@ class SampleCorrection:
     def __init__(
         self,
         sample: str,
-        config: dict[str, any],
+        config: dict,
         n_jobs: int,
         verbose: bool =True
     ):

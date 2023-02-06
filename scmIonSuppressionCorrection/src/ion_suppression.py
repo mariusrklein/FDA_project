@@ -5,6 +5,7 @@ This is the projects main class that holds all the steps of the correction workf
 Author: Marius Klein (mklein@duck.com), January 2023
 """
 
+from typing import Dict
 import os
 import json
 import re
@@ -262,7 +263,7 @@ columns to create well name using spacem_dataset_metadata_well_name
         return samples_list
     
     
-    def init_sample_corrections(self, samples: list[str] = None) -> list[SampleCorrection]:
+    def init_sample_corrections(self, samples: list = None) -> list:
         """ run corrections and deconvolutions of samples
 
         Args:
@@ -298,7 +299,7 @@ columns to create well name using spacem_dataset_metadata_well_name
         return corrections
     
     
-    def combine_wells(self, sample_list: list[SampleCorrection] = None):
+    def combine_wells(self, sample_list: list = None):
         """combine corrected and deconvoluted wells to a common AnnData Set
 
         Args:
@@ -322,7 +323,7 @@ columns to create well name using spacem_dataset_metadata_well_name
         self.corr_adata = self.concat_wells(corr_adatas)
             
     
-    def concat_wells(self, adata_dict: dict[str, ad.AnnData]) -> ad.AnnData:
+    def concat_wells(self, adata_dict: Dict[str, ad.AnnData]) -> ad.AnnData:
         """helper that combines adatas of multiple samples to one. Certain columns of AnnData.var
         are aggregated using average of sum functions 
 

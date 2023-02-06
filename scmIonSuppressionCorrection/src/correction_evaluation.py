@@ -46,8 +46,8 @@ class CorrectionEvaluation:
     def find_notebooks(self):
         """locate template notebooks for QC and results analysis in package folder.
         """
-        qc_file = files('ISC.notebook_templates').joinpath('qc.ipynb')
-        ra_file = files('ISC.notebook_templates').joinpath('results_analysis.ipynb')
+        qc_file = files('scmIonSuppressionCorrection.notebook_templates').joinpath('qc.ipynb')
+        ra_file = files('scmIonSuppressionCorrection.notebook_templates').joinpath('results_analysis.ipynb')
 
         with as_file(qc_file) as qc_path:
             self.qc_path = qc_path
@@ -84,8 +84,8 @@ class CorrectionEvaluation:
 
 # print locations of notebooks for testing purposes.
 if __name__ == '__main__':
-    qc = files('ISC.notebook_templates').joinpath('qc.ipynb')
-    ra = files('ISC.notebook_templates').joinpath('results_analysis.ipynb')
+    qc = files('scmIonSuppressionCorrection.notebook_templates').joinpath('qc.ipynb')
+    ra = files('scmIonSuppressionCorrection.notebook_templates').joinpath('results_analysis.ipynb')
 
     with as_file(qc) as path:
         print(path)
